@@ -9,8 +9,6 @@ const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
 
-  console.log(currentUser)
-
   if (currentUser) {
     return (
       <>

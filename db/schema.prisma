@@ -65,8 +65,9 @@ model Patient {
   updatedAt      DateTime         @updatedAt
   firstName      String
   lastName       String
-  email          String
+  email          String           @unique
   PatientSession PatientSession[]
+  isActive       Boolean          @default(true)
 }
 
 model SessionType {
@@ -83,7 +84,17 @@ model PatientSession {
   updatedAt     DateTime    @updatedAt
   type          SessionType @relation(fields: [sessionTypeId], references: [id])
   sessionTypeId Int
-  duration      Int
+  duration      Int?
   patient       Patient     @relation(fields: [patientId], references: [id])
   patientId     Int
+  Note          Note[]
+}
+
+model Note {
+  id               Int            @id @default(autoincrement())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  body             String
+  patientSession   PatientSession @relation(fields: [patientSessionId], references: [id])
+  patientSessionId Int
 }

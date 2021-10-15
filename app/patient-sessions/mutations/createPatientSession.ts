@@ -3,16 +3,30 @@ import db from "db"
 import { z } from "zod"
 
 const CreatePatientSession = z.object({
-  name: z.string(),
+  patientId: z.number().gte(0),
+  typeId: z.number().gte(0),
 })
 
 export default resolver.pipe(
   resolver.zod(CreatePatientSession),
   resolver.authorize(),
-  async (input) => {
+  async ({ patientId, typeId, ...input }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const patientSession = await db.patientSession.create({ data: input })
-
+    const patientSession = await db.patientSession.create({
+      data: {
+        ...input,
+        patient: {
+          connect: {
+            id: patientId,
+          },
+        },
+        type: {
+          connect: {
+            id: typeId,
+          },
+        },
+      },
+    })
     return patientSession
   }
 )

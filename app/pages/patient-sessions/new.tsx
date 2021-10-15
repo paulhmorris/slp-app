@@ -7,19 +7,12 @@ import getSessionTypes from "app/session-types/queries/getSessionTypes"
 const NewPatientSessionPage: BlitzPage = () => {
   const router = useRouter()
   const [createPatientSessionMutation] = useMutation(createPatientSession)
-  const [{ sessionTypes }] = useQuery(getSessionTypes, {
-    orderBy: { id: "asc" },
-  })
 
   return (
     <div>
-      <h1>Start New Session</h1>
-      {sessionTypes.map((type) => (
-        <p key={type.id}>{type.name}</p>
-      ))}
-
+      <h1>Start new Session</h1>
       <PatientSessionForm
-        submitText="Create PatientSession"
+        submitText="Start Session"
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
@@ -37,19 +30,11 @@ const NewPatientSessionPage: BlitzPage = () => {
           }
         }}
       />
-
-      <p>
-        <Link href={Routes.PatientSessionsPage()}>
-          <a>PatientSessions</a>
-        </Link>
-      </p>
     </div>
   )
 }
 
 NewPatientSessionPage.authenticate = true
-NewPatientSessionPage.getLayout = (page) => (
-  <Layout title={"Create New PatientSession"}>{page}</Layout>
-)
+NewPatientSessionPage.getLayout = (page) => <Layout title={"Start New Session"}>{page}</Layout>
 
 export default NewPatientSessionPage

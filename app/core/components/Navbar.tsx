@@ -1,4 +1,4 @@
-import { Link, Routes } from "blitz"
+import { Link, Routes, Image } from "blitz"
 
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react"
@@ -52,9 +52,7 @@ export default function Navbar() {
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                       alt="Workflow"
                     />
-                    <h1 className="text-sm text-white inline-block align-middle">
-                      PediaPlex Management
-                    </h1>
+                    <h1 className="text-sm text-white inline-block align-middle">TheTotSpot</h1>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
@@ -160,7 +158,7 @@ export default function Navbar() {
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                    <Image className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">{user.name}</div>

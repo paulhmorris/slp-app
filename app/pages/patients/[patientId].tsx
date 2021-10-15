@@ -21,7 +21,7 @@ export const Patient = () => {
         <pre>{JSON.stringify(patient, null, 2)}</pre>
 
         <Link href={Routes.EditPatientPage({ patientId: patient.id })}>
-          <a>Edit</a>
+          <a className="btn-primary mr-2">Edit</a>
         </Link>
 
         <button
@@ -32,7 +32,7 @@ export const Patient = () => {
               router.push(Routes.PatientsPage())
             }
           }}
-          style={{ marginLeft: "0.5rem" }}
+          className="btn-white"
         >
           Delete
         </button>
