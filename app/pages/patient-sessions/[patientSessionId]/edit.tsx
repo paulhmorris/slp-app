@@ -1,13 +1,12 @@
-import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getPatientSession from "app/patient-sessions/queries/getPatientSession"
-import updatePatientSession from "app/patient-sessions/mutations/updatePatientSession"
-import { PatientSessionForm, FORM_ERROR } from "app/patient-sessions/components/PatientSessionForm"
+import Layout from 'app/core/layouts/Layout'
+import { FORM_ERROR, PatientSessionForm } from 'app/patient-sessions/components/PatientSessionForm'
+import updatePatientSession from 'app/patient-sessions/mutations/updatePatientSession'
+import getPatientSession from 'app/patient-sessions/queries/getPatientSession'
+import { BlitzPage, Head, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
 
 export const EditPatientSession = () => {
   const router = useRouter()
-  const patientSessionId = useParam("patientSessionId", "number")
+  const patientSessionId = useParam('patientSessionId', 'number')
   const [patientSession, { setQueryData }] = useQuery(
     getPatientSession,
     { id: patientSessionId },
@@ -59,15 +58,7 @@ export const EditPatientSession = () => {
 const EditPatientSessionPage: BlitzPage = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <EditPatientSession />
-      </Suspense>
-
-      <p>
-        <Link href={Routes.PatientSessionsPage()}>
-          <a>PatientSessions</a>
-        </Link>
-      </p>
+      <EditPatientSession />
     </div>
   )
 }

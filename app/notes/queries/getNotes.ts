@@ -1,8 +1,8 @@
-import { paginate, resolver } from "blitz"
-import db, { Prisma } from "db"
+import { paginate, resolver } from 'blitz'
+import db, { Prisma } from 'db'
 
 interface GetNotesInput
-  extends Pick<Prisma.NoteFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
+  extends Pick<Prisma.NoteFindManyArgs, 'where' | 'orderBy' | 'skip' | 'take'> {}
 
 export default resolver.pipe(
   resolver.authorize(),
@@ -17,7 +17,8 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.note.count({ where }),
-      query: (paginateArgs) => db.note.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.note.findMany({ ...paginateArgs, where, orderBy, include: { author: true } }),
     })
 
     return {

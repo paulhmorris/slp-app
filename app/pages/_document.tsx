@@ -1,4 +1,4 @@
-import {Document, Html, DocumentHead, Main, BlitzScript /*DocumentContext*/} from 'blitz'
+import { BlitzScript /*DocumentContext*/, Document, DocumentHead, Html, Main } from 'blitz'
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
@@ -10,7 +10,9 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <DocumentHead />
+        <DocumentHead>
+          <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
+        </DocumentHead>
         <body>
           <Main />
           <BlitzScript />

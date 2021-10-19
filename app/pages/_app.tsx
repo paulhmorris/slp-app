@@ -1,24 +1,21 @@
+import { css } from '@emotion/react'
+import LoginForm from 'app/auth/components/LoginForm'
+import Navbar from 'app/core/components/Navbar'
+import 'app/core/styles/index.css'
 import {
   AppProps,
-  ErrorBoundary,
-  ErrorComponent,
   AuthenticationError,
   AuthorizationError,
+  ErrorBoundary,
+  ErrorComponent,
   ErrorFallbackProps,
   useQueryErrorResetBoundary,
-} from "blitz"
-import LoginForm from "app/auth/components/LoginForm"
-import "app/core/styles/index.css"
-import Navbar from "app/core/components/Navbar"
-import { Suspense, useState } from "react"
-import { BeatLoader } from "react-spinners"
-import { css } from "@emotion/react"
+} from 'blitz'
+import { Suspense } from 'react'
+import { BeatLoader } from 'react-spinners'
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
-
-  let [loading, setLoading] = useState(true)
-  let [color, setColor] = useState("#ffffff")
 
   const loader = css`
     position: fixed;
@@ -34,7 +31,9 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <Navbar />
       <Suspense fallback={<BeatLoader color="#818CF8" css={loader} size={30} />}>
-        <div className="px-6 py-4 max-w-7xl mx-auto">{getLayout(<Component {...pageProps} />)}</div>
+        <div className="px-6 py-4 max-w-7xl mx-auto min-h-full">
+          {getLayout(<Component {...pageProps} />)}
+        </div>
       </Suspense>
     </ErrorBoundary>
   )

@@ -1,8 +1,4 @@
-import { Link, Routes, Image } from "blitz"
-
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react"
-import { Disclosure, Menu, Transition } from "@headlessui/react"
+import { Disclosure, Menu, Transition } from '@headlessui/react'
 import {
   BellIcon,
   CurrencyDollarIcon,
@@ -11,33 +7,51 @@ import {
   PlayIcon,
   UserIcon,
   XIcon,
-} from "@heroicons/react/outline"
+} from '@heroicons/react/outline'
+import { SearchIcon } from '@heroicons/react/solid'
+import { Image, Link, Routes, useRouter } from 'blitz'
+/* This example requires Tailwind CSS v2.0+ */
+import { Fragment } from 'react'
 
 const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
+  name: 'Tom Cook',
+  email: 'tom@example.com',
   imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 
 const navigation = [
-  { name: "Dashboard", route: Routes.Home(), icon: <HomeIcon />, current: true },
-  { name: "Patients", route: Routes.PatientsPage(), icon: <UserIcon />, current: false },
-  { name: "Sessions", route: Routes.PatientSessionsPage(), icon: <PlayIcon />, current: false },
-  { name: "Billing", route: Routes.Home(), icon: <CurrencyDollarIcon />, current: false },
+  { name: 'Dashboard', route: Routes.Home(), icon: <HomeIcon />, current: false },
+  { name: 'Patients', route: Routes.PatientsPage(), icon: <UserIcon />, current: false },
+  { name: 'Sessions', route: Routes.PatientSessionsPage(), icon: <PlayIcon />, current: false },
+  { name: 'Billing', route: Routes.Home(), icon: <CurrencyDollarIcon />, current: false },
 ]
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: 'Your Profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' },
 ]
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ")
+  return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar() {
+  const router = useRouter()
+
+  function setCurrentNavigation() {
+    navigation.forEach((nav) => {
+      if (nav.route.pathname === router.route) {
+        nav.current = true
+      } else {
+        nav.current = false
+      }
+    })
+  }
+
+  setCurrentNavigation()
+
   return (
     <div>
       <Disclosure as="nav" className="bg-gray-800">
@@ -48,7 +62,9 @@ export default function Navbar() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <img
-                      className="h-8 w-8 inline-block mr-3"
+                      width={32}
+                      height={32}
+                      className="inline-block mr-3"
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                       alt="Workflow"
                     />
@@ -61,17 +77,36 @@ export default function Navbar() {
                           <a
                             className={classNames(
                               item.current
-                                ? "bg-gray-900 text-white flex items-center"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                                ? 'bg-gray-900 text-white flex items-center'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'px-3 py-2 rounded-md text-sm font-medium flex items-center'
                             )}
-                            aria-current={item.current ? "page" : undefined}
+                            aria-current={item.current ? 'page' : undefined}
                           >
-                            <div className="w-4 h-4 inline-block mr-2">{item.icon}</div>
+                            <div className="w-5 h-5 inline-block mr-2">{item.icon}</div>
                             {item.name}
                           </a>
                         </Link>
                       ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                  <div className="max-w-lg w-full lg:max-w-xs">
+                    <label htmlFor="search" className="sr-only">
+                      Search
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </div>
+                      <input
+                        id="search"
+                        name="search"
+                        className="block w-full pl-10 pr-3 py-2 border border-transparent rounded-md leading-5 bg-gray-700 text-gray-300 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-white focus:ring-white focus:text-gray-900 sm:text-sm"
+                        placeholder="Search"
+                        type="search"
+                      />
                     </div>
                   </div>
                 </div>
@@ -109,8 +144,8 @@ export default function Navbar() {
                                 <a
                                   href={item.href}
                                   className={classNames(
-                                    active ? "bg-gray-200" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
+                                    active ? 'bg-gray-200' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
                                   )}
                                 >
                                   {item.name}
@@ -144,11 +179,11 @@ export default function Navbar() {
                     <a
                       className={classNames(
                         item.current
-                          ? "bg-gray-900 text-white flex items-center"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                          ? 'bg-gray-900 text-white flex items-center'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'px-3 py-2 rounded-md text-sm font-medium flex items-center'
                       )}
-                      aria-current={item.current ? "page" : undefined}
+                      aria-current={item.current ? 'page' : undefined}
                     >
                       {item.name}
                     </a>
@@ -158,7 +193,13 @@ export default function Navbar() {
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <Image className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                    <Image
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                      src={user.imageUrl}
+                      alt="Profile picture"
+                    />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">{user.name}</div>

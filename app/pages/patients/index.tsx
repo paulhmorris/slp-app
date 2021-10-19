@@ -1,9 +1,8 @@
-import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getPatients from "app/patients/queries/getPatients"
-import createPatientSession from "app/patient-sessions/mutations/createPatientSession"
-import router from "next/router"
+import Layout from 'app/core/layouts/Layout'
+import createPatientSession from 'app/patient-sessions/mutations/createPatientSession'
+import getPatients from 'app/patients/queries/getPatients'
+import { BlitzPage, Head, Link, Routes, useMutation, usePaginatedQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
@@ -11,18 +10,16 @@ export const PatientsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
   const [{ patients, hasMore }] = usePaginatedQuery(getPatients, {
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
 
-  const startSession = (patientId) => {
-    if (patientId) {
-      const typeId = 1
-      createPatientSession({ patientId, typeId })
-      router.push(Routes.PatientSessionPage(patientId))
-    }
-  }
+  const [startSession] = useMutation(createPatientSession, {
+    onSuccess: (sessionData) => {
+      router.push(Routes.ShowPatientSessionPage({ patientSessionId: sessionData.id }))
+    },
+  })
 
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
@@ -66,7 +63,7 @@ export const PatientsList = () => {
                   {patients.map((patient, patientIdx) => (
                     <tr
                       key={patient.id}
-                      className={patientIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      className={patientIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {patient.firstName} {patient.lastName}
@@ -78,11 +75,11 @@ export const PatientsList = () => {
                         <span
                           className={`${
                             patient.isActive
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
                           } text-white inline-flex px-3 py-1 rounded-full text-xs leading-5 font-semibold align-middle`}
                         >
-                          {patient.isActive ? "Active" : "Inactive"}
+                          {patient.isActive ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -93,7 +90,16 @@ export const PatientsList = () => {
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button className="btn-secondary" onClick={() => startSession(patient.id)}>
+                        <button
+                          className="btn-secondary"
+                          onClick={async () => {
+                            try {
+                              startSession({ patientId: patient.id, typeId: 1 })
+                            } catch (error) {
+                              alert('Error starting session')
+                            }
+                          }}
+                        >
                           Start Session
                         </button>
                       </td>

@@ -1,7 +1,8 @@
-import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getPatientSessions from "app/patient-sessions/queries/getPatientSessions"
+import Layout from 'app/core/layouts/Layout'
+import { getTagStyles } from 'app/core/lib/helpers'
+import getPatientSessions from 'app/patient-sessions/queries/getPatientSessions'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
+import dayjs from 'dayjs'
 
 const ITEMS_PER_PAGE = 100
 
@@ -9,7 +10,7 @@ export const PatientSessionsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
   const [{ patientSessions, hasMore }] = usePaginatedQuery(getPatientSessions, {
-    orderBy: { id: "asc" },
+    orderBy: { createdAt: 'desc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
@@ -36,7 +37,25 @@ export const PatientSessionsList = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
+                      Patient
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Created At
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Status
                     </th>
                     <th
                       scope="col"
@@ -44,22 +63,57 @@ export const PatientSessionsList = () => {
                     >
                       Duration
                     </th>
+                    <th scope="col" className="relative px-6 py-3">
+                      <span className="sr-only">View Session</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {patientSessions.map((session, sessionIdx) => (
                     <tr
                       key={session.id}
-                      className={sessionIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      className={sessionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
                         {session.id}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {session.createdAt.toDateString()}
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        {session.patient.firstName} {session.patient.lastName}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {session.duration ? session.duration : "N/A"}
+                        {dayjs(session.createdAt).format('MM/DD/YYYY h:mm a')}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {session.type.name}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span className={`tag ${getTagStyles(session.status)}`}>
+                          {session.status}
+                          {session.status === 'In Progress' && (
+                            <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
+                              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                            </span>
+                          )}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {session.duration && session.duration}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Link
+                          href={Routes.ShowPatientSessionPage({ patientSessionId: session.id })}
+                        >
+                          <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                            View
+                          </a>
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -97,16 +151,9 @@ const PatientSessionsPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <h1>Sessions</h1>
-        <p>
-          <Link href={Routes.NewPatientSessionPage()}>
-            <a className="btn-secondary my-3">Start New Session</a>
-          </Link>
-        </p>
+        <h1 className="mb-3">Sessions</h1>
 
-        <Suspense fallback={<div>Loading...</div>}>
-          <PatientSessionsList />
-        </Suspense>
+        <PatientSessionsList />
       </div>
     </>
   )

@@ -1,9 +1,10 @@
-import { resolver } from "blitz"
-import db from "db"
-import { z } from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
 const CreateNote = z.object({
-  name: z.string(),
+  body: z.string(),
+  patientSessionId: z.number(),
 })
 
 export default resolver.pipe(resolver.zod(CreateNote), resolver.authorize(), async (input) => {

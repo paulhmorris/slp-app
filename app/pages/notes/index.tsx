@@ -1,7 +1,7 @@
-import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getNotes from "app/notes/queries/getNotes"
+import Layout from 'app/core/layouts/Layout'
+import getNotes from 'app/notes/queries/getNotes'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
@@ -9,7 +9,7 @@ export const NotesList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
   const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
-    orderBy: { id: "asc" },
+    orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
@@ -23,7 +23,7 @@ export const NotesList = () => {
         {notes.map((note) => (
           <li key={note.id}>
             <Link href={Routes.ShowNotePage({ noteId: note.id })}>
-              <a>{note.name}</a>
+              <a>{note.body}</a>
             </Link>
           </li>
         ))}

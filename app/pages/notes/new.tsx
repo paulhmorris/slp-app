@@ -1,7 +1,7 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import createNote from "app/notes/mutations/createNote"
-import { NoteForm, FORM_ERROR } from "app/notes/components/NoteForm"
+import Layout from 'app/core/layouts/Layout'
+import { FORM_ERROR, NoteForm } from 'app/notes/components/NoteForm'
+import createNote from 'app/notes/mutations/createNote'
+import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
 const NewNotePage: BlitzPage = () => {
   const router = useRouter()
@@ -9,10 +9,8 @@ const NewNotePage: BlitzPage = () => {
 
   return (
     <div>
-      <h1>Create New Note</h1>
-
       <NoteForm
-        submitText="Create Note"
+        submitText="+ Add Note"
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
@@ -41,6 +39,6 @@ const NewNotePage: BlitzPage = () => {
 }
 
 NewNotePage.authenticate = true
-NewNotePage.getLayout = (page) => <Layout title={"Create New Note"}>{page}</Layout>
+NewNotePage.getLayout = (page) => <Layout title={'Create New Note'}>{page}</Layout>
 
 export default NewNotePage

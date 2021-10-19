@@ -2,13 +2,17 @@
 
 @layer base {
   h1 {
-    @apply text-4xl;
+    @apply text-4xl font-extrabold text-gray-900 tracking-tight;
   }
   h2 {
     @apply text-3xl;
   }
   h3 {
     @apply text-2xl;
+  }
+
+  textarea {
+    @apply max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md;
   }
 }
 
@@ -31,7 +35,12 @@
   @apply text-center;
 }
 
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
   margin: 0 auto;
   background-color: #f9fafb;
 }
@@ -46,4 +55,12 @@ body {
 
 .btn-white {
   @apply inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.btn-danger {
+  @apply inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.tag {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium relative;
 }

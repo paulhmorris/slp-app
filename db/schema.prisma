@@ -13,16 +13,16 @@ generator client {
 // --------------------------------------
 
 model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             Int       @id @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   name           String?
-  email          String   @unique
+  email          String    @unique
   hashedPassword String?
-  role           String   @default("USER")
-
-  tokens   Token[]
-  sessions Session[]
+  role           String    @default("USER")
+  tokens         Token[]
+  sessions       Session[]
+  Note           Note[]
 }
 
 model Session {
@@ -65,7 +65,7 @@ model Patient {
   updatedAt      DateTime         @updatedAt
   firstName      String
   lastName       String
-  email          String           @unique
+  email          String
   PatientSession PatientSession[]
   isActive       Boolean          @default(true)
 }
@@ -74,8 +74,9 @@ model SessionType {
   id             Int              @id @default(autoincrement())
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  name           String
+  name           String           @unique
   PatientSession PatientSession[]
+
 }
 
 model PatientSession {
@@ -87,14 +88,17 @@ model PatientSession {
   duration      Int?
   patient       Patient     @relation(fields: [patientId], references: [id])
   patientId     Int
-  Note          Note[]
+  notes         Note[]
+  status        String      @default("New")
 }
 
 model Note {
   id               Int            @id @default(autoincrement())
+  author           User           @relation(fields: [userId], references: [id])
+  userId           Int
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-  body             String
+  body             String         @default("")
   patientSession   PatientSession @relation(fields: [patientSessionId], references: [id])
   patientSessionId Int
 }
