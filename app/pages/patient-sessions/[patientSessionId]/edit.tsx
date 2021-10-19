@@ -37,7 +37,7 @@ export const EditPatientSession = () => {
           initialValues={patientSession}
           onSubmit={async (values) => {
             try {
-              // after adding the notes field, you can pass it here
+              // 2. after adding the notes field, you can pass it here
               const updated = await updatePatientSessionMutation({
                 id: patientSession.id,
                 ...values,
