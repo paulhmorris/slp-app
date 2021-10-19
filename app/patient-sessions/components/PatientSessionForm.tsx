@@ -13,6 +13,7 @@ export function PatientSessionForm<S extends z.ZodType<any, any>>(props: FormPro
       <div className=" mt-6 space-y-3">
         <PatientSelect />
         <SessionTypeSelect />
+        {/* 1. Add note editor here, but make sure it's using a react-final-form field */}
       </div>
     </Form>
   )
