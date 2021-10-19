@@ -4,6 +4,9 @@ import { z } from 'zod'
 
 const UpdatePatientSession = z.object({
   id: z.number(),
+  name: z.string(),
+  // 3. after adding notes to the mutation, you can add:
+  // notes: z.string()
 })
 
 export default resolver.pipe(
