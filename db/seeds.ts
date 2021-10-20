@@ -2,11 +2,19 @@ import faker from 'faker'
 import db from './index'
 
 const seed = async () => {
-  // Create session type
-  const sessionType = await db.sessionType.create({
-    data: {
-      name: 'Speech',
-    },
+  // Create session types
+  const sessionTypes = await db.sessionType.createMany({
+    data: [{ name: 'Speech' }, { name: 'Occupational' }, { name: 'Physical' }],
+  })
+
+  // Create session statuses
+  const sessionStatuses = await db.sessionStatus.createMany({
+    data: [{ name: 'New' }, { name: 'In Progress' }, { name: 'Complete' }, { name: 'Canceled' }],
+  })
+
+  // Create goal statuses
+  const goalTypes = await db.goalStatus.createMany({
+    data: [{ name: 'Met' }, { name: 'Discontinued' }, { name: 'In Progress' }, { name: 'On Hold' }],
   })
 
   // Create one patient with 10 sessions
@@ -18,11 +26,17 @@ const seed = async () => {
     },
   })
 
+  console.log(sessionTypes)
+  console.log(sessionStatuses)
+  console.log(goalTypes)
+  console.log(patient)
+
   // Create one session with 10 notes
   const session = await db.patientSession.create({
     data: {
-      sessionTypeId: sessionType.id,
+      sessionTypeId: faker.random.arrayElement(sessionTypes).id,
       patientId: patient.id,
+      sessionStatusId: faker.random.arrayElement(sessionStatuses).id,
     },
   })
 
@@ -33,22 +47,23 @@ const seed = async () => {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
-        isActive: Math.random() < 0.25,
+        isActive: Math.random() < 0.1,
       },
     })
     // Create sessions
     await db.patientSession.create({
       data: {
-        sessionTypeId: sessionType.id,
+        sessionTypeId: faker.random.arrayElement(sessionTypes).id,
         patientId: patient.id,
-        status: faker.random.arrayElement(['New', 'In Progress', 'Complete']),
+        status: faker.random.arrayElement(goalTypes),
+        sessionStatusId: faker.random.arrayElement(sessionStatuses).id,
       },
     })
     // Create notes
     await db.note.create({
       data: {
         userId: 1,
-        createdAt: faker.date.between('2021-01-01', new Date()),
+        createdAt: faker.date.between('2021-10-01', new Date()),
         patientSessionId: session.id,
         body: faker.lorem.sentences(),
       },

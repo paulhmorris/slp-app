@@ -11,6 +11,11 @@ generator client {
 }
 
 // --------------------------------------
+enum Role {
+  B
+  USER
+  ADMIN
+}
 
 model User {
   id             Int       @id @default(autoincrement())
@@ -19,7 +24,7 @@ model User {
   name           String?
   email          String    @unique
   hashedPassword String?
-  role           String    @default("USER")
+  role           Role      @default(USER)
   tokens         Token[]
   sessions       Session[]
   Note           Note[]
@@ -40,6 +45,10 @@ model Session {
   userId Int?
 }
 
+enum TokenType {
+  RESET_PASSWORD
+}
+
 model Token {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
@@ -55,10 +64,6 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-enum TokenType {
-  RESET_PASSWORD
-}
-
 model Patient {
   id             Int              @id @default(autoincrement())
   createdAt      DateTime         @default(now())
@@ -68,6 +73,21 @@ model Patient {
   email          String
   PatientSession PatientSession[]
   isActive       Boolean          @default(true)
+  goals          Goal[]
+}
+
+model PatientSession {
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  type            SessionType   @relation(fields: [sessionTypeId], references: [id])
+  sessionTypeId   Int
+  duration        Int?
+  patient         Patient       @relation(fields: [patientId], references: [id])
+  patientId       Int
+  notes           Note[]
+  status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
+  sessionStatusId Int
 }
 
 model SessionType {
@@ -76,20 +96,15 @@ model SessionType {
   updatedAt      DateTime         @updatedAt
   name           String           @unique
   PatientSession PatientSession[]
-
+  Goal           Goal[]
 }
 
-model PatientSession {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  type          SessionType @relation(fields: [sessionTypeId], references: [id])
-  sessionTypeId Int
-  duration      Int?
-  patient       Patient     @relation(fields: [patientId], references: [id])
-  patientId     Int
-  notes         Note[]
-  status        String      @default("New")
+model SessionStatus {
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String
+  PatientSession PatientSession[]
 }
 
 model Note {
@@ -101,4 +116,25 @@ model Note {
   body             String         @default("")
   patientSession   PatientSession @relation(fields: [patientSessionId], references: [id])
   patientSessionId Int
+}
+
+model Goal {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  patient       Patient     @relation(fields: [patientId], references: [id])
+  patientId     Int
+  name          String
+  type          SessionType @relation(fields: [sessionTypeId], references: [id])
+  sessionTypeId Int
+  status        GoalStatus  @relation(fields: [goalStatusId], references: [id])
+  goalStatusId  Int         @default(1)
+}
+
+model GoalStatus {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  Goal      Goal[]
 }
