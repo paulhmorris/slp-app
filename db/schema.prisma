@@ -87,7 +87,7 @@ model PatientSession {
   patientId       Int
   notes           Note[]
   status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
-  sessionStatusId Int
+  sessionStatusId Int           @default(1)
 }
 
 model SessionType {

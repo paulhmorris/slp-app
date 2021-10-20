@@ -20,6 +20,9 @@ export function getTagStyles(tag: String) {
     case 'in progress':
       styles = 'bg-green-100 text-green-800'
       break
+    case 'canceled':
+      styles = 'bg-red-100 text-red-800'
+      break
     default:
       styles = 'bg-gray-100 text-gray-800'
   }

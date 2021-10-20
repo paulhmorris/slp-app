@@ -1,34 +1,54 @@
 import { Transition } from '@headlessui/react'
-import { usePaginatedQuery } from 'blitz'
+import { invalidateQuery, useMutation, usePaginatedQuery, useSession } from 'blitz'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import { Prisma } from 'db'
 import { useState } from 'react'
+import createNote from '../mutations/createNote'
 import getNotes from '../queries/getNotes'
+import { NoteForm } from './NoteForm'
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
 
 let itemsToRender = 3
 
-export const SessionNotes = (patientSessionId: Prisma.NoteWhereInput) => {
+export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
+  const session = useSession()
+  const [createNoteMutation] = useMutation(createNote)
   const [page, setPage] = useState(1)
-
   const loadMoreNotes = () => {
     setPage(page + 1)
   }
 
   const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
-    where: patientSessionId,
+    where: { patientSessionId },
     take: itemsToRender * page,
     orderBy: { createdAt: 'desc' },
   })
 
   return (
-    <div className="flex flex-col max-w-5xl py-4 sm:px-6 lg:px-8">
-      <Transition show={true}>
+    <>
+      <NoteForm
+        initialValues={{ body: '' }}
+        onSubmit={async (values) => {
+          try {
+            await createNoteMutation({
+              patientSessionId,
+              userId: session.userId,
+              ...values,
+            })
+            invalidateQuery(getNotes)
+          } catch (error) {
+            alert('Error creating note')
+          }
+        }}
+        submitText="Add Note"
+        className="mb-4"
+      />
+      <Transition show={true} appear={true}>
         <ul role="list" className="space-y-2 sm:space-y-4">
           {notes.map((note, noteIdx) => (
             <NoteItem
@@ -49,7 +69,7 @@ export const SessionNotes = (patientSessionId: Prisma.NoteWhereInput) => {
       >
         Load More
       </button>
-    </div>
+    </>
   )
 }
 
@@ -73,7 +93,7 @@ const NoteItem = (props) => {
           </span>{' '}
           <span className="text-gray-400 text-sm font-normal">wrote</span>
         </h3>
-        <p
+        <div
           onMouseEnter={() => setShowTime(true)}
           onMouseLeave={() => {
             setShowTime(false)
@@ -84,7 +104,7 @@ const NoteItem = (props) => {
           <Transition
             as="div"
             show={showTime}
-            enter="transition-opacity ease-in duration-100 delay-500"
+            enter="transition-opacity ease-in duration-100 delay-200"
             enterFrom="opacity-0"
             enterTo="opacity-100"
             leave="transition-opacity duration-50"
@@ -101,7 +121,7 @@ const NoteItem = (props) => {
               <rect x="12" y="-10" width="8" height="8" transform="rotate(45)" />
             </svg>
           </Transition>
-        </p>
+        </div>
       </div>
       <div
         className="mt-4 space-y-6 text-sm text-gray-800"

@@ -26,17 +26,12 @@ const seed = async () => {
     },
   })
 
-  console.log(sessionTypes)
-  console.log(sessionStatuses)
-  console.log(goalTypes)
-  console.log(patient)
-
   // Create one session with 10 notes
   const session = await db.patientSession.create({
     data: {
-      sessionTypeId: faker.random.arrayElement(sessionTypes).id,
+      sessionTypeId: 1,
       patientId: patient.id,
-      sessionStatusId: faker.random.arrayElement(sessionStatuses).id,
+      sessionStatusId: 1,
     },
   })
 
@@ -53,10 +48,10 @@ const seed = async () => {
     // Create sessions
     await db.patientSession.create({
       data: {
-        sessionTypeId: faker.random.arrayElement(sessionTypes).id,
+        sessionTypeId: 1,
         patientId: patient.id,
         status: faker.random.arrayElement(goalTypes),
-        sessionStatusId: faker.random.arrayElement(sessionStatuses).id,
+        sessionStatusId: 1,
       },
     })
     // Create notes

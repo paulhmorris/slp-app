@@ -12,7 +12,26 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const patientSession = await db.patientSession.findFirst({ where: { id } })
+    const patientSession = await db.patientSession.findFirst({
+      where: { id },
+      include: {
+        status: {
+          select: {
+            name: true,
+          },
+        },
+        type: {
+          select: {
+            name: true,
+          },
+        },
+        patient: {
+          include: {
+            goals: true,
+          },
+        },
+      },
+    })
 
     if (!patientSession) throw new NotFoundError()
 

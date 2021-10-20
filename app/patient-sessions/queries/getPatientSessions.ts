@@ -25,6 +25,7 @@ export default resolver.pipe(
           include: {
             patient: true,
             type: true,
+            status: true,
           },
         }),
     })

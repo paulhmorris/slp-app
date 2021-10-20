@@ -3,6 +3,7 @@ import db from 'db'
 import { z } from 'zod'
 
 const CreateNote = z.object({
+  userId: z.number(),
   body: z.string(),
   patientSessionId: z.number(),
 })

@@ -1,6 +1,6 @@
+import { SessionTimer } from 'app/core/components/SessionTimer'
 import Layout from 'app/core/layouts/Layout'
 import { SessionNotes } from 'app/notes/components/SessionNotes'
-import getNotes from 'app/notes/queries/getNotes'
 import deletePatientSession from 'app/patient-sessions/mutations/deletePatientSession'
 import getPatientSession from 'app/patient-sessions/queries/getPatientSession'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
@@ -10,28 +10,21 @@ export const PatientSession = () => {
   const patientSessionId = useParam('patientSessionId', 'number')
   const [deletePatientSessionMutation] = useMutation(deletePatientSession)
   const [patientSession] = useQuery(getPatientSession, { id: patientSessionId })
-  const [sessionNotes] = useQuery(getNotes, {
-    where: { patientSessionId },
-    orderBy: { createdAt: 'desc' },
-  })
 
   return (
     <>
       <Head>
-        <title>Session {patientSession.id}</title>
+        <title>Session</title>
       </Head>
 
       <div>
-        {/* <h1>Session {patientSession.id}</h1> */}
-        {/* <pre>{JSON.stringify(patientSession, null, 2)}</pre> */}
-
         <Link href={Routes.EditPatientSessionPage({ patientSessionId: patientSession.id })}>
-          <a className="btn-primary mr-2">Edit</a>
+          <a className="btn-white mr-2">Edit</a>
         </Link>
 
         <button
           type="button"
-          className="btn-secondary"
+          className="btn-white"
           onClick={async () => {
             if (window.confirm('This will be deleted')) {
               await deletePatientSessionMutation({ id: patientSession.id })
@@ -41,8 +34,13 @@ export const PatientSession = () => {
         >
           Delete
         </button>
-
-        <SessionNotes patientSessionId={patientSessionId} />
+        <div className="mt-12 mb-3">
+          <SessionTimer />
+        </div>
+        <div className="flex flex-col max-w-3xl">
+          <h2 className="my-3">Notes</h2>
+          <SessionNotes patientSessionId={patientSessionId} />
+        </div>
       </div>
     </>
   )
