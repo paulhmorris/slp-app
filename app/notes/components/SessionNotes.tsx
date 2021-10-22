@@ -5,7 +5,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import { Prisma } from 'db'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import createNote from '../mutations/createNote'
 import getNotes from '../queries/getNotes'
 import { NoteForm } from './NoteForm'
@@ -13,9 +13,10 @@ dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
 
-let itemsToRender = 3
+const ITEMS_TO_RENDER = 3
 
 export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
+  const loadBtn = useRef<HTMLButtonElement>(null)
   const session = useSession()
   const [createNoteMutation] = useMutation(createNote)
   const [page, setPage] = useState(1)
@@ -25,7 +26,7 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
 
   const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
     where: { patientSessionId },
-    take: itemsToRender * page,
+    take: ITEMS_TO_RENDER * page,
     orderBy: { createdAt: 'desc' },
   })
 
@@ -66,6 +67,7 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
         className="btn-secondary ml-auto sm:mt-4 w-full sm:w-auto"
         disabled={!hasMore}
         onClick={loadMoreNotes}
+        ref={loadBtn}
       >
         Load More
       </button>

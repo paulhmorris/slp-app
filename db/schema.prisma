@@ -12,7 +12,6 @@ generator client {
 
 // --------------------------------------
 enum Role {
-  B
   USER
   ADMIN
 }
@@ -71,6 +70,7 @@ model Patient {
   firstName      String
   lastName       String
   email          String
+  dateOfBirth    DateTime
   PatientSession PatientSession[]
   isActive       Boolean          @default(true)
   goals          Goal[]
@@ -129,6 +129,7 @@ model Goal {
   sessionTypeId Int
   status        GoalStatus  @relation(fields: [goalStatusId], references: [id])
   goalStatusId  Int         @default(1)
+  isLongTerm    Boolean     @default(true)
 }
 
 model GoalStatus {

@@ -10,7 +10,7 @@ export function NoteForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
         initialValue={''}
         name="body"
         component="textarea"
-        className="mb-4 h-20"
+        className="mb-4 h-24"
         placeholder="Add a note"
       />
     </Form>

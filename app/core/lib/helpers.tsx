@@ -17,14 +17,23 @@ export function getTagStyles(tag: String) {
     case 'new':
       styles = 'bg-blue-100 text-blue-800'
       break
+
     case 'in progress':
       styles = 'bg-green-100 text-green-800'
       break
+
+    case 'discontinued':
+      styles = 'bg-yellow-100 text-yellow-800'
+      break
+
     case 'canceled':
+    case 'on hold':
       styles = 'bg-red-100 text-red-800'
       break
+
+    case 'met':
     default:
-      styles = 'bg-gray-100 text-gray-800'
+      styles = 'bg-gray-200 text-gray-800'
   }
 
   return styles

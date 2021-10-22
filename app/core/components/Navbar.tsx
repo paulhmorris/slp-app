@@ -9,7 +9,7 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
-import { Image, Link, Routes, useRouter } from 'blitz'
+import { Image, Link, Routes, useRouter, useSession } from 'blitz'
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
 
@@ -39,7 +39,9 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const router = useRouter()
+  const session = useSession()
 
+  // TODO: redo this using state?
   function setCurrentNavigation() {
     navigation.forEach((nav) => {
       if (nav.route.pathname === router.route) {

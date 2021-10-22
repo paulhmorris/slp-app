@@ -29,9 +29,9 @@ export default function App({ Component, pageProps }: AppProps) {
       FallbackComponent={RootErrorFallback}
       onReset={useQueryErrorResetBoundary().reset}
     >
-      <Navbar />
       <Suspense fallback={<BeatLoader color="#818CF8" css={loader} size={30} />}>
-        <div className="px-6 py-4 max-w-7xl mx-auto min-h-full">
+        <Navbar />
+        <div className="px-6 pt-4 pb-20 max-w-7xl mx-auto min-h-full">
           {getLayout(<Component {...pageProps} />)}
         </div>
       </Suspense>

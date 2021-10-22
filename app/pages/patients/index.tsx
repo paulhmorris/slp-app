@@ -37,6 +37,12 @@ export const PatientsList = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
+                      Id
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Name
                     </th>
                     <th
@@ -65,6 +71,9 @@ export const PatientsList = () => {
                       key={patient.id}
                       className={patientIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {patient.id}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {patient.firstName} {patient.lastName}
                       </td>
