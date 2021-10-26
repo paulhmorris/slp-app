@@ -6,6 +6,9 @@ module.exports = {
   purge: ['{pages,app}/**/*.{js,ts,jsx,tsx}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    flex: {
+      2: '2 2 0%',
+    },
     extend: {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
@@ -19,6 +22,7 @@ module.exports = {
     extend: {
       backgroundColor: ['disabled'],
       textColor: ['disabled'],
+      opacity: ['disabled'],
     },
   },
   plugins: [require('@tailwindcss/forms')],

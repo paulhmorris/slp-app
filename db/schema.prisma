@@ -128,8 +128,11 @@ model Goal {
   type          SessionType @relation(fields: [sessionTypeId], references: [id])
   sessionTypeId Int
   status        GoalStatus  @relation(fields: [goalStatusId], references: [id])
+  ParentGoal    Goal?       @relation("GoalToGoal", fields: [parentGoalId], references: [id])
+  parentGoalId  Int?
   goalStatusId  Int         @default(1)
   isLongTerm    Boolean     @default(true)
+  Goal          Goal[]      @relation("GoalToGoal")
 }
 
 model GoalStatus {

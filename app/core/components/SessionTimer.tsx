@@ -7,7 +7,7 @@ export const SessionTimer = () => {
 
   return (
     <div>
-      <div className="flex text-4xl tracking-wider">
+      <div className="flex text-md tracking-wider">
         <Digit value={hours} title="Hours" />
         <span className="mx-3 h-auto mt-4">:</span>
         <Digit value={minutes} title="Minutes" />

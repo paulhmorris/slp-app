@@ -38,6 +38,7 @@
     "react": "alpha",
     "react-dom": "alpha",
     "react-final-form": "6.5.7",
+    "react-hot-toast": "2.1.1",
     "react-spinners": "0.11.0",
     "react-timer-hook": "3.0.5",
     "tailwindcss": "2.1.2",

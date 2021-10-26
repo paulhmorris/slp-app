@@ -1,11 +1,11 @@
 import { Transition } from '@headlessui/react'
-import { invalidateQuery, useMutation, usePaginatedQuery, useSession } from 'blitz'
+import { useMutation, usePaginatedQuery, useSession } from 'blitz'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import { Prisma } from 'db'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import createNote from '../mutations/createNote'
 import getNotes from '../queries/getNotes'
 import { NoteForm } from './NoteForm'
@@ -16,7 +16,6 @@ dayjs.extend(advancedFormat)
 const ITEMS_TO_RENDER = 3
 
 export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
-  const loadBtn = useRef<HTMLButtonElement>(null)
   const session = useSession()
   const [createNoteMutation] = useMutation(createNote)
   const [page, setPage] = useState(1)
@@ -24,7 +23,7 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
     setPage(page + 1)
   }
 
-  const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
+  const [{ notes, hasMore }, { refetch }] = usePaginatedQuery(getNotes, {
     where: { patientSessionId },
     take: ITEMS_TO_RENDER * page,
     orderBy: { createdAt: 'desc' },
@@ -41,7 +40,7 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
               userId: session.userId,
               ...values,
             })
-            invalidateQuery(getNotes)
+            refetch()
           } catch (error) {
             alert('Error creating note')
           }
@@ -67,7 +66,6 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
         className="btn-secondary ml-auto sm:mt-4 w-full sm:w-auto"
         disabled={!hasMore}
         onClick={loadMoreNotes}
-        ref={loadBtn}
       >
         Load More
       </button>

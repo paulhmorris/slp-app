@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 const CreateNote = z.object({
   userId: z.number(),
-  body: z.string(),
+  body: z.string().nonempty({ message: "Note can't be empty" }),
   patientSessionId: z.number(),
 })
 

@@ -7,3 +7,4 @@ db/migrations
 .blitz
 .yarn
 .pnp*
+node_modules

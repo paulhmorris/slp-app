@@ -1,6 +1,7 @@
 import { css } from '@emotion/react'
 import LoginForm from 'app/auth/components/LoginForm'
 import Navbar from 'app/core/components/Navbar'
+import { Toaster } from 'react-hot-toast'
 import 'app/core/styles/index.css'
 import {
   AppProps,
@@ -34,6 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <div className="px-6 pt-4 pb-20 max-w-7xl mx-auto min-h-full">
           {getLayout(<Component {...pageProps} />)}
         </div>
+        <Toaster gutter={8} position="top-right" />
       </Suspense>
     </ErrorBoundary>
   )

@@ -23,6 +23,7 @@ const seed = async () => {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
+      dateOfBirth: faker.date.past(10, new Date()),
     },
   })
 
@@ -53,6 +54,7 @@ const seed = async () => {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
+        dateOfBirth: faker.date.past(10, new Date()),
         isActive: Math.random() > 0.1,
       },
     })
@@ -79,7 +81,7 @@ const seed = async () => {
       data: {
         patientId: patient.id,
         name: faker.lorem.sentence(),
-        goalStatusId: faker.random.number({ min: 1, max: 4 }),
+        goalStatusId: 1,
         sessionTypeId: faker.random.number({ min: 1, max: 3 }),
         isLongTerm: Math.random() < 0.01,
       },
