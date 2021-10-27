@@ -41,7 +41,7 @@ export const EditPatientSession = () => {
                 id: patientSession.id,
                 ...values,
               })
-              await setQueryData(updated)
+              // await setQueryData(updated)
               router.push(Routes.ShowPatientSessionPage({ patientSessionId: updated.id }))
             } catch (error: any) {
               console.error(error)

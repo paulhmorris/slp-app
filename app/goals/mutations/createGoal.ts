@@ -3,7 +3,10 @@ import db from 'db'
 import { z } from 'zod'
 
 const CreateGoal = z.object({
-  name: z.string(),
+  title: z.string(),
+  patientId: z.number(),
+  sessionTypeId: z.number(),
+  goalCategoryId: z.number(),
 })
 
 export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input) => {

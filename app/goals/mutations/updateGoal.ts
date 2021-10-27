@@ -4,7 +4,6 @@ import { z } from 'zod'
 
 const UpdateGoal = z.object({
   id: z.number(),
-  name: z.string(),
 })
 
 export default resolver.pipe(

@@ -41,7 +41,8 @@ export const EditGoal = () => {
                 id: goal.id,
                 ...values,
               })
-              await setQueryData(updated)
+              // This doesn't even work from the boilerplate?
+              // await setQueryData(updated)
               router.push(Routes.ShowGoalPage({ goalId: updated.id }))
             } catch (error: any) {
               console.error(error)

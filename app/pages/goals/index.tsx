@@ -23,7 +23,7 @@ export const GoalsList = () => {
         {goals.map((goal) => (
           <li key={goal.id}>
             <Link href={Routes.ShowGoalPage({ goalId: goal.id })}>
-              <a>{goal.name}</a>
+              <a>{goal.title}</a>
             </Link>
           </li>
         ))}
