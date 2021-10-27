@@ -113,8 +113,10 @@ const seed = async () => {
         goalCategoryId: faker.random.number({ min: 1, max: 6 }),
       },
     })
-    // Create scores
-    await db.score.createMany({
+  }
+  // Create scores
+  for (let i = 0; i < 10; i++) {
+    await db.score.create({
       data: {
         createdBy: user.id,
         value: faker.random.number({ min: 25, max: 95 }),
