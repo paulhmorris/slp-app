@@ -65,8 +65,8 @@ const seed = async () => {
 
   const user = await db.user.create({
     data: {
-      name: 'Harriet Morris',
-      email: 'paulh.morris@gmail.com',
+      name: 'Leslie Knope',
+      email: 'admin@blitz.com',
       hashedPassword: 'password1',
       role: 'USER',
     },
