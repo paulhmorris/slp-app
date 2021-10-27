@@ -28,6 +28,7 @@ model User {
   tokens         Token[]
   sessions       Session[]
   Note           Note[]
+  Score          Score[]
 }
 
 model Session {
@@ -40,9 +41,8 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
-
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user               User[]    @relation(fields: [userId], references: [id])
+  userId             Int?
 }
 
 enum TokenType {
@@ -72,8 +72,8 @@ model Patient {
   lastName       String
   email          String
   dateOfBirth    DateTime
-  PatientSession PatientSession[]
   isActive       Boolean          @default(true)
+  PatientSession PatientSession[]
   goals          Goal[]
 }
 
@@ -81,14 +81,14 @@ model PatientSession {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  type            SessionType   @relation(fields: [sessionTypeId], references: [id])
   sessionTypeId   Int
   duration        Int?
-  patient         Patient       @relation(fields: [patientId], references: [id])
   patientId       Int
-  notes           Note[]
-  status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
   sessionStatusId Int           @default(1)
+  status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
+  notes           Note[]
+  patient         Patient       @relation(fields: [patientId], references: [id])
+  type            SessionType   @relation(fields: [sessionTypeId], references: [id])
 }
 
 model SessionType {
@@ -120,22 +120,23 @@ model Note {
 }
 
 model Goal {
-  id             Int           @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   title          String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  patient        Patient       @relation(fields: [patientId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   patientId      Int
-  type           SessionType   @relation(fields: [sessionTypeId], references: [id])
   sessionTypeId  Int
-  status         GoalStatus    @relation(fields: [goalStatusId], references: [id])
-  goalStatusId   Int           @default(1)
-  parentGoal     Goal?         @relation("GoalToGoal", fields: [parentGoalId], references: [id])
+  goalStatusId   Int      @default(1)
   parentGoalId   Int?
-  category       GoalCategory? @relation(fields: [goalCategoryId], references: [id])
   goalCategoryId Int?
-  Goal           Goal[]        @relation("GoalToGoal")
 
+  type       SessionType   @relation(fields: [sessionTypeId], references: [id])
+  status     GoalStatus    @relation(fields: [goalStatusId], references: [id])
+  parentGoal Goal?         @relation("GoalToGoal", fields: [parentGoalId], references: [id])
+  patient    Patient       @relation(fields: [patientId], references: [id])
+  category   GoalCategory? @relation(fields: [goalCategoryId], references: [id])
+  Goal       Goal[]        @relation("GoalToGoal")
+  Score      Score[]
 }
 
 model GoalStatus {
@@ -152,4 +153,15 @@ model GoalCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Goal      Goal[]
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  createdBy Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  value     Float
+  goalId    Int
+  goal      Goal     @relation(fields: [goalId], references: [id])
+  User      User?    @relation(fields: [createdBy], references: [id])
 }

@@ -13,8 +13,8 @@ export const PatientSession = () => {
   const patientSessionId = useParam('patientSessionId', 'number')
   const [patientSession] = useQuery(getPatientSession, { id: patientSessionId })
   const [updateSessionMutation, { isLoading }] = useMutation(updatePatientSession, {
+    // Start-Complete-Reopen session promises & toasts
     onSuccess: async () => {
-      console.dir(patientSession)
       await invalidateQuery(getPatientSession)
       toast.custom(
         (t) => (
@@ -70,7 +70,7 @@ export const PatientSession = () => {
 
         <div className="flex-1 relative z-0 flex space-x-8">
           <div className="flex-1">
-            <PatientActiveGoals />
+            <PatientActiveGoals patientId={patientSession.id} />
           </div>
           <div className="flex flex-1 flex-col">
             <h2 className="mb-3">Notes</h2>
