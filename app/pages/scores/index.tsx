@@ -23,7 +23,7 @@ export const ScoresList = () => {
         {scores.map((score) => (
           <li key={score.id}>
             <Link href={Routes.ShowScorePage({ scoreId: score.id })}>
-              <a>{score.name}</a>
+              <a>{score.value}</a>
             </Link>
           </li>
         ))}
