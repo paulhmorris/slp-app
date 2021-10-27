@@ -68,14 +68,14 @@ export const PatientSession = () => {
         />
         <Divider padding="6" />
 
-        <div className="flex-1 relative z-0 flex space-x-8">
+        <div className="flex flex-1 relative z-0 space-x-8">
           <div className="flex-1">
-            <PatientActiveGoals patientId={patientSession.id} />
+            <PatientActiveGoals patientId={patientSession.patientId} />
           </div>
-          <div className="flex flex-1 flex-col">
-            <h2 className="mb-3">Notes</h2>
-            <SessionNotes patientSessionId={patientSessionId} />
-          </div>
+        </div>
+        <div className="flex flex-1 flex-col mt-10">
+          <h2 className="mb-3">Notes</h2>
+          <SessionNotes patientSessionId={patientSessionId} />
         </div>
       </div>
     </>

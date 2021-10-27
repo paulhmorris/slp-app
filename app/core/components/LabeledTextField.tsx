@@ -1,5 +1,6 @@
 import { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef } from 'react'
 import { useField, UseFieldConfig } from 'react-final-form'
+import { ExclamationCircleIcon } from '@heroicons/react/solid'
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements['input']> {
   /** Field name. */
@@ -33,19 +34,18 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       <div {...outerProps}>
         <label className="block text-sm font-medium text-gray-700" {...labelProps}>
           {label}
-          <div className="mt-1">
-            <input
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              {...input}
-              disabled={submitting}
-              {...props}
-              ref={ref}
-            />
+          <div className="mt-1 relative">
+            <input {...input} disabled={submitting} {...props} ref={ref} />
+            {touched && normalizedError && (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
+            )}
           </div>
         </label>
 
         {touched && normalizedError && (
-          <div role="alert" style={{ color: 'red' }}>
+          <div role="alert" className="mt-2 text-sm text-red-600">
             {normalizedError}
           </div>
         )}

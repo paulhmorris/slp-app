@@ -39,7 +39,22 @@ const seed = async () => {
     },
   })
 
-  // Create one session with 10 notes
+  // Create 4 long term goals
+  for (let i = 0; i < 4; i++) {
+    await db.goal.createMany({
+      data: [
+        {
+          title: faker.random.phrase(),
+          patientId: patient.id,
+          sessionTypeId: 1,
+          goalStatusId: 1,
+          goalCategoryId: faker.random.number({ min: 1, max: 6 }),
+        },
+      ],
+    })
+  }
+
+  // Create a session
   const session = await db.patientSession.create({
     data: {
       sessionTypeId: faker.random.number({ min: 1, max: 3 }),
@@ -96,6 +111,14 @@ const seed = async () => {
         goalStatusId: 1,
         sessionTypeId: faker.random.number({ min: 1, max: 3 }),
         goalCategoryId: faker.random.number({ min: 1, max: 6 }),
+      },
+    })
+    // Create scores
+    await db.score.create({
+      data: {
+        createdBy: user.id,
+        value: faker.random.number({ min: 25, max: 95 }),
+        goalId: faker.random.number({}),
       },
     })
   }

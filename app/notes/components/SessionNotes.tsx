@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { Tooltip } from 'app/core/components/Tooltip'
-import { useMutation, usePaginatedQuery, useSession, invalidateQuery } from 'blitz'
+import { useMutation, usePaginatedQuery, useSession, invalidateQuery, Routes } from 'blitz'
 import { Prisma } from 'db'
 import { Toast } from 'app/core/components/Toast'
 import createNote from '../mutations/createNote'

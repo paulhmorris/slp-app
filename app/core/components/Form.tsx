@@ -41,12 +41,6 @@ export function Form<S extends z.ZodType<any, any>>({
         <form onSubmit={handleSubmit} className="form" {...props}>
           {children}
 
-          {submitError && (
-            <div role="alert" className="text-red-700">
-              {submitError}
-            </div>
-          )}
-
           {submitText && (
             <button
               type="submit"
@@ -58,6 +52,12 @@ export function Form<S extends z.ZodType<any, any>>({
               )}
               {submitText}
             </button>
+          )}
+
+          {submitError && (
+            <div role="alert" className="text-red-600">
+              <pre>{submitError}</pre>
+            </div>
           )}
 
           <style global jsx>{`

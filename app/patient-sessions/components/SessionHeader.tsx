@@ -45,9 +45,9 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
           <button
             type="button"
             disabled={loading}
-            className={`btn-${status === 1 ? 'primary' : status === 2 ? 'secondary' : 'white'} ${
-              loading && 'text-transparent'
-            }`}
+            className={`${
+              status === 1 ? 'btn-primary' : status === 2 ? 'btn-secondary' : 'btn-white'
+            } ${loading && 'text-transparent'}`}
             onClick={() => updateSession(status === 2 ? 3 : 2)}
           >
             {loading && (
