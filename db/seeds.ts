@@ -111,6 +111,7 @@ const seed = async () => {
         goalStatusId: 1,
         sessionTypeId: faker.random.number({ min: 1, max: 3 }),
         goalCategoryId: faker.random.number({ min: 1, max: 6 }),
+        parentGoalId: faker.random.number({ min: 1, max: 4 }),
       },
     })
   }
