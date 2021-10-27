@@ -114,11 +114,11 @@ const seed = async () => {
       },
     })
     // Create scores
-    await db.score.create({
+    await db.score.createMany({
       data: {
         createdBy: user.id,
         value: faker.random.number({ min: 25, max: 95 }),
-        goalId: faker.random.number({}),
+        goalId: faker.random.number({ min: 1, max: 10 }),
       },
     })
   }
