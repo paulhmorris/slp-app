@@ -18,7 +18,12 @@ export default resolver.pipe(
       take,
       count: () => db.goal.count({ where }),
       query: (paginateArgs) =>
-        db.goal.findMany({ ...paginateArgs, where, orderBy, include: { status: true } }),
+        db.goal.findMany({
+          ...paginateArgs,
+          where,
+          orderBy,
+          include: { status: true, category: true },
+        }),
     })
 
     return {

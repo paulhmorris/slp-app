@@ -10,18 +10,27 @@ import {
 import { PulseLoader } from 'react-spinners'
 import { Link, Routes } from 'blitz'
 import { Patient, PatientSession } from 'db'
-import dayOfYear from 'dayjs/plugin/dayOfYear'
 import dayjs from 'dayjs'
+import { getTagStyles } from 'app/core/lib/helpers'
+import dayOfYear from 'dayjs/plugin/dayOfYear'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+import timezone from 'dayjs/plugin/timezone'
+import { useState } from 'react'
+import { Tooltip } from 'app/core/components/Tooltip'
 dayjs.extend(dayOfYear)
+dayjs.extend(timezone)
+dayjs.extend(advancedFormat)
 
 interface SessionHeaderProps {
   patient: Patient
-  session: PatientSession
+  session: PatientSession & { status: { name: string } }
   loading: boolean
   updateSession: (status: number) => Promise<void>
 }
 
 export const SessionHeader = ({ patient, session, updateSession, loading }: SessionHeaderProps) => {
+  const [showStatusTime, setShowStatusTime] = useState(false)
+  const status = session.sessionStatusId
   const loader = css`
     position: absolute;
     top: 53%;
@@ -33,46 +42,40 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
     <div className="lg:flex lg:items-center lg:justify-between mt-6">
       <div className="mt-5 flex space-x-3 lg:mt-0">
         <span>
-          {session.sessionStatusId === 1 ? (
-            <button
-              type="button"
-              disabled={loading}
-              className={`btn-primary ${loading && 'text-transparent'}`}
-              onClick={() => updateSession(2)}
-            >
-              {loading && (
-                <PulseLoader css={loader} color="white" size={8} speedMultiplier={0.75} />
-              )}
-              <ClockIcon className="-ml-1 mr-2 h-5 w-5 stroke-current" aria-hidden="true" />
-              Start Session
-            </button>
-          ) : session.sessionStatusId === 2 ? (
-            <button
-              type="button"
-              disabled={loading}
-              className={`btn-secondary ${loading && 'text-transparent'}`}
-              onClick={() => updateSession(3)}
-            >
-              {loading && (
-                <PulseLoader css={loader} color="white" size={8} speedMultiplier={0.75} />
-              )}
-              <CheckCircleIcon className="-ml-1 mr-2 h-5 w-5 fill-current" aria-hidden="true" />
-              Complete Session
-            </button>
-          ) : (
-            <button
-              type="button"
-              disabled={loading}
-              className={`btn-white ${loading && 'text-transparent'}`}
-              onClick={() => updateSession(2)}
-            >
-              {loading && (
-                <PulseLoader css={loader} color="#4F46E5" size={8} speedMultiplier={0.75} />
-              )}
-              <RefreshIcon className="-ml-1 mr-2 h-5 w-5 fill-current" aria-hidden="true" />
-              Reopen Session
-            </button>
-          )}
+          <button
+            type="button"
+            disabled={loading}
+            className={`btn-${status === 1 ? 'primary' : status === 2 ? 'secondary' : 'white'} ${
+              loading && 'text-transparent'
+            }`}
+            onClick={() => updateSession(status === 2 ? 3 : 2)}
+          >
+            {loading && (
+              <PulseLoader
+                css={loader}
+                color={`${status !== 2 && status !== 1 ? '#4f46e5' : '#fff'}`}
+                size={8}
+                speedMultiplier={0.75}
+              />
+            )}
+            {status === 1 ? (
+              <>
+                <ClockIcon className="-ml-1 mr-2 h-5 w-5 stroke-current" aria-hidden="true" />
+                <span>Start Session</span>
+              </>
+            ) : status === 2 ? (
+              <>
+                {' '}
+                <CheckCircleIcon className="-ml-1 mr-2 h-5 w-5 fill-current" aria-hidden="true" />
+                <span>Complete Session</span>
+              </>
+            ) : (
+              <>
+                <RefreshIcon className="-ml-1 mr-2 h-5 w-5 fill-current" aria-hidden="true" />
+                <span>Reopen Session</span>
+              </>
+            )}
+          </button>
         </span>
         <span className="sm:block">
           <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
@@ -83,12 +86,30 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
           </Link>
         </span>
       </div>
-      <div className="flex-1 min-w-0">
+      <div
+        className="relative cursor-default"
+        onMouseEnter={() => setShowStatusTime(true)}
+        onMouseLeave={() => setShowStatusTime(false)}
+      >
+        <span className={`tag-2xl ${getTagStyles(session.status.name)}`}>
+          {session.status.name}
+          {session.sessionStatusId === 2 && (
+            <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
+              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-70"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+          )}
+        </span>
+        <Tooltip show={showStatusTime}>
+          Last updated: {dayjs(session.updatedAt).format('M/D/YY h:mma z')}
+        </Tooltip>
+      </div>
+      <div className="flex-0 min-w-0">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           {patient.firstName} {patient.lastName}
         </h2>
         <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-          <div className="mt-2 flex items-center text-sm text-gray-500">
+          <div className="mt-2 flex flex-1 justify-end items-center text-sm text-gray-500">
             {dayjs().dayOfYear() - dayjs(patient.dateOfBirth).dayOfYear() > -7 &&
             dayjs().dayOfYear() - dayjs(patient.dateOfBirth).dayOfYear() < 7 ? (
               <CakeIcon
@@ -102,7 +123,7 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
               />
             )}
             <span>
-              Date of birth: {dayjs(patient.dateOfBirth).format('MM/DD/YYYY')} (
+              DOB: {dayjs(patient.dateOfBirth).format('MM/DD/YYYY')} (
               {dayjs().diff(dayjs(patient.dateOfBirth), 'years', false)} years old)
             </span>
           </div>

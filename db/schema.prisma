@@ -11,6 +11,7 @@ generator client {
 }
 
 // --------------------------------------
+
 enum Role {
   USER
   ADMIN
@@ -119,26 +120,36 @@ model Note {
 }
 
 model Goal {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  patient       Patient     @relation(fields: [patientId], references: [id])
-  patientId     Int
-  name          String
-  type          SessionType @relation(fields: [sessionTypeId], references: [id])
-  sessionTypeId Int
-  status        GoalStatus  @relation(fields: [goalStatusId], references: [id])
-  ParentGoal    Goal?       @relation("GoalToGoal", fields: [parentGoalId], references: [id])
-  parentGoalId  Int?
-  goalStatusId  Int         @default(1)
-  isLongTerm    Boolean     @default(true)
-  Goal          Goal[]      @relation("GoalToGoal")
+  id             Int           @id @default(autoincrement())
+  title          String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  patient        Patient       @relation(fields: [patientId], references: [id])
+  patientId      Int
+  type           SessionType   @relation(fields: [sessionTypeId], references: [id])
+  sessionTypeId  Int
+  status         GoalStatus    @relation(fields: [goalStatusId], references: [id])
+  goalStatusId   Int           @default(1)
+  parentGoal     Goal?         @relation("GoalToGoal", fields: [parentGoalId], references: [id])
+  parentGoalId   Int?
+  category       GoalCategory? @relation(fields: [goalCategoryId], references: [id])
+  goalCategoryId Int?
+  Goal           Goal[]        @relation("GoalToGoal")
+
 }
 
 model GoalStatus {
   id        Int      @id @default(autoincrement())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Goal      Goal[]
+}
+
+model GoalCategory {
+  id        Int      @id @default(autoincrement())
   name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Goal      Goal[]
 }

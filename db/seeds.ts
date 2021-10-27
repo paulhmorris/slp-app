@@ -3,18 +3,30 @@ import db from './index'
 
 const seed = async () => {
   // Create session types
-  const sessionTypes = await db.sessionType.createMany({
+  await db.sessionType.createMany({
     data: [{ name: 'Speech' }, { name: 'Occupational' }, { name: 'Physical' }],
   })
 
   // Create session statuses
-  const sessionStatuses = await db.sessionStatus.createMany({
+  await db.sessionStatus.createMany({
     data: [{ name: 'New' }, { name: 'In Progress' }, { name: 'Complete' }, { name: 'Canceled' }],
   })
 
   // Create goal statuses
   const goalTypes = await db.goalStatus.createMany({
     data: [{ name: 'In Progress' }, { name: 'Discontinued' }, { name: 'Met' }, { name: 'On Hold' }],
+  })
+
+  // Create Intervention Areas
+  await db.goalCategory.createMany({
+    data: [
+      { name: 'Expressive Language' },
+      { name: 'Receptive Language' },
+      { name: 'Pragmatics/Social Skills' },
+      { name: 'Articulation/Phonology' },
+      { name: 'Feeding' },
+      { name: 'Fluency' },
+    ],
   })
 
   // Create one patient with 10 sessions
@@ -40,7 +52,7 @@ const seed = async () => {
     data: {
       name: 'Harriet Morris',
       email: 'paulh.morris@gmail.com',
-      hashedPassword: faker.internet.password(8),
+      hashedPassword: 'password1',
       role: 'USER',
     },
   })
@@ -80,10 +92,10 @@ const seed = async () => {
     await db.goal.create({
       data: {
         patientId: patient.id,
-        name: faker.lorem.sentence(),
+        title: faker.lorem.sentence(),
         goalStatusId: 1,
         sessionTypeId: faker.random.number({ min: 1, max: 3 }),
-        isLongTerm: Math.random() < 0.01,
+        goalCategoryId: faker.random.number({ min: 1, max: 6 }),
       },
     })
   }

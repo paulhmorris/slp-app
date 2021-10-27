@@ -91,11 +91,11 @@ export const PatientSessionsList = () => {
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`tag ${getTagStyles(session.status.name)}`}>
+                        <span className={`tag-lg ${getTagStyles(session.status.name)}`}>
                           {session.status.name}
                           {session.status.id === 2 && (
                             <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
-                              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-50"></span>
+                              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-70"></span>
                               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                             </span>
                           )}

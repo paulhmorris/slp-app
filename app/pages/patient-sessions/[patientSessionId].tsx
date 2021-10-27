@@ -20,7 +20,7 @@ export const PatientSession = () => {
         (t) => (
           <Toast
             show={t.visible}
-            type={patientSession.sessionStatusId === 2 ? 'success' : 'info'}
+            type="success"
             title="Successfully updated!"
             message={`Your session ${
               patientSession.sessionStatusId === 2
@@ -32,7 +32,7 @@ export const PatientSession = () => {
         { duration: 3000 }
       )
     },
-    onError: async () => {
+    onError: () => {
       toast.custom((t) => (
         <Toast
           show={t.visible}
@@ -68,11 +68,11 @@ export const PatientSession = () => {
         />
         <Divider padding="6" />
 
-        <div className="flex-1 relative z-0 flex overflow-hidden space-x-8">
+        <div className="flex-1 relative z-0 flex space-x-8">
           <div className="flex-1">
             <PatientActiveGoals />
           </div>
-          <div className="flex flex-2 flex-col">
+          <div className="flex flex-1 flex-col">
             <h2 className="mb-3">Notes</h2>
             <SessionNotes patientSessionId={patientSessionId} />
           </div>

@@ -60,6 +60,18 @@
   }
 
   .tag {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium relative;
+  }
+
+  .tag-lg {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium relative;
+  }
+
+  .tag-xl {
+    @apply inline-flex items-center px-3 py-0.5 rounded-md text-base font-medium relative;
+  }
+
+  .tag-2xl {
+    @apply inline-flex items-center px-3 py-0.5 rounded-md text-lg font-medium relative;
   }
 }

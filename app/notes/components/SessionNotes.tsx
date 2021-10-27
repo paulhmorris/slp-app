@@ -1,14 +1,17 @@
+import { useState } from 'react'
 import { Transition } from '@headlessui/react'
-import { useMutation, usePaginatedQuery, useSession } from 'blitz'
+import { Tooltip } from 'app/core/components/Tooltip'
+import { useMutation, usePaginatedQuery, useSession, invalidateQuery } from 'blitz'
+import { Prisma } from 'db'
+import { Toast } from 'app/core/components/Toast'
+import createNote from '../mutations/createNote'
+import getNotes from '../queries/getNotes'
+import { NoteForm } from './NoteForm'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
-import { Prisma } from 'db'
-import { useState } from 'react'
-import createNote from '../mutations/createNote'
-import getNotes from '../queries/getNotes'
-import { NoteForm } from './NoteForm'
+import toast from 'react-hot-toast'
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -17,13 +20,27 @@ const ITEMS_TO_RENDER = 3
 
 export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
   const session = useSession()
-  const [createNoteMutation] = useMutation(createNote)
+  const [createNoteMutation] = useMutation(createNote, {
+    onSuccess: async () => {
+      await invalidateQuery(getNotes)
+    },
+    onError: () => {
+      toast.custom((t) => (
+        <Toast
+          show={t.visible}
+          type="error"
+          title="Something went wrong"
+          message="We couldn't add your note."
+        />
+      ))
+    },
+  })
   const [page, setPage] = useState(1)
   const loadMoreNotes = () => {
     setPage(page + 1)
   }
 
-  const [{ notes, hasMore }, { refetch }] = usePaginatedQuery(getNotes, {
+  const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
     where: { patientSessionId },
     take: ITEMS_TO_RENDER * page,
     orderBy: { createdAt: 'desc' },
@@ -40,9 +57,8 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
               userId: session.userId,
               ...values,
             })
-            refetch()
           } catch (error) {
-            alert('Error creating note')
+            console.error('Error: ', error)
           }
         }}
         submitText="Add Note"
@@ -101,26 +117,7 @@ const NoteItem = (props) => {
           className="mt-1 text-sm text-gray-500 whitespace-nowrap sm:mt-0 sm:ml-3 relative cursor-pointer hover:text-indigo-700 hover:underline"
         >
           <time dateTime={props.createdAt.toISOString()}>{dayjs(props.createdAt).fromNow()}</time>
-          <Transition
-            as="div"
-            show={showTime}
-            enter="transition-opacity ease-in duration-100 delay-200"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-50"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            className="absolute top-0 z-10 w-auto py-2 px-3 -mt-1 text-xs leading-tight text-white transform -translate-y-full -translate-x-6 bg-gray-700 rounded-lg shadow-lg"
-          >
-            {dayjs(props.createdAt).format('M/D/YY h:mma z')}
-            <svg
-              className="absolute z-10 w-6 h-6 transform translate-x-9 delay fill-current stroke-current text-gray-700"
-              width="8"
-              height="8"
-            >
-              <rect x="12" y="-10" width="8" height="8" transform="rotate(45)" />
-            </svg>
-          </Transition>
+          <Tooltip show={showTime}>{dayjs(props.createdAt).format('M/D/YY h:mma z')}</Tooltip>
         </div>
       </div>
       <div
