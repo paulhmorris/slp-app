@@ -44,7 +44,7 @@ const seed = async () => {
     await db.goal.createMany({
       data: [
         {
-          title: faker.random.phrase(),
+          title: faker.random.sentence(),
           patientId: patient.id,
           sessionTypeId: 1,
           goalStatusId: 1,
