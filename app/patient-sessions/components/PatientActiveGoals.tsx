@@ -1,27 +1,16 @@
-import { Disclosure, Transition } from '@headlessui/react'
+import { Disclosure } from '@headlessui/react'
 import { FolderIcon, FolderOpenIcon } from '@heroicons/react/solid'
-import { useQuery } from 'blitz'
-import getGoals from 'app/goals/queries/getGoals'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { GoalToScore } from 'app/goals/components/GoalToScore'
 
-type PatientActiveGoalsProps = {
-  patientId: number
-}
-
-export const PatientActiveGoals = ({ patientId }: PatientActiveGoalsProps) => {
-  const [{ goals }] = useQuery(getGoals, {
-    where: { patientId, goalStatusId: 1 },
-    orderBy: { createdAt: 'desc' },
-  })
-
+export const PatientActiveGoals = ({ goals, patientId }) => {
   const [currentGoal, setCurrentGoal] = useState(goals[0])
 
   const parentGoals = goals.filter((g) => !g.parentGoalId)
   const childGoals = goals.filter((g) => g.parentGoalId)
 
   return (
-    <div className="flex flex-1 justify-between divide-x divide-gray-200">
+    <div className="flex flex-1 justify-between">
       <div className="flex-1 pr-8">
         <h2>Goals In Progress</h2>
         <div className="divide-y space-y-4 divide-gray-200 mt-2 text-sm">

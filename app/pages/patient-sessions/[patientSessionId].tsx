@@ -8,43 +8,50 @@ import { BlitzPage, Head, useMutation, useParam, useQuery, invalidateQuery } fro
 import toast from 'react-hot-toast'
 import { Toast } from 'app/core/components/Toast'
 import { SessionHeader } from 'app/patient-sessions/components/SessionHeader'
+import getGoals from 'app/goals/queries/getGoals'
+import getNotes from 'app/notes/queries/getNotes'
+import { useState } from 'react'
+
+const handleUpdate = async ({ isSuccess, statusId }) => {
+  await invalidateQuery(getPatientSession)
+  toast.custom(
+    (t) => (
+      <Toast
+        show={t.visible}
+        type={isSuccess ? 'success' : 'error'}
+        title={isSuccess ? 'Successfully updated!' : 'Whoops! Something went wrong'}
+        message={
+          isSuccess
+            ? `Your session ${
+                statusId === 2 ? `has been marked complete.` : `is now in progress.`
+              } `
+            : "We couldn't update your session"
+        }
+      />
+    ),
+    isSuccess && { duration: 3000 }
+  )
+}
 
 export const PatientSession = () => {
   const patientSessionId = useParam('patientSessionId', 'number')
   const [patientSession] = useQuery(getPatientSession, { id: patientSessionId })
+  const [{ goals }] = useQuery(getGoals, {
+    where: { patientId: patientSession.patientId, goalStatusId: 1 },
+    orderBy: { createdAt: 'desc' },
+  })
+  const [currentGoal, setCurrentGoal] = useState(goals[0])
+
   const [updateSessionMutation, { isLoading }] = useMutation(updatePatientSession, {
-    // Start-Complete-Reopen session promises & toasts
-    onSuccess: async () => {
-      await invalidateQuery(getPatientSession)
-      toast.custom(
-        (t) => (
-          <Toast
-            show={t.visible}
-            type="success"
-            title="Successfully updated!"
-            message={`Your session ${
-              patientSession.sessionStatusId === 2
-                ? `has been marked complete.`
-                : `is now in progress.`
-            } `}
-          />
-        ),
-        { duration: 3000 }
-      )
+    onSuccess: () => {
+      handleUpdate({ isSuccess: true, statusId: patientSession.sessionStatusId })
     },
     onError: () => {
-      toast.custom((t) => (
-        <Toast
-          show={t.visible}
-          type="error"
-          title="Whoops! Something went wrong"
-          message="We couldn't update your session."
-        />
-      ))
+      handleUpdate({ isSuccess: false, statusId: patientSession.sessionStatusId })
     },
   })
 
-  async function updateSessionStatus(status: number) {
+  const updateSessionStatus = async (status: number) => {
     try {
       // @ts-ignore
       await updateSessionMutation({ id: patientSessionId, sessionStatusId: status })
@@ -69,13 +76,11 @@ export const PatientSession = () => {
         <Divider padding="6" />
 
         <div className="flex flex-1 relative z-0 space-x-8">
-          <div className="flex-1">
-            <PatientActiveGoals patientId={patientSession.patientId} />
-          </div>
+          <PatientActiveGoals goals={goals} patientId={patientSession.patientId} />
         </div>
         <div className="flex flex-1 flex-col mt-10">
           <h2 className="mb-3">Notes</h2>
-          <SessionNotes patientSessionId={patientSessionId} />
+          <SessionNotes goalId={currentGoal?.id} patientSessionId={patientSessionId} />
         </div>
       </div>
     </>

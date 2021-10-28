@@ -57,7 +57,7 @@ const seed = async () => {
   // Create a session
   const session = await db.patientSession.create({
     data: {
-      sessionTypeId: faker.random.number({ min: 1, max: 3 }),
+      sessionTypeId: 1,
       patientId: patient.id,
       sessionStatusId: faker.random.number({ min: 1, max: 4 }),
     },
@@ -88,7 +88,7 @@ const seed = async () => {
     // Create sessions
     await db.patientSession.create({
       data: {
-        sessionTypeId: faker.random.number({ min: 1, max: 3 }),
+        sessionTypeId: 1,
         patientId: patient.id,
         status: faker.random.arrayElement(goalTypes),
         sessionStatusId: faker.random.number({ min: 1, max: 4 }),
@@ -109,7 +109,7 @@ const seed = async () => {
         patientId: patient.id,
         title: faker.lorem.sentence(),
         goalStatusId: 1,
-        sessionTypeId: faker.random.number({ min: 1, max: 3 }),
+        sessionTypeId: 1,
         goalCategoryId: faker.random.number({ min: 1, max: 6 }),
         parentGoalId: faker.random.number({ min: 1, max: 4 }),
       },

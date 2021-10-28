@@ -3,10 +3,8 @@ import { useMutation, useSession, useQuery, useRouter, Routes } from 'blitz'
 import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
 import createScore from 'app/scores/mutations/createScore'
 import { PlusIcon } from '@heroicons/react/solid'
-import getGoal from '../queries/getGoal'
 import getScores from 'app/scores/queries/getScores'
 import dayjs from 'dayjs'
-import { ReactNode } from 'react'
 
 type GoalToScoreProps = {
   goal:
@@ -22,7 +20,6 @@ type GoalToScoreProps = {
 export const GoalToScore = ({ goal, patientId }: GoalToScoreProps) => {
   const router = useRouter()
   const session = useSession()
-  const [parentGoal] = useQuery(getGoal, { id: goal?.parentGoalId })
   const [{ scores }] = useQuery(getScores, {
     where: { goalId: goal?.id },
     orderBy: { createdAt: 'desc' },
@@ -39,16 +36,16 @@ export const GoalToScore = ({ goal, patientId }: GoalToScoreProps) => {
         <div className="container flex flex-col space-y-4 justify-center mx-auto py-8 pl-8 pr-12 bg-white rounded-md border border-gray-200">
           <div>
             <dl className="mt-2 border-b border-gray-200 divide-y divide-gray-200">
-              <div className="py-3 flex justify-between text-sm font-medium">
-                <dt className="text-gray-500">Intervention Area</dt>
+              <div className="py-3 flex items-center justify-between text-sm font-medium">
+                <dt className="text-gray-500 whitespace-nowrap">Intervention Area</dt>
                 <dd className="text-gray-600 text-right">{goal.category.name}</dd>
               </div>
-              <div className="py-3 flex justify-between text-sm font-medium">
-                <dt className="text-gray-500">Long Term Goal</dt>
-                <dd className="text-gray-600 text-right">{parentGoal.title}</dd>
+              <div className="py-3 flex items-center justify-between text-sm font-medium">
+                <dt className="text-gray-500 whitespace-nowrap">Long Term Goal</dt>
+                <dd className="text-gray-600 text-right">{goal.parentGoal.title}</dd>
               </div>
-              <div className="py-3 flex justify-between text-sm font-medium">
-                <dt className="text-gray-500">Last Score</dt>
+              <div className="py-3 flex items-center justify-between text-sm font-medium">
+                <dt className="text-gray-500 whitespace-nowrap">Last Score</dt>
                 <dd className="text-gray-600 text-right">
                   {scores.length > 0
                     ? `${scores[0]?.value}% on ${dayjs(scores[0]?.updatedAt).format('M/D')}`

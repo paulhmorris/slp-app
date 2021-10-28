@@ -18,7 +18,7 @@ dayjs.extend(advancedFormat)
 
 const ITEMS_TO_RENDER = 3
 
-export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
+export const SessionNotes = ({ patientSessionId, goalId }: Prisma.NoteWhereInput) => {
   const session = useSession()
   const [createNoteMutation] = useMutation(createNote, {
     onSuccess: async () => {
@@ -39,9 +39,8 @@ export const SessionNotes = ({ patientSessionId }: Prisma.NoteWhereInput) => {
   const loadMoreNotes = () => {
     setPage(page + 1)
   }
-
   const [{ notes, hasMore }] = usePaginatedQuery(getNotes, {
-    where: { patientSessionId },
+    where: { goalId },
     take: ITEMS_TO_RENDER * page,
     orderBy: { createdAt: 'desc' },
   })

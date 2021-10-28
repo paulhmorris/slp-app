@@ -137,9 +137,9 @@ model Goal {
   parentGoal Goal?        @relation("GoalToGoal", fields: [parentGoalId], references: [id])
   patient    Patient      @relation(fields: [patientId], references: [id])
   category   GoalCategory @relation(fields: [goalCategoryId], references: [id])
-  Goal       Goal[]       @relation("GoalToGoal")
-  Score      Score[]
-  Note       Note[]
+  goals      Goal[]       @relation("GoalToGoal")
+  scores     Score[]
+  notes      Note[]
 }
 
 model GoalStatus {

@@ -22,7 +22,29 @@ export default resolver.pipe(
           ...paginateArgs,
           where,
           orderBy,
-          include: { status: true, category: true },
+          include: {
+            status: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            parentGoal: {
+              select: {
+                id: true,
+                title: true,
+                goalCategoryId: true,
+              },
+            },
+            scores: true,
+            notes: true,
+          },
         }),
     })
 
