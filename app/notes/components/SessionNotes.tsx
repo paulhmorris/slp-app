@@ -12,13 +12,14 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import toast from 'react-hot-toast'
+import EmptyState from 'app/core/components/EmptyState'
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
 
 const ITEMS_TO_RENDER = 3
 
-export const SessionNotes = ({ patientSessionId, goalId }: Prisma.NoteWhereInput) => {
+export const SessionNotes = ({ goalId }: Prisma.NoteWhereInput) => {
   const session = useSession()
   const [createNoteMutation] = useMutation(createNote, {
     onSuccess: async () => {
@@ -52,7 +53,7 @@ export const SessionNotes = ({ patientSessionId, goalId }: Prisma.NoteWhereInput
         onSubmit={async (values) => {
           try {
             await createNoteMutation({
-              patientSessionId,
+              goalId,
               userId: session.userId,
               ...values,
             })
@@ -63,32 +64,37 @@ export const SessionNotes = ({ patientSessionId, goalId }: Prisma.NoteWhereInput
         submitText="Add Note"
         className="mb-4"
       />
-      <Transition show={true} appear={true}>
-        <ul role="list" className="space-y-2 sm:space-y-4">
-          {notes.map((note, noteIdx) => (
-            <NoteItem
-              key={noteIdx}
-              id={note.id}
-              author={note.author.name}
-              createdAt={note.createdAt}
-              body={note.body}
-            />
-          ))}
-        </ul>
-      </Transition>
-
-      <button
-        className="btn-secondary ml-auto sm:mt-4 w-full sm:w-auto"
-        disabled={!hasMore}
-        onClick={loadMoreNotes}
-      >
-        Load More
-      </button>
+      {notes.length ? (
+        <>
+          <Transition show={true} appear={true}>
+            <ul role="list" className="space-y-2 sm:space-y-4">
+              {notes.map((note, noteIdx) => (
+                <NoteItem
+                  key={noteIdx}
+                  id={note.id}
+                  author={note.author.name}
+                  createdAt={note.createdAt}
+                  body={note.body}
+                />
+              ))}
+            </ul>
+          </Transition>
+          <button
+            className="btn-secondary ml-auto sm:mt-4 w-full sm:w-auto"
+            disabled={!hasMore}
+            onClick={loadMoreNotes}
+          >
+            Load More
+          </button>
+        </>
+      ) : (
+        <EmptyState message="No notes for this goal" />
+      )}
     </>
   )
 }
 
-const NoteItem = (props) => {
+const NoteItem = ({ id, author, createdAt, body }) => {
   const [showTime, setShowTime] = useState(false)
 
   return (
@@ -98,15 +104,15 @@ const NoteItem = (props) => {
       enter="transition ease-in duration-300"
       enterFrom="opacity-0"
       enterTo="opacity-100"
-      id={props.id}
+      id={id}
     >
       <div className="sm:flex sm:justify-between sm:items-baseline">
         <h3 className="text-base font-medium">
           {/* TODO: setup User page and link this up */}
           <span className="text-sm text-gray-600 hover:text-indigo-700 hover:cursor-pointer hover:underline">
-            {props.author}
+            {author}
           </span>{' '}
-          <span className="text-gray-400 text-sm font-normal">wrote</span>
+          <span className="text-gray-400 text-sm font-normal">wrote (Id: {id})</span>
         </h3>
         <div
           onMouseEnter={() => setShowTime(true)}
@@ -115,13 +121,13 @@ const NoteItem = (props) => {
           }}
           className="mt-1 text-sm text-gray-500 whitespace-nowrap sm:mt-0 sm:ml-3 relative cursor-pointer hover:text-indigo-700 hover:underline"
         >
-          <time dateTime={props.createdAt.toISOString()}>{dayjs(props.createdAt).fromNow()}</time>
-          <Tooltip show={showTime}>{dayjs(props.createdAt).format('M/D/YY h:mma z')}</Tooltip>
+          <time dateTime={createdAt.toISOString()}>{dayjs(createdAt).fromNow()}</time>
+          <Tooltip show={showTime}>{dayjs(createdAt).format('M/D/YY h:mma z')}</Tooltip>
         </div>
       </div>
       <div
         className="mt-4 space-y-6 text-sm text-gray-800"
-        dangerouslySetInnerHTML={{ __html: props.body }}
+        dangerouslySetInnerHTML={{ __html: body }}
       />
     </Transition.Child>
   )

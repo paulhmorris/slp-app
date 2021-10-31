@@ -12,6 +12,7 @@ import { SearchIcon } from '@heroicons/react/solid'
 import { Image, Link, Routes, useRouter, useSession } from 'blitz'
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
+import { classNames } from '../lib/helpers'
 
 const user = {
   name: 'Tom Cook',
@@ -32,10 +33,6 @@ const userNavigation = [
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Navbar() {
   const router = useRouter()

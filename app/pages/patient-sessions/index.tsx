@@ -1,5 +1,5 @@
 import Layout from 'app/core/layouts/Layout'
-import { getTagStyles } from 'app/core/lib/helpers'
+import { getBadgeColor } from 'app/core/lib/helpers'
 import getPatientSessions from 'app/patient-sessions/queries/getPatientSessions'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import dayjs from 'dayjs'
@@ -91,7 +91,7 @@ export const PatientSessionsList = () => {
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`tag-lg ${getTagStyles(session.status.name)}`}>
+                        <span className={`tag-lg ${getBadgeColor(session.status.name)}`}>
                           {session.status.name}
                           {session.status.id === 2 && (
                             <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">

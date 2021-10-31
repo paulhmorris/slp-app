@@ -1,4 +1,4 @@
-import { ClockIcon } from '@heroicons/react/outline'
+import { ClockIcon, UploadIcon } from '@heroicons/react/outline'
 import { css } from '@emotion/react'
 import {
   CalendarIcon,
@@ -11,7 +11,7 @@ import { PulseLoader } from 'react-spinners'
 import { Link, Routes } from 'blitz'
 import { Patient, PatientSession } from 'db'
 import dayjs from 'dayjs'
-import { getTagStyles } from 'app/core/lib/helpers'
+import { getBadgeColor } from 'app/core/lib/helpers'
 import dayOfYear from 'dayjs/plugin/dayOfYear'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
@@ -20,6 +20,9 @@ import { Tooltip } from 'app/core/components/Tooltip'
 dayjs.extend(dayOfYear)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
+
+// move session status nexct to button, move view patient by patient
+//
 
 interface SessionHeaderProps {
   patient: Patient
@@ -50,6 +53,7 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
             } ${loading && 'text-transparent'}`}
             onClick={() => updateSession(status === 2 ? 3 : 2)}
           >
+            {/* start session green, session completed and submitted to insurance red disabled, in progress green, complete session red */}
             {loading && (
               <PulseLoader
                 css={loader}
@@ -85,13 +89,23 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
             </a>
           </Link>
         </span>
+        {status === 3 && (
+          <span className="sm:block">
+            <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
+              <a className="btn-primary">
+                <UploadIcon className="-ml-1 mr-2 h-5 w-5 stroke-current" aria-hidden="true" />
+                Submit To Insurance
+              </a>
+            </Link>
+          </span>
+        )}
       </div>
       <div
         className="relative cursor-default"
         onMouseEnter={() => setShowStatusTime(true)}
         onMouseLeave={() => setShowStatusTime(false)}
       >
-        <span className={`tag-2xl ${getTagStyles(session.status.name)}`}>
+        <span className={`tag-2xl ${getBadgeColor(session.status.name)}`}>
           {session.status.name}
           {session.sessionStatusId === 2 && (
             <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
@@ -126,6 +140,9 @@ export const SessionHeader = ({ patient, session, updateSession, loading }: Sess
               DOB: {dayjs(patient.dateOfBirth).format('MM/DD/YYYY')} (
               {dayjs().diff(dayjs(patient.dateOfBirth), 'years', false)} years old)
             </span>
+            {/* TODO: change to chrono age
+              years and months, round days up 15 days
+            */}
           </div>
         </div>
       </div>

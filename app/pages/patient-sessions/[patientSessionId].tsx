@@ -1,6 +1,5 @@
 import { Divider } from 'app/core/components/Divider'
 import Layout from 'app/core/layouts/Layout'
-import { SessionNotes } from 'app/notes/components/SessionNotes'
 import { PatientActiveGoals } from 'app/patient-sessions/components/PatientActiveGoals'
 import updatePatientSession from 'app/patient-sessions/mutations/updatePatientSession'
 import getPatientSession from 'app/patient-sessions/queries/getPatientSession'
@@ -9,7 +8,6 @@ import toast from 'react-hot-toast'
 import { Toast } from 'app/core/components/Toast'
 import { SessionHeader } from 'app/patient-sessions/components/SessionHeader'
 import getGoals from 'app/goals/queries/getGoals'
-import getNotes from 'app/notes/queries/getNotes'
 import { useState } from 'react'
 
 const handleUpdate = async ({ isSuccess, statusId }) => {
@@ -76,11 +74,12 @@ export const PatientSession = () => {
         <Divider padding="6" />
 
         <div className="flex flex-1 relative z-0 space-x-8">
-          <PatientActiveGoals goals={goals} patientId={patientSession.patientId} />
-        </div>
-        <div className="flex flex-1 flex-col mt-10">
-          <h2 className="mb-3">Notes</h2>
-          <SessionNotes goalId={currentGoal?.id} patientSessionId={patientSessionId} />
+          <PatientActiveGoals
+            goals={goals}
+            currentGoal={currentGoal}
+            setGoal={setCurrentGoal}
+            patientId={patientSession.patientId}
+          />
         </div>
       </div>
     </>

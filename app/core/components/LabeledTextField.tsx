@@ -1,6 +1,7 @@
 import { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef } from 'react'
 import { useField, UseFieldConfig } from 'react-final-form'
 import { ExclamationCircleIcon } from '@heroicons/react/solid'
+import { classNames } from '../lib/helpers'
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements['input']> {
   /** Field name. */
@@ -35,7 +36,19 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         <label className="block text-sm font-medium text-gray-700" {...labelProps}>
           {label}
           <div className="mt-1 relative">
-            <input {...input} disabled={submitting} {...props} ref={ref} />
+            <input
+              {...input}
+              disabled={submitting}
+              {...props}
+              ref={ref}
+              // Why does this override className in the instance?
+              // className={classNames(
+              //   touched && normalizedError
+              //     ? 'border-red-300 text-red-900 focus:outline-none focus:ring-red-500 focus:border-red-500'
+              //     : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500',
+              //   'shadow-sm block pr-10 sm:text-sm rounded-md'
+              // )}
+            />
             {touched && normalizedError && (
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />

@@ -127,15 +127,17 @@ model Goal {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   patientId      Int
-  sessionTypeId  Int
   goalStatusId   Int      @default(1)
-  parentGoalId   Int?
   goalCategoryId Int
+  sessionTypeId  Int      @default(1)
+  parentGoalId   Int?
+  scoreTypeId    Int?
 
   type       SessionType  @relation(fields: [sessionTypeId], references: [id])
   status     GoalStatus   @relation(fields: [goalStatusId], references: [id])
   parentGoal Goal?        @relation("GoalToGoal", fields: [parentGoalId], references: [id])
   patient    Patient      @relation(fields: [patientId], references: [id])
+  scoreType  ScoreType?   @relation(fields: [scoreTypeId], references: [id])
   category   GoalCategory @relation(fields: [goalCategoryId], references: [id])
   goals      Goal[]       @relation("GoalToGoal")
   scores     Score[]
@@ -153,18 +155,29 @@ model GoalStatus {
 model GoalCategory {
   id        Int      @id @default(autoincrement())
   name      String
+  color     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Goal      Goal[]
 }
 
 model Score {
+  id          Int       @id @default(autoincrement())
+  createdBy   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  value       Float
+  goalId      Int
+  scoreTypeId Int
+  type        ScoreType @relation(fields: [scoreTypeId], references: [id])
+  goal        Goal      @relation(fields: [goalId], references: [id])
+  user        User      @relation(fields: [createdBy], references: [id])
+}
+
+model ScoreType {
   id        Int      @id @default(autoincrement())
-  createdBy Int
+  name      String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     Float
-  goalId    Int
-  goal      Goal     @relation(fields: [goalId], references: [id])
-  User      User     @relation(fields: [createdBy], references: [id])
+  Score     Score[]
+  Goal      Goal[]
 }

@@ -10,31 +10,41 @@ export function capitalize(string: String) {
   return strArr.join(' ')
 }
 
-export function getTagStyles(tag: String) {
-  let styles = ''
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
-  switch (tag.toLowerCase()) {
-    case 'new':
-      styles = 'bg-blue-100 text-blue-800'
-      break
+export const getBadgeColor = (string: string, includeBackground: Boolean = true): string => {
+  string = string.toLowerCase()
+  const tags = {
+    new: 'blue',
+    'expressive language': 'blue',
 
-    case 'in progress':
-      styles = 'bg-green-100 text-green-800'
-      break
+    open: 'green',
+    'receptive language': 'green',
+    'in progress': 'green',
 
-    case 'discontinued':
-      styles = 'bg-yellow-100 text-yellow-800'
-      break
+    'pragmatics/social skills': 'yellow',
+    discontinued: 'yellow',
 
-    case 'canceled':
-    case 'on hold':
-      styles = 'bg-red-100 text-red-800'
-      break
+    'articulation/phonology': 'indigio',
 
-    case 'met':
-    default:
-      styles = 'bg-gray-200 text-gray-800'
+    canceled: 'red',
+    'on hold': 'red',
+
+    fluency: 'purple',
+
+    feeding: 'pink',
   }
 
-  return styles
+  const color = tags[string]
+
+  return includeBackground
+    ? `bg-${color}-100 text-${color}-800` || 'bg-gray-200 text-gray-800'
+    : `text-${color}-800`
 }
+
+export const currencyFormatter = new Intl.NumberFormat('en-us', {
+  style: 'currency',
+  currency: 'USD',
+})

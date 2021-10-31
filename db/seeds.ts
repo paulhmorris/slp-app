@@ -29,6 +29,10 @@ const seed = async () => {
     ],
   })
 
+  await db.scoreType.createMany({
+    data: [{ name: 'Percentage' }, { name: 'Frequency' }, { name: 'Duration' }],
+  })
+
   // Create one patient with 10 sessions
   const patient = await db.patient.create({
     data: {
@@ -48,7 +52,7 @@ const seed = async () => {
           patientId: patient.id,
           sessionTypeId: 1,
           goalStatusId: 1,
-          goalCategoryId: faker.random.number({ min: 1, max: 6 }),
+          goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
         },
       ],
     })
@@ -59,7 +63,7 @@ const seed = async () => {
     data: {
       sessionTypeId: 1,
       patientId: patient.id,
-      sessionStatusId: faker.random.number({ min: 1, max: 4 }),
+      sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
     },
   })
 
@@ -91,7 +95,7 @@ const seed = async () => {
         sessionTypeId: 1,
         patientId: patient.id,
         status: faker.random.arrayElement(goalTypes),
-        sessionStatusId: faker.random.number({ min: 1, max: 4 }),
+        sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
       },
     })
     // Create notes
@@ -110,8 +114,9 @@ const seed = async () => {
         title: faker.lorem.sentence(),
         goalStatusId: 1,
         sessionTypeId: 1,
-        goalCategoryId: faker.random.number({ min: 1, max: 6 }),
-        parentGoalId: faker.random.number({ min: 1, max: 4 }),
+        goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
+        parentGoalId: faker.datatype.number({ min: 1, max: 4 }),
+        scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
       },
     })
   }
@@ -120,8 +125,9 @@ const seed = async () => {
     await db.score.create({
       data: {
         createdBy: user.id,
-        value: faker.random.number({ min: 25, max: 95 }),
-        goalId: faker.random.number({ min: 1, max: 10 }),
+        value: faker.datatype.number({ min: 25, max: 95 }),
+        goalId: faker.datatype.number({ min: 1, max: 10 }),
+        scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
       },
     })
   }
