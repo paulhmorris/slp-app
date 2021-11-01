@@ -71,6 +71,7 @@ const seed = async () => {
     data: {
       name: 'Leslie Knope',
       email: 'admin@blitz.com',
+      image: faker.image.avatar(),
       hashedPassword: 'password1',
       role: 'USER',
     },
