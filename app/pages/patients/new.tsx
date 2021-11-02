@@ -2,7 +2,7 @@ import { useRouter, useMutation, BlitzPage, Routes } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
 import createPatient from 'app/patients/mutations/createPatient'
 import { PatientForm, FORM_ERROR } from 'app/patients/components/PatientForm'
-import { createPatientSchema } from './validations'
+import { createPatientSchema } from '../../patients/validations'
 
 const NewPatientPage: BlitzPage = () => {
   const router = useRouter()
