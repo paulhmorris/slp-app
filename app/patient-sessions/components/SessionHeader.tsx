@@ -141,7 +141,7 @@ const PatientDetail = ({ patient }) => {
         {patient.firstName} {patient.lastName}
       </h2>
       <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-        <div className="mt-2 flex flex-1 justify-end items-center text-sm text-gray-500">
+        <div className="mt-2 flex flex-1 justify-start items-center text-sm text-gray-500">
           {isBirthday(patient.dateOfBirth) ? (
             <CakeIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-purple-500" aria-hidden="true" />
           ) : (

@@ -60,7 +60,7 @@ export const getChronologicalAge = (dateOfBirth: Date): string => {
     months += 1
   }
 
-  return `${years} year${years > 1 && '(s)'} ${months} month${months > 1 && '(s)'}`
+  return `${years} year${years === 1 ? '' : 's'} ${months} month${months === 1 ? '' : 's'}`
 }
 
 export const isBirthday = (dateOfBirth: Date): boolean => {
