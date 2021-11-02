@@ -1,13 +1,13 @@
-import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getPatient from "app/patients/queries/getPatient"
-import updatePatient from "app/patients/mutations/updatePatient"
-import { PatientForm, FORM_ERROR } from "app/patients/components/PatientForm"
+import { Suspense } from 'react'
+import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from 'blitz'
+import Layout from 'app/core/layouts/Layout'
+import getPatient from 'app/patients/queries/getPatient'
+import updatePatient from 'app/patients/mutations/updatePatient'
+import { PatientForm, FORM_ERROR } from 'app/patients/components/PatientForm'
 
 export const EditPatient = () => {
   const router = useRouter()
-  const patientId = useParam("patientId", "number")
+  const patientId = useParam('patientId', 'number')
   const [patient, { setQueryData }] = useQuery(
     getPatient,
     { id: patientId },
@@ -41,7 +41,7 @@ export const EditPatient = () => {
                 id: patient.id,
                 ...values,
               })
-              await setQueryData(updated)
+              // await setQueryData(updated)
               router.push(Routes.ShowPatientPage({ patientId: updated.id }))
             } catch (error: any) {
               console.error(error)

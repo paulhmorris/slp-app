@@ -17,6 +17,7 @@ test.skip('renders blitz documentation link', () => {
     name: 'User',
     email: 'user@email.com',
     role: 'USER',
+    image: '',
   })
 
   const { getByText } = render(<Home />)

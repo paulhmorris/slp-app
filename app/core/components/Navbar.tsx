@@ -202,14 +202,16 @@ export default function Navbar() {
                       width={40}
                       height={40}
                       className="rounded-full"
-                      src={user?.image}
+                      src=""
                       alt="Profile picture"
                     />
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">{user.name}</div>
+                    <div className="text-base font-medium leading-none text-white">
+                      {user?.name}
+                    </div>
                     <div className="text-sm font-medium leading-none text-gray-400">
-                      {user.email}
+                      {user?.email}
                     </div>
                   </div>
                   <button
