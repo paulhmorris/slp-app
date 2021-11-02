@@ -1,3 +1,11 @@
+import dayjs from 'dayjs'
+import dayOfYear from 'dayjs/plugin/dayOfYear'
+dayjs.extend(dayOfYear)
+
+export function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
 export function capitalize(string: String) {
   const strArr = string.split(' ')
 
@@ -8,10 +16,6 @@ export function capitalize(string: String) {
 
   console.log(strArr)
   return strArr.join(' ')
-}
-
-export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
 }
 
 export const getBadgeColor = (string: string, includeBackground: Boolean = true): string => {
@@ -29,22 +33,39 @@ export const getBadgeColor = (string: string, includeBackground: Boolean = true)
 
     'articulation/phonology': 'indigio',
 
-    canceled: 'red',
-    'on hold': 'red',
-
     fluency: 'purple',
 
     feeding: 'pink',
+
+    canceled: 'red',
+    'on hold': 'red',
   }
 
-  const color = tags[string]
+  const color = tags[string] || 'gray'
 
-  return includeBackground
-    ? `bg-${color}-100 text-${color}-800` || 'bg-gray-200 text-gray-800'
-    : `text-${color}-800`
+  return includeBackground ? `bg-${color}-100 text-${color}-800` : `text-${color}-800`
 }
 
 export const currencyFormatter = new Intl.NumberFormat('en-us', {
   style: 'currency',
   currency: 'USD',
 })
+
+export const getChronologicalAge = (dateOfBirth: Date): string => {
+  const years = dayjs().diff(dateOfBirth, 'years', false)
+  const days = dayjs().diff(dateOfBirth, 'days', false)
+  let months = dayjs().diff(dateOfBirth, 'months', false) - years * 12
+
+  if (days >= 15) {
+    months += 1
+  }
+
+  return `${years} year${years > 1 && '(s)'} ${months} month${months > 1 && '(s)'}`
+}
+
+export const isBirthday = (dateOfBirth: Date): boolean => {
+  return (
+    dayjs().dayOfYear() - dayjs(dateOfBirth).dayOfYear() > -7 &&
+    dayjs().dayOfYear() - dayjs(dateOfBirth).dayOfYear() < 7
+  )
+}

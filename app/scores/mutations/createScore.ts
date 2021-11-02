@@ -2,10 +2,11 @@ import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
-const CreateScore = z.object({
-  value: z.number().nonnegative({ message: "Score can't be negative!" }),
+export const CreateScore = z.object({
+  value: z.number(),
   goalId: z.number(),
   createdBy: z.number(),
+  scoreTypeId: z.number(),
 })
 
 export default resolver.pipe(resolver.zod(CreateScore), resolver.authorize(), async (input) => {

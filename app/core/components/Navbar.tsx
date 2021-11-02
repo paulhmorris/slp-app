@@ -9,9 +9,11 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
+import { Avatar } from 'app/users/components/Avatar'
 import { Image, Link, Routes, useRouter, useSession } from 'blitz'
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 import { classNames } from '../lib/helpers'
 
 const user = {
@@ -36,7 +38,7 @@ const userNavigation = [
 
 export default function Navbar() {
   const router = useRouter()
-  const session = useSession()
+  const user = useCurrentUser()
 
   // TODO: redo this using state?
   function setCurrentNavigation() {
@@ -122,9 +124,13 @@ export default function Navbar() {
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                        <Menu.Button className="max-w-xs overflow-hidden h-8 w-8 bg-gray-100 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                          {user?.image ? (
+                            <img className="h-8 w-8 rounded-full" src={user.image} alt="" />
+                          ) : (
+                            <Avatar />
+                          )}
                         </Menu.Button>
                       </div>
                       <Transition
@@ -196,7 +202,7 @@ export default function Navbar() {
                       width={40}
                       height={40}
                       className="rounded-full"
-                      src={user.imageUrl}
+                      src={user?.image}
                       alt="Profile picture"
                     />
                   </div>

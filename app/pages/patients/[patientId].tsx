@@ -1,12 +1,12 @@
-import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getPatient from "app/patients/queries/getPatient"
-import deletePatient from "app/patients/mutations/deletePatient"
+import { Suspense } from 'react'
+import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from 'blitz'
+import Layout from 'app/core/layouts/Layout'
+import getPatient from 'app/patients/queries/getPatient'
+import deletePatient from 'app/patients/mutations/deletePatient'
 
 export const Patient = () => {
   const router = useRouter()
-  const patientId = useParam("patientId", "number")
+  const patientId = useParam('patientId', 'number')
   const [deletePatientMutation] = useMutation(deletePatient)
   const [patient] = useQuery(getPatient, { id: patientId })
 
@@ -27,7 +27,7 @@ export const Patient = () => {
         <button
           type="button"
           onClick={async () => {
-            if (window.confirm("This will be deleted")) {
+            if (window.confirm('This will be deleted')) {
               await deletePatientMutation({ id: patient.id })
               router.push(Routes.PatientsPage())
             }

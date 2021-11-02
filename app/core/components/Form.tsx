@@ -48,7 +48,7 @@ export function Form<S extends z.ZodType<any, any>>({
               className={`btn-primary relative ${submitting && 'text-transparent'}`}
             >
               {submitting && (
-                <PulseLoader css={loader} color="white" size={8} speedMultiplier={0.75} />
+                <PulseLoader css={loader} color="white" size={6} speedMultiplier={0.75} />
               )}
               {submitText}
             </button>

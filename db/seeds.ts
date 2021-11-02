@@ -9,7 +9,13 @@ const seed = async () => {
 
   // Create session statuses
   await db.sessionStatus.createMany({
-    data: [{ name: 'New' }, { name: 'In Progress' }, { name: 'Complete' }, { name: 'Canceled' }],
+    data: [
+      { name: 'New' },
+      { name: 'In Progress' },
+      { name: 'Complete' },
+      { name: 'Canceled' },
+      { name: 'Submitted' },
+    ],
   })
 
   // Create goal statuses

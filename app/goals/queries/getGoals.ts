@@ -23,26 +23,14 @@ export default resolver.pipe(
           where,
           orderBy,
           include: {
-            status: {
-              select: {
-                id: true,
-                name: true,
+            status: true,
+            category: true,
+            parentGoal: true,
+            scores: {
+              orderBy: {
+                createdAt: 'asc',
               },
             },
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            parentGoal: {
-              select: {
-                id: true,
-                title: true,
-                goalCategoryId: true,
-              },
-            },
-            scores: true,
             notes: true,
           },
         }),

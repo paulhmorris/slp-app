@@ -1,20 +1,20 @@
 import { useStopwatch } from 'react-timer-hook'
 
-export const SessionTimer = () => {
-  const { seconds, minutes, hours, start, pause, reset } = useStopwatch({
+export const Timer = () => {
+  const { seconds, minutes, hours, start, pause, reset, isRunning } = useStopwatch({
     autoStart: false,
   })
 
   return (
     <div>
-      <div className="flex text-md tracking-wider">
+      <div className="flex text-md tracking-wider justify-between">
         <Digit value={hours} title="Hours" />
         <span className="mx-3 h-auto mt-4">:</span>
         <Digit value={minutes} title="Minutes" />
         <span className="mx-3 h-auto mt-4">:</span>
         <Digit value={seconds} title="Seconds" />
       </div>
-      <div className="space-x-2 mt-4">
+      <div className="flex justify-center space-x-2 mt-4 w-64">
         {/* @ts-ignore */}
         <button type="button" className="btn-white" onClick={reset}>
           Reset
@@ -22,9 +22,15 @@ export const SessionTimer = () => {
         <button type="button" className="btn-white" onClick={pause}>
           Pause
         </button>
-        <button type="button" className="btn-primary" onClick={start}>
-          Start
-        </button>
+        {!isRunning ? (
+          <button type="button" className="btn-secondary" onClick={start}>
+            Start
+          </button>
+        ) : (
+          <button type="button" className="btn-primary" onClick={start}>
+            Submit
+          </button>
+        )}
       </div>
     </div>
   )

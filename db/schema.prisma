@@ -66,16 +66,30 @@ model Token {
 }
 
 model Patient {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  firstName      String
-  lastName       String
-  email          String
-  dateOfBirth    DateTime
-  isActive       Boolean          @default(true)
-  PatientSession PatientSession[]
-  goals          Goal[]
+  id          Int              @id @default(autoincrement())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  firstName   String
+  lastName    String
+  email       String
+  dateOfBirth DateTime
+  isActive    Boolean          @default(true)
+  sessions    PatientSession[]
+  goals       Goal[]
+  address     Address[]
+}
+
+model Address {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  street    String?
+  city      String?
+  region    String?  @default("TX")
+  postcode  String?
+  country   String?  @default("United States")
+  patientId Int
+  patient   Patient  @relation(fields: [patientId], references: [id])
 }
 
 model PatientSession {
@@ -105,7 +119,7 @@ model SessionStatus {
   id             Int              @id @default(autoincrement())
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  name           String
+  name           String           @unique
   PatientSession PatientSession[]
 }
 
@@ -147,7 +161,7 @@ model Goal {
 
 model GoalStatus {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Goal      Goal[]
@@ -155,7 +169,7 @@ model GoalStatus {
 
 model GoalCategory {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   color     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -177,7 +191,7 @@ model Score {
 
 model ScoreType {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
   Score     Score[]
   Goal      Goal[]
