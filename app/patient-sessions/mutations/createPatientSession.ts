@@ -1,30 +1,22 @@
-import { resolver } from "blitz"
-import db from "db"
-import { z } from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
 const CreatePatientSession = z.object({
-  patientId: z.number().gte(0),
-  typeId: z.number().gte(0),
+  patientId: z.number(),
+  typeId: z.number(),
 })
 
 export default resolver.pipe(
   resolver.zod(CreatePatientSession),
   resolver.authorize(),
-  async ({ patientId, typeId, ...input }) => {
+  async ({ patientId, typeId }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const patientSession = await db.patientSession.create({
       data: {
-        ...input,
-        patient: {
-          connect: {
-            id: patientId,
-          },
-        },
-        type: {
-          connect: {
-            id: typeId,
-          },
-        },
+        patientId,
+        sessionTypeId: typeId,
+        organizationId: ctx.session.orgId,
       },
     })
     return patientSession

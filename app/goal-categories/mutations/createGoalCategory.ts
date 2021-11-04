@@ -9,9 +9,14 @@ const CreateGoalCategory = z.object({
 export default resolver.pipe(
   resolver.zod(CreateGoalCategory),
   resolver.authorize(),
-  async (input) => {
+  async (input, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const goalCategory = await db.goalCategory.create({ data: input })
+    const goalCategory = await db.goalCategory.create({
+      data: {
+        ...input,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
     return goalCategory
   }

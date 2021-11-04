@@ -7,11 +7,17 @@ const GetPatient = z.object({
   id: z.number().optional().refine(Boolean, 'Required'),
 })
 
-export default resolver.pipe(resolver.zod(GetPatient), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const patient = await db.patient.findFirst({ where: { id }, include: { address: true } })
+export default resolver.pipe(
+  resolver.zod(GetPatient),
+  resolver.authorize(),
+  async ({ id }, ctx) => {
+    const patient = await db.patient.findFirst({
+      where: { id, organizationId: ctx.session.orgId },
+      include: { address: true },
+    })
 
-  if (!patient) throw new NotFoundError()
+    if (!patient) throw new NotFoundError()
 
-  return patient
-})
+    return patient
+  }
+)

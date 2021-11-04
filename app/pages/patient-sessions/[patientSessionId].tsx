@@ -86,7 +86,7 @@ export const PatientSession = () => {
         <Divider padding="6" />
 
         <div className="flex-1 relative z-0 space-x-8">
-          {patientSession.sessionStatusId !== 5 || session.role === 'USER' ? (
+          {patientSession.sessionStatusId !== 5 ? (
             <Suspense fallback={<div>Loading...</div>}>
               <PatientActiveGoals
                 goals={goals}

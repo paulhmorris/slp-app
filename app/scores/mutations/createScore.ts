@@ -9,9 +9,18 @@ export const CreateScore = z.object({
   scoreTypeId: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(CreateScore), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const score = await db.score.create({ data: input })
+export default resolver.pipe(
+  resolver.zod(CreateScore),
+  resolver.authorize(),
+  async (input, ctx) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const score = await db.score.create({
+      data: {
+        ...input,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
-  return score
-})
+    return score
+  }
+)

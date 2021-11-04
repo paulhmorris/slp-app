@@ -16,14 +16,24 @@ export const CreatePatient = z.object({
   }),
 })
 
-export default resolver.pipe(resolver.zod(CreatePatient), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const patient = await db.patient.create({
-    data: {
-      ...input,
-      address: { create: input.address },
-    },
-  })
+export default resolver.pipe(
+  resolver.zod(CreatePatient),
+  resolver.authorize(),
+  async (input, ctx) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const patient = await db.patient.create({
+      data: {
+        ...input,
+        address: {
+          create: {
+            ...input.address,
+            organizationId: ctx.session.orgId,
+          },
+        },
+        organizationId: ctx.session.orgId,
+      },
+    })
 
-  return patient
-})
+    return patient
+  }
+)

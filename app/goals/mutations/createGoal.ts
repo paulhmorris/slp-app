@@ -9,9 +9,14 @@ const CreateGoal = z.object({
   goalCategoryId: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input) => {
+export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const goal = await db.goal.create({ data: input })
+  const goal = await db.goal.create({
+    data: {
+      ...input,
+      organizationId: ctx.session.orgId,
+    },
+  })
 
   return goal
 })
