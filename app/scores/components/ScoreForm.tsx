@@ -1,7 +1,7 @@
-import { Form, FormProps } from 'app/core/components/Form'
-import { LabeledTextField } from 'app/core/components/LabeledTextField'
+import { Form, FormProps } from 'app/core/components/Forms/Form'
+import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
 import { z } from 'zod'
-export { FORM_ERROR } from 'app/core/components/Form'
+export { FORM_ERROR } from 'app/core/components/Forms/Form'
 
 export function ScoreForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (

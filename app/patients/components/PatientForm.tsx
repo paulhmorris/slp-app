@@ -1,9 +1,9 @@
-import { Form, FormProps } from 'app/core/components/Form'
-import { LabeledTextField } from 'app/core/components/LabeledTextField'
+import { Form, FormProps } from 'app/core/components/Forms/Form'
+import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
 import dayjs from 'dayjs'
 import { Field } from 'react-final-form'
 import { z } from 'zod'
-export { FORM_ERROR } from 'app/core/components/Form'
+export { FORM_ERROR } from 'app/core/components/Forms/Form'
 
 export function PatientForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   console.log()

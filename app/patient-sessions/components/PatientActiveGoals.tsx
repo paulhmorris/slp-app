@@ -23,7 +23,7 @@ export const PatientActiveGoals: FC<GoalTreeProps> = ({
 }) => {
   const parentGoals = goals.filter((g) => !g.parentGoalId)
   const childGoals = goals.filter((g) => g.parentGoalId)
-  const categories = goals.map((g) => g.category.name)
+  const categories = parentGoals.map((g) => g.category.name)
   const categoryNames = Array.from(new Set(categories))
 
   return (

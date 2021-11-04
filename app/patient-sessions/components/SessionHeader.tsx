@@ -11,11 +11,10 @@ import { PulseLoader } from 'react-spinners'
 import { Link, Routes, useSession } from 'blitz'
 import { Patient, PatientSession } from 'db'
 import dayjs from 'dayjs'
-import { getBadgeColor, getChronologicalAge, isBirthday } from 'app/core/lib/helpers'
+import { getChronologicalAge, isBirthday } from 'app/core/lib/helpers'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
 import { useState } from 'react'
-import { Tooltip } from 'app/core/components/Tooltip'
 
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -36,7 +35,6 @@ export const SessionHeader = ({
   updateSession,
   loading,
 }: SessionHeaderProps) => {
-  const [showStatusTime, setShowStatusTime] = useState(false)
   const session = useSession()
   const status = patientSession.sessionStatusId
   const loader = css`
@@ -53,7 +51,7 @@ export const SessionHeader = ({
           <PatientDetail patient={patient} />
         </div>
         <span>
-          {(status !== 5 || session.role === 'USER') && (
+          {status !== 5 && (
             <button
               type="button"
               disabled={loading}

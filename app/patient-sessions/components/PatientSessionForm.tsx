@@ -1,11 +1,11 @@
-import { Form, FormProps } from 'app/core/components/Form'
+import { Form, FormProps } from 'app/core/components/Forms/Form'
 import getPatients from 'app/patients/queries/getPatients'
 import getSessionTypes from 'app/session-types/queries/getSessionTypes'
 import { useQuery } from 'blitz'
 import React from 'react'
 import { Field } from 'react-final-form'
 import { z } from 'zod'
-export { FORM_ERROR } from 'app/core/components/Form'
+export { FORM_ERROR } from 'app/core/components/Forms/Form'
 
 export function PatientSessionForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (

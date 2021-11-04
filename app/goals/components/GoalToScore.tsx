@@ -1,17 +1,19 @@
 import { Goal, GoalCategory, GoalStatus } from 'db'
 import { useMutation, useSession, invalidateQuery } from 'blitz'
-import { Form } from 'app/core/components/Form'
+import { Form } from 'app/core/components/Forms/Form'
 import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
 import createScore from 'app/scores/mutations/createScore'
 import { createScoreSchema } from 'app/scores/validations'
 import { ChevronDoubleLeftIcon } from '@heroicons/react/outline'
 import { useState } from 'react'
 import { PlusSmIcon, MinusSmIcon } from '@heroicons/react/solid'
-import LabeledTextField from 'app/core/components/LabeledTextField'
+import LabeledTextField from 'app/core/components/Forms/LabeledTextField'
 import toast from 'react-hot-toast'
 import { Toast } from 'app/core/components/Toast'
 import { Timer } from 'app/scores/components/Timer'
 import getScores from 'app/scores/queries/getScores'
+import EmptyState from 'app/core/components/EmptyState'
+import ScoreButton from 'app/core/components/Buttons/ScoreButton'
 
 const handleUpdate = async ({ isSuccess }) => {
   toast.custom(
@@ -76,7 +78,11 @@ export const GoalToScore = ({ goal }: GoalToScoreProps) => {
           )}
         </div>
       ) : (
-        <EmptyGoal />
+        <EmptyState
+          icon={<ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />}
+          title="No Goal selected"
+          message="Please select a goal from the tree"
+        />
       )}
     </>
   )
@@ -112,13 +118,11 @@ const FrequencyGoal = ({ goal, scoreMutation, userId }) => {
 
   return (
     <div className="flex justify-center items-center space-x-6">
-      <button
-        type="button"
-        className="inline-flex justify-center items-center p-2 mb-9 border border-transparent rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-        onClick={() => setScore(score - 1)}
-      >
-        <MinusSmIcon className="h-8 w-8" aria-hidden="true" />
-      </button>
+      <ScoreButton
+        color="red"
+        icon={<MinusSmIcon className="h-8 w-8" />}
+        callback={() => setScore(score - 1)}
+      />
       <Form
         submitText="Save"
         schema={createScoreSchema}
@@ -150,13 +154,11 @@ const FrequencyGoal = ({ goal, scoreMutation, userId }) => {
           className="text-3xl text-center w-16 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
         />
       </Form>
-      <button
-        type="button"
-        className="inline-flex justify-center items-center p-2 mb-9 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        onClick={() => setScore(score + 1)}
-      >
-        <PlusSmIcon className="h-8 w-8" aria-hidden="true" />
-      </button>
+      <ScoreButton
+        color="green"
+        icon={<PlusSmIcon className="h-8 w-8" />}
+        callback={() => setScore(score + 1)}
+      />
     </div>
   )
 }
@@ -166,15 +168,5 @@ const DurationGoal = ({ goal, scoreMutation, userId }) => {
     <>
       <Timer />
     </>
-  )
-}
-
-const EmptyGoal = () => {
-  return (
-    <div className="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-12 text-center">
-      <ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />
-      <h3 className="mt-2 text-sm font-medium text-gray-900">No goal selected</h3>
-      <p className="mt-1 text-sm text-gray-500">Select a goal from the goal tree</p>
-    </div>
   )
 }

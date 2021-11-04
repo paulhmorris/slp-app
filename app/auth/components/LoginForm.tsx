@@ -1,6 +1,6 @@
 import { AuthenticationError, Link, useMutation, Routes } from 'blitz'
-import { LabeledTextField } from 'app/core/components/LabeledTextField'
-import { Form, FORM_ERROR } from 'app/core/components/Form'
+import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
+import { Form, FORM_ERROR } from 'app/core/components/Forms/Form'
 import login from 'app/auth/mutations/login'
 import { Login } from 'app/auth/validations'
 
@@ -35,8 +35,22 @@ export const LoginForm = (props: LoginFormProps) => {
           }
         }}
       >
-        <LabeledTextField name="email" label="Email" placeholder="Email" type="email" />
-        <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
+        <LabeledTextField
+          name="email"
+          label="Email"
+          placeholder="Email"
+          type="email"
+          autoComplete="current-password"
+          required
+        />
+        <LabeledTextField
+          name="password"
+          label="Password"
+          placeholder="Password"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
         <div>
           <Link href={Routes.ForgotPasswordPage()}>
             <a className="hover:text-indigo-600 hover:underline">Forgot your password?</a>

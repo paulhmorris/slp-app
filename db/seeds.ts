@@ -1,42 +1,84 @@
 import faker from 'faker'
+import { SecurePassword } from 'blitz'
 import db from './index'
 
 const seed = async () => {
+  const org = await db.organization.create({
+    data: {
+      name: 'Default Organization',
+    },
+  })
+
+  const membership = await db.membership.create({
+    data: {
+      role: 'OWNER',
+      organizationId: org.id,
+    },
+  })
+
+  const password = await SecurePassword.hash('password123')
+  const user = await db.user.create({
+    data: {
+      name: 'Leslie Knope',
+      email: 'admin@blitz.com',
+      image: faker.image.avatar(),
+      hashedPassword: password,
+      role: 'CUSTOMER',
+      memberships: {
+        connect: { id: membership.id },
+      },
+    },
+  })
+  console.dir(user)
+
   // Create session types
   await db.sessionType.createMany({
-    data: [{ name: 'Speech' }, { name: 'Occupational' }, { name: 'Physical' }],
+    data: [
+      { name: 'Speech', organizationId: org.id },
+      { name: 'Occupational', organizationId: org.id },
+      { name: 'Physical', organizationId: org.id },
+    ],
   })
 
   // Create session statuses
   await db.sessionStatus.createMany({
     data: [
-      { name: 'New' },
-      { name: 'In Progress' },
-      { name: 'Complete' },
-      { name: 'Canceled' },
-      { name: 'Submitted' },
+      { name: 'Scheduled', organizationId: org.id },
+      { name: 'In Progress', organizationId: org.id },
+      { name: 'Complete', organizationId: org.id },
+      { name: 'Canceled', organizationId: org.id },
+      { name: 'Submitted', organizationId: org.id },
     ],
   })
 
   // Create goal statuses
   const goalTypes = await db.goalStatus.createMany({
-    data: [{ name: 'In Progress' }, { name: 'Discontinued' }, { name: 'Met' }, { name: 'On Hold' }],
+    data: [
+      { name: 'In Progress', organizationId: org.id },
+      { name: 'Discontinued', organizationId: org.id },
+      { name: 'Mastered', organizationId: org.id },
+      { name: 'On Hold', organizationId: org.id },
+    ],
   })
 
   // Create Intervention Areas
   await db.goalCategory.createMany({
     data: [
-      { name: 'Expressive Language' },
-      { name: 'Receptive Language' },
-      { name: 'Pragmatics/Social Skills' },
-      { name: 'Articulation/Phonology' },
-      { name: 'Feeding' },
-      { name: 'Fluency' },
+      { name: 'Expressive Language', organizationId: org.id },
+      { name: 'Receptive Language', organizationId: org.id },
+      { name: 'Pragmatics/Social Skills', organizationId: org.id },
+      { name: 'Articulation/Phonology', organizationId: org.id },
+      { name: 'Feeding', organizationId: org.id },
+      { name: 'Fluency', organizationId: org.id },
     ],
   })
 
   await db.scoreType.createMany({
-    data: [{ name: 'Percentage' }, { name: 'Frequency' }, { name: 'Duration' }],
+    data: [
+      { name: 'Percentage', organizationId: org.id },
+      { name: 'Frequency', organizationId: org.id },
+      { name: 'Duration', organizationId: org.id },
+    ],
   })
 
   // Create one patient with 10 sessions
@@ -46,22 +88,37 @@ const seed = async () => {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       dateOfBirth: faker.date.past(10, new Date()),
+      organizationId: org.id,
     },
   })
 
   // Create 4 long term goals
   for (let i = 0; i < 4; i++) {
-    await db.goal.createMany({
-      data: [
-        {
-          title: faker.lorem.sentence(),
-          patientId: patient.id,
-          sessionTypeId: 1,
-          goalStatusId: 1,
-          goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
-        },
-      ],
+    const goal = await db.goal.create({
+      data: {
+        title: faker.lorem.sentence(),
+        patientId: patient.id,
+        sessionTypeId: 1,
+        goalStatusId: 1,
+        goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
+        organizationId: org.id,
+      },
     })
+    // Create child goals
+    for (let i = 0; i < 5; i++) {
+      await db.goal.create({
+        data: {
+          patientId: patient.id,
+          title: faker.lorem.sentence(),
+          goalStatusId: 1,
+          sessionTypeId: 1,
+          goalCategoryId: goal.goalCategoryId,
+          parentGoalId: goal.id,
+          scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
+          organizationId: org.id,
+        },
+      })
+    }
   }
 
   // Create a session
@@ -70,20 +127,9 @@ const seed = async () => {
       sessionTypeId: 1,
       patientId: patient.id,
       sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
+      organizationId: org.id,
     },
   })
-
-  const user = await db.user.create({
-    data: {
-      name: 'Leslie Knope',
-      email: 'admin@blitz.com',
-      image: faker.image.avatar(),
-      hashedPassword: 'password1',
-      role: 'USER',
-    },
-  })
-
-  console.dir(user)
 
   for (let i = 0; i < 10; i++) {
     // Create patients
@@ -94,6 +140,7 @@ const seed = async () => {
         email: faker.internet.email(),
         dateOfBirth: faker.date.past(10, new Date()),
         isActive: Math.random() > 0.1,
+        organizationId: org.id,
       },
     })
     // Create sessions
@@ -103,38 +150,33 @@ const seed = async () => {
         patientId: patient.id,
         status: faker.random.arrayElement(goalTypes),
         sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
+        organizationId: org.id,
       },
     })
+  }
+
+  for (let i = 0; i < 100; i++) {
     // Create notes
     await db.note.create({
       data: {
         userId: 1,
         createdAt: faker.date.between('2021-10-01', new Date()),
-        patientSessionId: session.id,
         body: faker.lorem.sentences(),
-      },
-    })
-    // Create goals
-    await db.goal.create({
-      data: {
-        patientId: patient.id,
-        title: faker.lorem.sentence(),
-        goalStatusId: 1,
-        sessionTypeId: 1,
-        goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
-        parentGoalId: faker.datatype.number({ min: 1, max: 4 }),
-        scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
+        goalId: faker.datatype.number({ min: 1, max: 10 }),
+        organizationId: org.id,
       },
     })
   }
-  // Create scores
-  for (let i = 0; i < 10; i++) {
+
+  for (let i = 0; i < 100; i++) {
+    // Create scores
     await db.score.create({
       data: {
         createdBy: user.id,
         value: faker.datatype.number({ min: 25, max: 95 }),
         goalId: faker.datatype.number({ min: 1, max: 10 }),
         scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
+        organizationId: org.id,
       },
     })
   }

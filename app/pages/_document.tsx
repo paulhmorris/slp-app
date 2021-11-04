@@ -12,6 +12,9 @@ class MyDocument extends Document {
       <Html lang="en">
         <DocumentHead>
           <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
+          {/* {process.env.NODE_ENV === 'development' && (
+            <script src="https://cdn-tailwindcss.vercel.app"></script>
+          )} */}
         </DocumentHead>
         <body>
           <Main />

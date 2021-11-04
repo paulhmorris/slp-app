@@ -12,24 +12,65 @@ generator client {
 
 // --------------------------------------
 
-enum Role {
-  USER
+// Top level
+
+enum MembershipRole {
+  OWNER
   ADMIN
+  USER
+}
+
+enum GlobalRole {
+  SUPERADMIN
+  CUSTOMER
+}
+
+model Organization {
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String
+  memberships    Membership[]
+  Patient        Patient[]
+  Address        Address[]
+  PatientSession PatientSession[]
+  Note           Note[]
+  Goal           Goal[]
+  GoalStatus     GoalStatus[]
+  GoalCategory   GoalCategory[]
+  SessionType    SessionType[]
+  SessionStatus  SessionStatus[]
+  Score          Score[]
+  ScoreType      ScoreType[]
+}
+
+model Membership {
+  id             Int            @id @default(autoincrement())
+  role           MembershipRole
+  organizationId Int
+  invitedName    String?
+  invitedEmail   String?
+  userId         Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User?          @relation(fields: [userId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id])
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   name           String?
   image          String?
-  email          String    @unique
+  email          String       @unique
   hashedPassword String?
-  role           Role      @default(USER)
+  role           GlobalRole
   tokens         Token[]
   sessions       Session[]
-  Note           Note[]
-  Score          Score[]
+  notes          Note[]
+  scores         Score[]
+  memberships    Membership[]
 }
 
 model Session {
@@ -42,8 +83,8 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
-  user               User[]    @relation(fields: [userId], references: [id])
   userId             Int?
+  user               User[]    @relation(fields: [userId], references: [id])
 }
 
 enum TokenType {
@@ -58,52 +99,59 @@ model Token {
   type        TokenType
   expiresAt   DateTime
   sentTo      String
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
 
   @@unique([hashedToken, type])
 }
 
 model Patient {
-  id          Int              @id @default(autoincrement())
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  firstName   String
-  lastName    String
-  email       String
-  dateOfBirth DateTime
-  isActive    Boolean          @default(true)
-  sessions    PatientSession[]
-  goals       Goal[]
-  address     Address[]
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  firstName      String
+  lastName       String
+  email          String
+  dateOfBirth    DateTime
+  isActive       Boolean          @default(true)
+  organizationId Int
+  sessions       PatientSession[]
+  goals          Goal[]
+  address        Address[]
+  organization   Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model Address {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  street    String?
-  city      String?
-  region    String?  @default("TX")
-  postcode  String?
-  country   String?  @default("United States")
-  patientId Int
-  patient   Patient  @relation(fields: [patientId], references: [id])
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  street         String?
+  city           String?
+  region         String?      @default("TX")
+  postcode       String?
+  country        String?      @default("United States")
+  patientId      Int
+  organizationId Int
+  patient        Patient      @relation(fields: [patientId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model PatientSession {
   id              Int           @id @default(autoincrement())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+  scheduledAt     DateTime?
+  startedAt       DateTime?
+  endedAt         DateTime?
   sessionTypeId   Int
   duration        Int?
   patientId       Int
   sessionStatusId Int           @default(1)
+  organizationId  Int
   status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
-  notes           Note[]
   patient         Patient       @relation(fields: [patientId], references: [id])
   type            SessionType   @relation(fields: [sessionTypeId], references: [id])
+  organization    Organization  @relation(fields: [organizationId], references: [id])
 }
 
 model SessionType {
@@ -111,8 +159,10 @@ model SessionType {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   name           String           @unique
+  organizationId Int
   PatientSession PatientSession[]
   Goal           Goal[]
+  organization   Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model SessionStatus {
@@ -120,20 +170,22 @@ model SessionStatus {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   name           String           @unique
+  organizationId Int
   PatientSession PatientSession[]
+  organization   Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model Note {
-  id               Int             @id @default(autoincrement())
-  author           User            @relation(fields: [userId], references: [id])
-  userId           Int
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  body             String          @default("")
-  patientSession   PatientSession? @relation(fields: [patientSessionId], references: [id])
-  patientSessionId Int?
-  goal             Goal?           @relation(fields: [goalId], references: [id])
-  goalId           Int?
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  body           String       @default("")
+  organizationId Int
+  goalId         Int
+  author         User         @relation(fields: [userId], references: [id])
+  goal           Goal         @relation(fields: [goalId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Goal {
@@ -147,52 +199,62 @@ model Goal {
   sessionTypeId  Int      @default(1)
   parentGoalId   Int?
   scoreTypeId    Int?
+  organizationId Int
 
-  type       SessionType  @relation(fields: [sessionTypeId], references: [id])
-  status     GoalStatus   @relation(fields: [goalStatusId], references: [id])
-  parentGoal Goal?        @relation("GoalToGoal", fields: [parentGoalId], references: [id])
-  patient    Patient      @relation(fields: [patientId], references: [id])
-  scoreType  ScoreType?   @relation(fields: [scoreTypeId], references: [id])
-  category   GoalCategory @relation(fields: [goalCategoryId], references: [id])
-  goals      Goal[]       @relation("GoalToGoal")
-  scores     Score[]
-  notes      Note[]
+  type         SessionType  @relation(fields: [sessionTypeId], references: [id])
+  status       GoalStatus   @relation(fields: [goalStatusId], references: [id])
+  parentGoal   Goal?        @relation("GoalToGoal", fields: [parentGoalId], references: [id])
+  patient      Patient      @relation(fields: [patientId], references: [id])
+  scoreType    ScoreType?   @relation(fields: [scoreTypeId], references: [id])
+  category     GoalCategory @relation(fields: [goalCategoryId], references: [id])
+  childGoals   Goal[]       @relation("GoalToGoal")
+  scores       Score[]
+  notes        Note[]
+  organization Organization @relation(fields: [organizationId], references: [id])
 }
 
 model GoalStatus {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Goal      Goal[]
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId Int
+  Goal           Goal[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model GoalCategory {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  color     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Goal      Goal[]
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  color          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId Int
+  Goal           Goal[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Score {
-  id          Int       @id @default(autoincrement())
-  createdBy   Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  value       Float
-  goalId      Int
-  scoreTypeId Int
-  type        ScoreType @relation(fields: [scoreTypeId], references: [id])
-  goal        Goal      @relation(fields: [goalId], references: [id])
-  user        User      @relation(fields: [createdBy], references: [id])
+  id             Int          @id @default(autoincrement())
+  createdBy      Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  value          Float
+  goalId         Int
+  scoreTypeId    Int
+  organizationId Int
+  type           ScoreType    @relation(fields: [scoreTypeId], references: [id])
+  goal           Goal         @relation(fields: [goalId], references: [id])
+  user           User         @relation(fields: [createdBy], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model ScoreType {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  Score     Score[]
-  Goal      Goal[]
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  createdAt      DateTime     @default(now())
+  organizationId Int
+  Score          Score[]
+  Goal           Goal[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
