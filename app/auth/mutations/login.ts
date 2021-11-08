@@ -1,4 +1,4 @@
-import { resolver, SecurePassword, AuthenticationError } from 'blitz'
+import { AuthenticationError, resolver, SecurePassword } from 'blitz'
 import db from 'db'
 import { Login } from '../validations'
 
@@ -26,15 +26,14 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
 export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
-  if (!user) {
-    throw new Error('Unexpected error: No user object')
+  if (!user.memberships[0]?.role) {
+    throw new Error('Unexpected error: No user role in membership')
   }
+
   await ctx.session.$create({
     userId: user.id,
-    // @ts-ignore
-    roles: [user.role, user.memberships[0].role],
-    // @ts-ignore
-    orgId: user.memberships[0].organizationId,
+    roles: [user.role, user.memberships[0]?.role || 'CUSTOMER'],
+    orgId: user.memberships[0]?.organizationId,
   })
 
   return user

@@ -1,6 +1,6 @@
+import { Signup } from 'app/auth/validations'
 import { resolver, SecurePassword } from 'blitz'
 import db from 'db'
-import { Signup } from 'app/auth/validations'
 
 export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, ctx) => {
   const hashedPassword = await SecurePassword.hash(password.trim())
@@ -23,11 +23,13 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
     include: { memberships: true },
   })
 
+  if (!user.memberships[0]?.role) {
+    throw new Error('Unexpected error: No user role in membership')
+  }
+
   await ctx.session.$create({
     userId: user.id,
-    // @ts-ignore
     roles: [user.role, user.memberships[0].role],
-    // @ts-ignore
     orgId: user.memberships[0].organizationId,
   })
   return user
