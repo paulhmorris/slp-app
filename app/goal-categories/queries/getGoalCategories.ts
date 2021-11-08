@@ -6,8 +6,7 @@ interface GetGoalCategoriesInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetGoalCategoriesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetGoalCategoriesInput, ctx) => {
     const {
       items: goalCategories,
       hasMore,
@@ -17,7 +16,14 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.goalCategory.count({ where }),
-      query: (paginateArgs) => db.goalCategory.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.goalCategory.findMany({
+          ...paginateArgs,
+          where: {
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+        }),
     })
 
     return {

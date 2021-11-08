@@ -6,8 +6,7 @@ interface GetScoresInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetScoresInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetScoresInput, ctx) => {
     const {
       items: scores,
       hasMore,
@@ -17,7 +16,14 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.score.count({ where }),
-      query: (paginateArgs) => db.score.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.score.findMany({
+          ...paginateArgs,
+          where: {
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+        }),
     })
 
     return {

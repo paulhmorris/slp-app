@@ -10,9 +10,14 @@ const UpdateScore = z.object({
 export default resolver.pipe(
   resolver.zod(UpdateScore),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const score = await db.score.update({ where: { id }, data })
+  async ({ id, ...data }, ctx) => {
+    const score = await db.score.update({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      data,
+    })
 
     return score
   }

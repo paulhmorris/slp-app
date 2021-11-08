@@ -10,9 +10,14 @@ const UpdateGoalCategory = z.object({
 export default resolver.pipe(
   resolver.zod(UpdateGoalCategory),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const goalCategory = await db.goalCategory.update({ where: { id }, data })
+  async ({ id, ...data }, ctx) => {
+    const goalCategory = await db.goalCategory.update({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      data,
+    })
 
     return goalCategory
   }

@@ -1,17 +1,25 @@
-import { resolver, NotFoundError } from "blitz"
-import db from "db"
-import { z } from "zod"
+import { resolver, NotFoundError } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
 const GetSessionType = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.number().optional().refine(Boolean, 'Required'),
 })
 
-export default resolver.pipe(resolver.zod(GetSessionType), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const sessionType = await db.sessionType.findFirst({ where: { id } })
+export default resolver.pipe(
+  resolver.zod(GetSessionType),
+  resolver.authorize(),
+  async ({ id }, ctx) => {
+    const sessionType = await db.sessionType.findFirst({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
-  if (!sessionType) throw new NotFoundError()
+    if (!sessionType) throw new NotFoundError()
 
-  return sessionType
-})
+    return sessionType
+  }
+)

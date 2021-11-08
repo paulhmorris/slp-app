@@ -10,9 +10,14 @@ const UpdateSessionStatus = z.object({
 export default resolver.pipe(
   resolver.zod(UpdateSessionStatus),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const sessionStatus = await db.sessionStatus.update({ where: { id }, data })
+  async ({ id, ...data }, ctx) => {
+    const sessionStatus = await db.sessionStatus.update({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      data,
+    })
 
     return sessionStatus
   }

@@ -11,7 +11,6 @@ export default resolver.pipe(
   resolver.zod(CreatePatientSession),
   resolver.authorize(),
   async ({ patientId, typeId }, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const patientSession = await db.patientSession.create({
       data: {
         patientId,

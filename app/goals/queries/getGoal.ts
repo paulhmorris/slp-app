@@ -7,9 +7,16 @@ const GetGoal = z.object({
   id: z.number().optional().refine(Boolean, 'Required'),
 })
 
-export default resolver.pipe(resolver.zod(GetGoal), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const goal = await db.goal.findFirst({ where: { id }, include: { status: true } })
+export default resolver.pipe(resolver.zod(GetGoal), resolver.authorize(), async ({ id }, ctx) => {
+  const goal = await db.goal.findFirst({
+    where: {
+      id,
+      organizationId: ctx.session.orgId,
+    },
+    include: {
+      status: true,
+    },
+  })
 
   if (!goal) throw new NotFoundError()
 

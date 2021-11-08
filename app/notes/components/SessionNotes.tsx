@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { Tooltip } from 'app/core/components/Tooltip'
-import { useMutation, usePaginatedQuery, useSession, invalidateQuery, Routes } from 'blitz'
-import { Prisma } from 'db'
+import { useMutation, usePaginatedQuery, useSession, invalidateQuery } from 'blitz'
 import { Toast } from 'app/core/components/Toast'
 import createNote from '../mutations/createNote'
 import getNotes from '../queries/getNotes'
@@ -19,7 +18,11 @@ dayjs.extend(advancedFormat)
 
 const ITEMS_TO_RENDER = 3
 
-export const SessionNotes = ({ goalId }: Prisma.NoteWhereInput) => {
+type SessionNotesInput = {
+  goalId: number
+}
+
+export const SessionNotes = ({ goalId }: SessionNotesInput) => {
   const session = useSession()
   const [createNoteMutation] = useMutation(createNote, {
     onSuccess: async () => {

@@ -1,5 +1,5 @@
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from 'blitz'
-import { GlobalRole, MembershipRole, Organization, User } from 'db'
+import { GlobalRole, MembershipRole, Organization, Prisma, User } from 'db'
 
 type Role = MembershipRole | GlobalRole
 
@@ -16,3 +16,14 @@ declare module 'blitz' {
     }
   }
 }
+
+const GoalWithAllRelations = Prisma.validator<Prisma.GoalArgs>()({
+  include: {
+    status: true,
+    category: true,
+    parentGoal: true,
+    scores: true,
+    notes: true,
+  },
+})
+export type GoalWithAllRelations = Prisma.GoalGetPayload<typeof GoalWithAllRelations>

@@ -12,8 +12,13 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id }, ctx) => {
     const patient = await db.patient.findFirst({
-      where: { id, organizationId: ctx.session.orgId },
-      include: { address: true },
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      include: {
+        address: true,
+      },
     })
 
     if (!patient) throw new NotFoundError()

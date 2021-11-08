@@ -6,8 +6,7 @@ interface GetNotesInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetNotesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetNotesInput, ctx) => {
     const {
       items: notes,
       hasMore,
@@ -18,7 +17,14 @@ export default resolver.pipe(
       take,
       count: () => db.note.count({ where }),
       query: (paginateArgs) =>
-        db.note.findMany({ ...paginateArgs, where, orderBy, include: { author: true } }),
+        db.note.findMany({
+          ...paginateArgs,
+          where: {
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+          include: { author: true },
+        }),
     })
 
     return {

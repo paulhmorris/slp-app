@@ -1,6 +1,6 @@
-import { resolver } from "blitz"
-import db from "db"
-import { z } from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
 const DeleteSessionType = z.object({
   id: z.number(),
@@ -9,9 +9,13 @@ const DeleteSessionType = z.object({
 export default resolver.pipe(
   resolver.zod(DeleteSessionType),
   resolver.authorize(),
-  async ({ id }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const sessionType = await db.sessionType.deleteMany({ where: { id } })
+  async ({ id }, ctx) => {
+    const sessionType = await db.sessionType.deleteMany({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
     return sessionType
   }

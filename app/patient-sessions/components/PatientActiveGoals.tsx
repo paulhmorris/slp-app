@@ -1,26 +1,21 @@
 import { Disclosure } from '@headlessui/react'
+import { ChevronDoubleLeftIcon } from '@heroicons/react/outline'
 import { FolderIcon, FolderOpenIcon } from '@heroicons/react/solid'
-import { FC, Suspense, useEffect } from 'react'
-import { GoalToScore } from 'app/goals/components/GoalToScore'
-import { Goal, GoalCategory, GoalStatus } from 'db'
+import EmptyState from 'app/core/components/EmptyState'
 import { classNames, getBadgeColor } from 'app/core/lib/helpers'
 import { GoalChart } from 'app/goals/components/GoalChart'
+import { GoalToScore } from 'app/goals/components/GoalToScore'
+import { Goal } from 'db'
+import React, { FC, Suspense } from 'react'
+import { GoalWithAllRelations } from 'types'
 
 interface GoalTreeProps {
-  goals: (Goal & { category: GoalCategory; parentGoal: Goal | null; status: GoalStatus })[]
-  currentGoal:
-    | (Goal & { category: GoalCategory; parentGoal: Goal | null; status: GoalStatus })
-    | undefined
-  patientId: number
+  goals: GoalWithAllRelations[]
+  currentGoal: GoalWithAllRelations | undefined
   setGoal: (goal: Goal) => void
 }
 
-export const PatientActiveGoals: FC<GoalTreeProps> = ({
-  goals,
-  currentGoal,
-  patientId,
-  setGoal,
-}) => {
+export const PatientActiveGoals: FC<GoalTreeProps> = ({ goals, currentGoal, setGoal }) => {
   const parentGoals = goals.filter((g) => !g.parentGoalId)
   const childGoals = goals.filter((g) => g.parentGoalId)
   const categories = parentGoals.map((g) => g.category.name)
@@ -116,11 +111,19 @@ export const PatientActiveGoals: FC<GoalTreeProps> = ({
             ))}
           </div>
         </div>
-        <div className="flex-1 px-8">
-          <Suspense fallback={<div>Loading...</div>}>
-            <GoalToScore goal={currentGoal} patientId={patientId} />
-          </Suspense>
-        </div>
+        {currentGoal ? (
+          <div className="flex-1 px-8">
+            <Suspense fallback={<div>Loading...</div>}>
+              <GoalToScore goal={currentGoal} />
+            </Suspense>
+          </div>
+        ) : (
+          <EmptyState
+            icon={<ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />}
+            title="No Goal selected"
+            message="Please select a goal from the tree"
+          />
+        )}
       </div>
       <div>
         {currentGoal && (

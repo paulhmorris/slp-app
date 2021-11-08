@@ -10,7 +10,6 @@ const CreateGoal = z.object({
 })
 
 export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input, ctx) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const goal = await db.goal.create({
     data: {
       ...input,

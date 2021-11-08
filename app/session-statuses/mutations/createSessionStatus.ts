@@ -9,9 +9,13 @@ const CreateSessionStatus = z.object({
 export default resolver.pipe(
   resolver.zod(CreateSessionStatus),
   resolver.authorize(),
-  async (input) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const sessionStatus = await db.sessionStatus.create({ data: input })
+  async (input, ctx) => {
+    const sessionStatus = await db.sessionStatus.create({
+      data: {
+        ...input,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
     return sessionStatus
   }

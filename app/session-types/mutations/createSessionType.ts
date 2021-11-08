@@ -1,6 +1,6 @@
-import { resolver } from "blitz"
-import db from "db"
-import { z } from "zod"
+import { resolver } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
 const CreateSessionType = z.object({
   name: z.string(),
@@ -9,9 +9,13 @@ const CreateSessionType = z.object({
 export default resolver.pipe(
   resolver.zod(CreateSessionType),
   resolver.authorize(),
-  async (input) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const sessionType = await db.sessionType.create({ data: input })
+  async (input, ctx) => {
+    const sessionType = await db.sessionType.create({
+      data: {
+        ...input,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
     return sessionType
   }

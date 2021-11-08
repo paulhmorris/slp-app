@@ -13,7 +13,6 @@ export default resolver.pipe(
   resolver.zod(CreateScore),
   resolver.authorize(),
   async (input, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const score = await db.score.create({
       data: {
         ...input,

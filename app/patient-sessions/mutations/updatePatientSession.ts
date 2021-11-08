@@ -10,9 +10,14 @@ const UpdatePatientSession = z.object({
 export default resolver.pipe(
   resolver.zod(UpdatePatientSession),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const patientSession = await db.patientSession.update({ where: { id }, data })
+  async ({ id, ...data }, ctx) => {
+    const patientSession = await db.patientSession.update({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      data,
+    })
 
     return patientSession
   }

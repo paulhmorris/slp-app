@@ -9,9 +9,13 @@ const DeleteSessionStatus = z.object({
 export default resolver.pipe(
   resolver.zod(DeleteSessionStatus),
   resolver.authorize(),
-  async ({ id }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const sessionStatus = await db.sessionStatus.deleteMany({ where: { id } })
+  async ({ id }, ctx) => {
+    const sessionStatus = await db.sessionStatus.deleteMany({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
     return sessionStatus
   }

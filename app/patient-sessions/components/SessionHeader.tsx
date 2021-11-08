@@ -8,13 +8,12 @@ import {
   CakeIcon,
 } from '@heroicons/react/solid'
 import { PulseLoader } from 'react-spinners'
-import { Link, Routes, useSession } from 'blitz'
+import { Link, Routes } from 'blitz'
 import { Patient, PatientSession } from 'db'
 import dayjs from 'dayjs'
 import { getChronologicalAge, isBirthday } from 'app/core/lib/helpers'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
-import { useState } from 'react'
 
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -35,7 +34,6 @@ export const SessionHeader = ({
   updateSession,
   loading,
 }: SessionHeaderProps) => {
-  const session = useSession()
   const status = patientSession.sessionStatusId
   const loader = css`
     position: absolute;

@@ -6,9 +6,17 @@ const DeleteScore = z.object({
   id: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(DeleteScore), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const score = await db.score.deleteMany({ where: { id } })
+export default resolver.pipe(
+  resolver.zod(DeleteScore),
+  resolver.authorize(),
+  async ({ id }, ctx) => {
+    const score = await db.score.deleteMany({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
-  return score
-})
+    return score
+  }
+)

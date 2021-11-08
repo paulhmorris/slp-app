@@ -1,18 +1,13 @@
+import EmptyState from 'app/core/components/EmptyState'
 import getScores from 'app/scores/queries/getScores'
 import { invalidateQuery, useQuery } from 'blitz'
-import { Line, ChartProps } from 'react-chartjs-2'
 import dayjs from 'dayjs'
 import { useEffect } from 'react'
-import EmptyState from 'app/core/components/EmptyState'
-import { Goal, GoalCategory, GoalStatus, Score } from 'db'
+import { Line } from 'react-chartjs-2'
+import { GoalWithAllRelations } from 'types'
 
-interface GoalChartProps {
-  goal:
-    | Goal & {
-        parentGoal: Goal | null
-        status: GoalStatus
-        category: GoalCategory
-      }
+type GoalChartProps = {
+  goal: GoalWithAllRelations
 }
 
 export const GoalChart = ({ goal }: GoalChartProps) => {

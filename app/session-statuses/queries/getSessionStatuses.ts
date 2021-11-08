@@ -6,8 +6,7 @@ interface GetSessionStatusesInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetSessionStatusesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetSessionStatusesInput, ctx) => {
     const {
       items: sessionStatuses,
       hasMore,
@@ -17,7 +16,14 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.sessionStatus.count({ where }),
-      query: (paginateArgs) => db.sessionStatus.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.sessionStatus.findMany({
+          ...paginateArgs,
+          where: {
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+        }),
     })
 
     return {

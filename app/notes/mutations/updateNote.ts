@@ -10,9 +10,14 @@ const UpdateNote = z.object({
 export default resolver.pipe(
   resolver.zod(UpdateNote),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const note = await db.note.update({ where: { id }, data })
+  async ({ id, ...data }, ctx) => {
+    const note = await db.note.update({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+      data,
+    })
 
     return note
   }

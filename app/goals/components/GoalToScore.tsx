@@ -1,19 +1,17 @@
-import { Goal, GoalCategory, GoalStatus } from 'db'
-import { useMutation, useSession, invalidateQuery } from 'blitz'
-import { Form } from 'app/core/components/Forms/Form'
-import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
-import createScore from 'app/scores/mutations/createScore'
-import { createScoreSchema } from 'app/scores/validations'
-import { ChevronDoubleLeftIcon } from '@heroicons/react/outline'
-import { useState } from 'react'
-import { PlusSmIcon, MinusSmIcon } from '@heroicons/react/solid'
-import LabeledTextField from 'app/core/components/Forms/LabeledTextField'
-import toast from 'react-hot-toast'
-import { Toast } from 'app/core/components/Toast'
-import { Timer } from 'app/scores/components/Timer'
-import getScores from 'app/scores/queries/getScores'
-import EmptyState from 'app/core/components/EmptyState'
+import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid'
 import ScoreButton from 'app/core/components/Buttons/ScoreButton'
+import { Form } from 'app/core/components/Forms/Form'
+import LabeledTextField from 'app/core/components/Forms/LabeledTextField'
+import { Toast } from 'app/core/components/Toast'
+import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
+import { Timer } from 'app/scores/components/Timer'
+import createScore from 'app/scores/mutations/createScore'
+import getScores from 'app/scores/queries/getScores'
+import { createScoreSchema } from 'app/scores/validations'
+import { invalidateQuery, useMutation, useSession } from 'blitz'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import { GoalWithAllRelations } from 'types'
 
 const handleUpdate = async ({ isSuccess }) => {
   toast.custom(
@@ -28,15 +26,9 @@ const handleUpdate = async ({ isSuccess }) => {
     isSuccess && { duration: 3000 }
   )
 }
-interface GoalToScoreProps {
-  goal:
-    | (Goal & {
-        parentGoal: Goal | null
-        status: GoalStatus
-        category: GoalCategory
-      })
-    | undefined
-  patientId: number
+
+type GoalToScoreProps = {
+  goal: GoalWithAllRelations
 }
 
 export const GoalToScore = ({ goal }: GoalToScoreProps) => {
@@ -53,37 +45,17 @@ export const GoalToScore = ({ goal }: GoalToScoreProps) => {
 
   return (
     <>
-      {goal ? (
-        <div className="container flex flex-col items-center space-y-4 justify-center mx-auto py-8 pl-8 pr-12 bg-white rounded-md border border-gray-200">
-          {goal.scoreTypeId === 1 ? (
-            <PercentageGoal
-              goal={goal}
-              scoreMutation={createScoreMutation}
-              userId={session.userId}
-            />
-          ) : goal.scoreTypeId === 2 ? (
-            <FrequencyGoal
-              goal={goal}
-              scoreMutation={createScoreMutation}
-              userId={session.userId}
-            />
-          ) : (
-            goal.scoreTypeId === 3 && (
-              <DurationGoal
-                goal={goal}
-                scoreMutation={createScoreMutation}
-                userId={session.userId}
-              />
-            )
-          )}
-        </div>
-      ) : (
-        <EmptyState
-          icon={<ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />}
-          title="No Goal selected"
-          message="Please select a goal from the tree"
-        />
-      )}
+      <div className="container flex flex-col items-center space-y-4 justify-center mx-auto py-8 pl-8 pr-12 bg-white rounded-md border border-gray-200">
+        {goal.scoreTypeId === 1 ? (
+          <PercentageGoal goal={goal} scoreMutation={createScoreMutation} userId={session.userId} />
+        ) : goal.scoreTypeId === 2 ? (
+          <FrequencyGoal goal={goal} scoreMutation={createScoreMutation} userId={session.userId} />
+        ) : (
+          goal.scoreTypeId === 3 && (
+            <DurationGoal goal={goal} scoreMutation={createScoreMutation} userId={session.userId} />
+          )
+        )}
+      </div>
     </>
   )
 }
