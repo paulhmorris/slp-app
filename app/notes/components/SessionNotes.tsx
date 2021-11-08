@@ -1,17 +1,17 @@
-import { useState } from 'react'
 import { Transition } from '@headlessui/react'
-import { Tooltip } from 'app/core/components/Tooltip'
-import { useMutation, usePaginatedQuery, useSession, invalidateQuery } from 'blitz'
+import EmptyState from 'app/core/components/EmptyState'
 import { Toast } from 'app/core/components/Toast'
-import createNote from '../mutations/createNote'
-import getNotes from '../queries/getNotes'
-import { NoteForm } from './NoteForm'
+import { Tooltip } from 'app/core/components/Tooltip'
+import { invalidateQuery, useMutation, usePaginatedQuery, useSession } from 'blitz'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
-import EmptyState from 'app/core/components/EmptyState'
+import createNote from '../mutations/createNote'
+import getNotes from '../queries/getNotes'
+import { NoteForm } from './NoteForm'
 dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -98,8 +98,6 @@ export const SessionNotes = ({ goalId }: SessionNotesInput) => {
 }
 
 const NoteItem = ({ id, author, createdAt, body }) => {
-  const [showTime, setShowTime] = useState(false)
-
   return (
     <Transition.Child
       as="li"
@@ -117,16 +115,11 @@ const NoteItem = ({ id, author, createdAt, body }) => {
           </span>{' '}
           <span className="text-gray-400 text-sm font-normal">wrote (Id: {id})</span>
         </h3>
-        <div
-          onMouseEnter={() => setShowTime(true)}
-          onMouseLeave={() => {
-            setShowTime(false)
-          }}
-          className="mt-1 text-sm text-gray-500 whitespace-nowrap sm:mt-0 sm:ml-3 relative cursor-pointer hover:text-indigo-700 hover:underline"
-        >
-          <time dateTime={createdAt.toISOString()}>{dayjs(createdAt).fromNow()}</time>
-          <Tooltip show={showTime}>{dayjs(createdAt).format('M/D/YY h:mma z')}</Tooltip>
-        </div>
+        <Tooltip content={dayjs(createdAt).format('M/D/YY h:mma z')}>
+          <div className="mt-1 text-sm text-gray-500 whitespace-nowrap sm:mt-0 sm:ml-3 cursor-pointer hover:text-indigo-700 hover:underline">
+            <time dateTime={createdAt.toISOString()}>{dayjs(createdAt).fromNow()}</time>
+          </div>
+        </Tooltip>
       </div>
       <div
         className="mt-4 space-y-6 text-sm text-gray-800"

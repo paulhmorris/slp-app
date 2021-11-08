@@ -111,19 +111,19 @@ export const PatientActiveGoals: FC<GoalTreeProps> = ({ goals, currentGoal, setG
             ))}
           </div>
         </div>
-        {currentGoal ? (
-          <div className="flex-1 px-8">
+        <div className="flex-1 px-8">
+          {currentGoal ? (
             <Suspense fallback={<div>Loading...</div>}>
               <GoalToScore goal={currentGoal} />
             </Suspense>
-          </div>
-        ) : (
-          <EmptyState
-            icon={<ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />}
-            title="No Goal selected"
-            message="Please select a goal from the tree"
-          />
-        )}
+          ) : (
+            <EmptyState
+              icon={<ChevronDoubleLeftIcon className="mx-auto h-6 w-6 text-gray-400" />}
+              title="No Goal selected"
+              message="Please select a goal from the tree"
+            />
+          )}
+        </div>
       </div>
       <div>
         {currentGoal && (

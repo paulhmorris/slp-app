@@ -147,14 +147,6 @@ const PatientsPage: BlitzPage = () => {
         <title>Patients</title>
       </Head>
 
-      <div className="mb-4">
-        <p>
-          <Link href={Routes.NewPatientPage()}>
-            <a className="btn-primary">Create Patient</a>
-          </Link>
-        </p>
-      </div>
-
       <Suspense fallback={<div>Loading...</div>}>
         <PatientsList />
       </Suspense>

@@ -1,6 +1,5 @@
 import { Form, FormProps } from 'app/core/components/Forms/Form'
 import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
-import dayjs from 'dayjs'
 import { Field } from 'react-final-form'
 import { z } from 'zod'
 export { FORM_ERROR } from 'app/core/components/Forms/Form'
@@ -29,6 +28,7 @@ export function PatientForm<S extends z.ZodType<any, any>>(props: FormProps<S>) 
                       name="firstName"
                       label="First name"
                       placeholder="Jimmy"
+                      required
                       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
@@ -38,6 +38,7 @@ export function PatientForm<S extends z.ZodType<any, any>>(props: FormProps<S>) 
                       name="lastName"
                       label="Last name"
                       placeholder="John"
+                      required
                       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
@@ -60,6 +61,7 @@ export function PatientForm<S extends z.ZodType<any, any>>(props: FormProps<S>) 
                         format={(value) => value && value.valueAsDate}
                         name="dateOfBirth"
                         id="dateOfBirth"
+                        required
                         className="focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>

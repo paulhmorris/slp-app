@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import LoginForm from 'app/auth/components/LoginForm'
 import Navbar from 'app/core/components/Navbar'
-import { Toaster } from 'react-hot-toast'
 import 'app/core/styles/index.css'
 import {
   AppProps,
@@ -13,6 +12,7 @@ import {
   useQueryErrorResetBoundary,
 } from 'blitz'
 import { Suspense } from 'react'
+import { Toaster } from 'react-hot-toast'
 import { BeatLoader } from 'react-spinners'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -31,10 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
       onReset={useQueryErrorResetBoundary().reset}
     >
       <Suspense fallback={<BeatLoader color="#818CF8" css={loader} size={30} />}>
-        <Navbar />
-        <div className="px-6 pt-4 pb-20 max-w-7xl mx-auto min-h-full">
-          {getLayout(<Component {...pageProps} />)}
-        </div>
+        <Navbar>{getLayout(<Component {...pageProps} />)}</Navbar>
         <Toaster gutter={8} position="top-right" />
       </Suspense>
     </ErrorBoundary>

@@ -3,6 +3,7 @@ import EmptyState from 'app/core/components/EmptyState'
 import { Toast } from 'app/core/components/Toast'
 import Layout from 'app/core/layouts/Layout'
 import getGoals from 'app/goals/queries/getGoals'
+import { SessionNotes } from 'app/notes/components/SessionNotes'
 import { PatientActiveGoals } from 'app/patient-sessions/components/PatientActiveGoals'
 import { SessionHeader } from 'app/patient-sessions/components/SessionHeader'
 import updatePatientSession from 'app/patient-sessions/mutations/updatePatientSession'
@@ -90,6 +91,7 @@ export const PatientSession = () => {
           )}
         </div>
       </div>
+      {currentGoal && <SessionNotes goalId={currentGoal.id} />}
     </>
   )
 }

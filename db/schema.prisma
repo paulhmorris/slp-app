@@ -42,6 +42,7 @@ model Organization {
   SessionStatus  SessionStatus[]
   Score          Score[]
   ScoreType      ScoreType[]
+  PatientContact PatientContact[]
 }
 
 model Membership {
@@ -66,6 +67,7 @@ model User {
   email          String       @unique
   hashedPassword String?
   role           GlobalRole
+  phone          Phone[]
   tokens         Token[]
   sessions       Session[]
   notes          Note[]
@@ -117,8 +119,50 @@ model Patient {
   organizationId Int
   sessions       PatientSession[]
   goals          Goal[]
-  address        Address[]
+  address        Address?
+  phones         Phone[]
   organization   Organization     @relation(fields: [organizationId], references: [id])
+}
+
+enum ContactType {
+  PARENT
+  GUARDIAN
+  FAMILY_MEMBER
+  OTHER
+}
+
+model PatientContact {
+  id                     Int          @id @default(autoincrement())
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  firstName              String
+  lastName               String
+  email                  String?
+  responsibileForBilling Boolean      @default(false)
+  organizationId         Int
+  contactType            ContactType  @default(PARENT)
+  organization           Organization @relation(fields: [organizationId], references: [id])
+  phones                 Phone?
+}
+
+enum PhoneType {
+  MOBILE
+  HOME
+  WORK
+}
+
+model Phone {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  number           String
+  patientId        Int?
+  patientContactId Int?
+  userId           Int?
+  phoneType        PhoneType       @default(MOBILE)
+  patient          Patient?        @relation(fields: [patientId], references: [id])
+  patientContact   PatientContact? @relation(fields: [patientContactId], references: [id])
+  user             User?           @relation(fields: [userId], references: [id])
 }
 
 model Address {
@@ -129,10 +173,10 @@ model Address {
   city           String?
   region         String?      @default("TX")
   postcode       String?
-  country        String?      @default("United States")
-  patientId      Int
+  country        String?      @default("USA")
+  patientId      Int?
   organizationId Int
-  patient        Patient      @relation(fields: [patientId], references: [id])
+  patient        Patient?     @relation(fields: [patientId], references: [id])
   organization   Organization @relation(fields: [organizationId], references: [id])
 }
 

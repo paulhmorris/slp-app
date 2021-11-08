@@ -1,19 +1,19 @@
-import { ClockIcon, UploadIcon } from '@heroicons/react/outline'
 import { css } from '@emotion/react'
+import { ClockIcon, UploadIcon } from '@heroicons/react/outline'
 import {
+  CakeIcon,
   CalendarIcon,
   CheckCircleIcon,
   ExternalLinkIcon,
   RefreshIcon,
-  CakeIcon,
 } from '@heroicons/react/solid'
-import { PulseLoader } from 'react-spinners'
-import { Link, Routes } from 'blitz'
-import { Patient, PatientSession } from 'db'
-import dayjs from 'dayjs'
 import { getChronologicalAge, isBirthday } from 'app/core/lib/helpers'
+import { Link, Routes } from 'blitz'
+import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
+import { Patient, PatientSession } from 'db'
+import { PulseLoader } from 'react-spinners'
 
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -48,6 +48,7 @@ export const SessionHeader = ({
         <div className="flex-0 mr-8">
           <PatientDetail patient={patient} />
         </div>
+
         <span>
           {status !== 5 && (
             <button
@@ -122,9 +123,6 @@ export const SessionHeader = ({
             </span>
           )}
         </span>
-        <Tooltip show={showStatusTime}>
-          Last updated: {dayjs(patientSession.updatedAt).format('M/D/YY h:mma z')}
-        </Tooltip>
       </div> */}
     </div>
   )

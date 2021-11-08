@@ -1,6 +1,6 @@
-import resetPassword from './resetPassword'
-import db from 'db'
 import { hash256, SecurePassword } from 'blitz'
+import db from 'db'
+import resetPassword from './resetPassword'
 
 beforeEach(async () => {
   await db.$reset()
@@ -28,6 +28,16 @@ describe('resetPassword mutation', () => {
       data: {
         email: 'user@example.com',
         role: 'CUSTOMER',
+        memberships: {
+          create: {
+            role: 'OWNER',
+            organization: {
+              create: {
+                name: 'Test Organization',
+              },
+            },
+          },
+        },
         tokens: {
           // Create old token to ensure it's deleted
           create: [

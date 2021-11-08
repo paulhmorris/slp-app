@@ -1,5 +1,5 @@
-import faker from 'faker'
 import { SecurePassword } from 'blitz'
+import faker from 'faker'
 import db from './index'
 
 const seed = async () => {
@@ -173,6 +173,7 @@ const seed = async () => {
     await db.score.create({
       data: {
         createdBy: user.id,
+        createdAt: faker.date.between('2021-10-01', new Date()),
         value: faker.datatype.number({ min: 25, max: 95 }),
         goalId: faker.datatype.number({ min: 1, max: 10 }),
         scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
