@@ -75,7 +75,7 @@ export const SessionNotes = ({ goalId }: SessionNotesInput) => {
                 <NoteItem
                   key={noteIdx}
                   id={note.id}
-                  author={note.author.name}
+                  author={note.author}
                   createdAt={note.createdAt}
                   body={note.body}
                 />
@@ -111,7 +111,7 @@ const NoteItem = ({ id, author, createdAt, body }) => {
         <h3 className="text-base font-medium">
           {/* TODO: setup User page and link this up */}
           <span className="text-sm text-gray-600 hover:text-indigo-700 hover:cursor-pointer hover:underline">
-            {author}
+            {author.firstName} {author.lastName}
           </span>{' '}
           <span className="text-gray-400 text-sm font-normal">wrote (Id: {id})</span>
         </h3>

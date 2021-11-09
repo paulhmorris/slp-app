@@ -2,17 +2,15 @@ import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
-const UpdatePhone = z.object({
+const UpdateAppointment = z.object({
   id: z.number(),
-  number: z.string(),
 })
 
 export default resolver.pipe(
-  resolver.zod(UpdatePhone),
+  resolver.zod(UpdateAppointment),
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const phone = await db.phone.update({
+    const appointment = await db.appointment.update({
       where: {
         id,
         organizationId: ctx.session.orgId,
@@ -20,6 +18,6 @@ export default resolver.pipe(
       data,
     })
 
-    return phone
+    return appointment
   }
 )

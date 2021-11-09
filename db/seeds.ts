@@ -19,9 +19,7 @@ const seed = async () => {
   const password = await SecurePassword.hash('password123')
   const user = await db.user.create({
     data: {
-      name: 'Leslie Knope',
       email: 'admin@blitz.com',
-      image: faker.image.avatar(),
       hashedPassword: password,
       role: 'CUSTOMER',
       memberships: {
@@ -30,26 +28,6 @@ const seed = async () => {
     },
   })
   console.dir(user)
-
-  // Create session types
-  await db.sessionType.createMany({
-    data: [
-      { name: 'Speech', organizationId: org.id },
-      { name: 'Occupational', organizationId: org.id },
-      { name: 'Physical', organizationId: org.id },
-    ],
-  })
-
-  // Create session statuses
-  await db.sessionStatus.createMany({
-    data: [
-      { name: 'Scheduled', organizationId: org.id },
-      { name: 'In Progress', organizationId: org.id },
-      { name: 'Complete', organizationId: org.id },
-      { name: 'Canceled', organizationId: org.id },
-      { name: 'Submitted', organizationId: org.id },
-    ],
-  })
 
   // Create goal statuses
   const goalTypes = await db.goalStatus.createMany({
@@ -98,7 +76,6 @@ const seed = async () => {
       data: {
         title: faker.lorem.sentence(),
         patientId: patient.id,
-        sessionTypeId: 1,
         goalStatusId: 1,
         goalCategoryId: faker.datatype.number({ min: 1, max: 6 }),
         organizationId: org.id,
@@ -111,22 +88,19 @@ const seed = async () => {
           patientId: patient.id,
           title: faker.lorem.sentence(),
           goalStatusId: 1,
-          sessionTypeId: 1,
           goalCategoryId: goal.goalCategoryId,
           parentGoalId: goal.id,
-          scoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
+          defaultScoreTypeId: faker.datatype.number({ min: 1, max: 3 }),
           organizationId: org.id,
         },
       })
     }
   }
 
-  // Create a session
-  const session = await db.patientSession.create({
+  // Create an appointment
+  const appointment = await db.appointment.create({
     data: {
-      sessionTypeId: 1,
       patientId: patient.id,
-      sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
       organizationId: org.id,
     },
   })
@@ -143,13 +117,10 @@ const seed = async () => {
         organizationId: org.id,
       },
     })
-    // Create sessions
-    await db.patientSession.create({
+    // Create appointments
+    await db.appointment.create({
       data: {
-        sessionTypeId: 1,
         patientId: patient.id,
-        status: faker.random.arrayElement(goalTypes),
-        sessionStatusId: faker.datatype.number({ min: 1, max: 4 }),
         organizationId: org.id,
       },
     })
@@ -163,6 +134,7 @@ const seed = async () => {
         createdAt: faker.date.between('2021-10-01', new Date()),
         body: faker.lorem.sentences(),
         goalId: faker.datatype.number({ min: 1, max: 10 }),
+        noteTypeId: 1,
         organizationId: org.id,
       },
     })

@@ -16,9 +16,6 @@ export default resolver.pipe(
         id,
         organizationId: ctx.session.orgId,
       },
-      include: {
-        address: true,
-      },
     })
 
     if (!patient) throw new NotFoundError()

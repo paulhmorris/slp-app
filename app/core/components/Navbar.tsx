@@ -26,7 +26,7 @@ const user = {
 const navigation = [
   { name: 'Dashboard', route: Routes.Home(), icon: <HomeIcon />, current: false },
   { name: 'Patients', route: Routes.PatientsPage(), icon: <UserIcon />, current: false },
-  { name: 'Sessions', route: Routes.PatientSessionsPage(), icon: <PlayIcon />, current: false },
+  { name: 'Sessions', route: Routes.AppointmentsPage(), icon: <PlayIcon />, current: false },
   { name: 'Billing', route: Routes.Home(), icon: <CurrencyDollarIcon />, current: false },
 ]
 

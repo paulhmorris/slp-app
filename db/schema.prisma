@@ -14,67 +14,6 @@ generator client {
 
 // Top level
 
-enum MembershipRole {
-  OWNER
-  ADMIN
-  USER
-}
-
-enum GlobalRole {
-  SUPERADMIN
-  CUSTOMER
-}
-
-model Organization {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String
-  memberships    Membership[]
-  Patient        Patient[]
-  Address        Address[]
-  PatientSession PatientSession[]
-  Note           Note[]
-  Goal           Goal[]
-  GoalStatus     GoalStatus[]
-  GoalCategory   GoalCategory[]
-  SessionType    SessionType[]
-  SessionStatus  SessionStatus[]
-  Score          Score[]
-  ScoreType      ScoreType[]
-  PatientContact PatientContact[]
-}
-
-model Membership {
-  id             Int            @id @default(autoincrement())
-  role           MembershipRole
-  organizationId Int
-  invitedName    String?
-  invitedEmail   String?
-  userId         Int?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  user           User?          @relation(fields: [userId], references: [id])
-  organization   Organization   @relation(fields: [organizationId], references: [id])
-}
-
-model User {
-  id             Int          @id @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  name           String?
-  image          String?
-  email          String       @unique
-  hashedPassword String?
-  role           GlobalRole
-  phone          Phone[]
-  tokens         Token[]
-  sessions       Session[]
-  notes          Note[]
-  scores         Score[]
-  memberships    Membership[]
-}
-
 model Session {
   id                 Int       @id @default(autoincrement())
   createdAt          DateTime  @default(now())
@@ -107,48 +46,115 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-model Patient {
+enum MembershipRole {
+  OWNER
+  ADMIN
+  USER
+}
+
+enum GlobalRole {
+  SUPERADMIN
+  CUSTOMER
+}
+
+model Organization {
   id             Int              @id @default(autoincrement())
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  firstName      String
-  lastName       String
-  email          String
-  dateOfBirth    DateTime
-  isActive       Boolean          @default(true)
-  organizationId Int
-  sessions       PatientSession[]
+  name           String
+  memberships    Membership[]
+  patients       Patient[]
+  contacts       PatientContact[]
+  addresses      Address[]
+  appointments   Appointment[]
   goals          Goal[]
-  address        Address?
-  phones         Phone[]
-  organization   Organization     @relation(fields: [organizationId], references: [id])
+  notes          Note[]
+  goalStatuses   GoalStatus[]
+  goalCategories GoalCategory[]
+  scores         Score[]
+  scoreTypes     ScoreType[]
+  Phone          Phone[]
 }
 
-enum ContactType {
-  PARENT
-  GUARDIAN
-  FAMILY_MEMBER
-  OTHER
+model Membership {
+  id             Int            @id @default(autoincrement())
+  role           MembershipRole
+  organizationId Int
+  invitedName    String?
+  invitedEmail   String?
+  userId         Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User?          @relation(fields: [userId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  email            String   @unique
+  hashedPassword   String?
+  patientContactId Int?
+  patientId        Int?
+
+  role           GlobalRole      @default(CUSTOMER)
+  patientContact PatientContact? @relation(fields: [patientContactId], references: [id])
+  patient        Patient?        @relation(fields: [patientId], references: [id])
+  phone          Phone[]
+  tokens         Token[]
+  sessions       Session[]
+  notes          Note[]
+  scores         Score[]
+  memberships    Membership[]
+}
+
+model Patient {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  firstName      String
+  lastName       String
+  preferredName  String?
+  dateOfBirth    DateTime
+  isMinor        Boolean  @default(false)
+  email          String?
+  isActive       Boolean  @default(true)
+  organizationId Int
+  phoneId        Int?
+
+  addresses    Address[]
+  contacts     PatientContact[]
+  appointments Appointment[]
+  goals        Goal[]
+  phones       Phone[]
+  organization Organization     @relation(fields: [organizationId], references: [id])
+  User         User[]
 }
 
 model PatientContact {
-  id                     Int          @id @default(autoincrement())
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
+  id                     Int       @id @default(autoincrement())
+  organizationId         Int
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
   firstName              String
   lastName               String
+  preferredName          String?
   email                  String?
-  responsibileForBilling Boolean      @default(false)
-  organizationId         Int
-  contactType            ContactType  @default(PARENT)
-  organization           Organization @relation(fields: [organizationId], references: [id])
-  phones                 Phone?
-}
+  allowEmails            Boolean   @default(true)
+  dateOfBirth            DateTime?
+  patientId              Int
+  addressId              Int?
+  responsibileForBilling Boolean   @default(false)
+  isEmergencyContact     Boolean   @default(false)
+  receiveReminders       Boolean   @default(true)
 
-enum PhoneType {
-  MOBILE
-  HOME
-  WORK
+  contactType  PatientContactType @default(PARENT)
+  organization Organization       @relation(fields: [organizationId], references: [id])
+  addresses    Address[]
+  phones       Phone[]
+  patient      Patient?           @relation(fields: [patientId], references: [id])
+  user         User?
 }
 
 model Phone {
@@ -159,64 +165,59 @@ model Phone {
   patientId        Int?
   patientContactId Int?
   userId           Int?
+  allowCalls       Boolean         @default(true)
+  allowTexts       Boolean         @default(true)
+  organizationId   Int
   phoneType        PhoneType       @default(MOBILE)
-  patient          Patient?        @relation(fields: [patientId], references: [id])
-  patientContact   PatientContact? @relation(fields: [patientContactId], references: [id])
+  contact          PatientContact? @relation(fields: [patientContactId], references: [id])
   user             User?           @relation(fields: [userId], references: [id])
+  patient          Patient?        @relation(fields: [patientId], references: [id])
+  organization     Organization    @relation(fields: [organizationId], references: [id])
+}
+
+enum PatientContactType {
+  PARENT
+  GUARDIAN
+  FAMILY_MEMBER
+  OTHER
+}
+
+enum PhoneType {
+  MOBILE
+  HOME
+  WORK
+  FAX
 }
 
 model Address {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  street           String?
+  city             String?
+  region           String?         @default("TX")
+  postcode         String?
+  country          String?         @default("USA")
+  patientId        Int?
+  patientContactId Int?
+  organizationId   Int
+  patient          Patient?        @relation(fields: [patientId], references: [id])
+  patientContact   PatientContact? @relation(fields: [patientContactId], references: [id])
+  organization     Organization    @relation(fields: [organizationId], references: [id])
+}
+
+model Appointment {
   id             Int          @id @default(autoincrement())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  street         String?
-  city           String?
-  region         String?      @default("TX")
-  postcode       String?
-  country        String?      @default("USA")
-  patientId      Int?
+  scheduledAt    DateTime?
+  startedAt      DateTime?
+  endedAt        DateTime?
+  duration       Int?
+  patientId      Int
   organizationId Int
-  patient        Patient?     @relation(fields: [patientId], references: [id])
+  patient        Patient      @relation(fields: [patientId], references: [id])
   organization   Organization @relation(fields: [organizationId], references: [id])
-}
-
-model PatientSession {
-  id              Int           @id @default(autoincrement())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  scheduledAt     DateTime?
-  startedAt       DateTime?
-  endedAt         DateTime?
-  sessionTypeId   Int
-  duration        Int?
-  patientId       Int
-  sessionStatusId Int           @default(1)
-  organizationId  Int
-  status          SessionStatus @relation(fields: [sessionStatusId], references: [id])
-  patient         Patient       @relation(fields: [patientId], references: [id])
-  type            SessionType   @relation(fields: [sessionTypeId], references: [id])
-  organization    Organization  @relation(fields: [organizationId], references: [id])
-}
-
-model SessionType {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String           @unique
-  organizationId Int
-  PatientSession PatientSession[]
-  Goal           Goal[]
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-}
-
-model SessionStatus {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String           @unique
-  organizationId Int
-  PatientSession PatientSession[]
-  organization   Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model Note {
@@ -224,6 +225,7 @@ model Note {
   userId         Int
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  noteTypeId     Int
   body           String       @default("")
   organizationId Int
   goalId         Int
@@ -233,23 +235,21 @@ model Note {
 }
 
 model Goal {
-  id             Int      @id @default(autoincrement())
-  title          String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  patientId      Int
-  goalStatusId   Int      @default(1)
-  goalCategoryId Int
-  sessionTypeId  Int      @default(1)
-  parentGoalId   Int?
-  scoreTypeId    Int?
-  organizationId Int
+  id                 Int      @id @default(autoincrement())
+  title              String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  patientId          Int
+  goalStatusId       Int      @default(1)
+  goalCategoryId     Int
+  parentGoalId       Int?
+  defaultScoreTypeId Int?
+  organizationId     Int
 
-  type         SessionType  @relation(fields: [sessionTypeId], references: [id])
   status       GoalStatus   @relation(fields: [goalStatusId], references: [id])
   parentGoal   Goal?        @relation("GoalToGoal", fields: [parentGoalId], references: [id])
   patient      Patient      @relation(fields: [patientId], references: [id])
-  scoreType    ScoreType?   @relation(fields: [scoreTypeId], references: [id])
+  scoreType    ScoreType?   @relation(fields: [defaultScoreTypeId], references: [id])
   category     GoalCategory @relation(fields: [goalCategoryId], references: [id])
   childGoals   Goal[]       @relation("GoalToGoal")
   scores       Score[]

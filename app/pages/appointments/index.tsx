@@ -1,24 +1,18 @@
 import Layout from 'app/core/layouts/Layout'
-import createAppointment from 'app/appointments/mutations/createAppointment'
-import getPatients from 'app/patients/queries/getPatients'
-import { BlitzPage, Head, Link, Routes, useMutation, usePaginatedQuery, useRouter } from 'blitz'
-import { Suspense } from 'react'
+import { getBadgeColor } from 'app/core/lib/helpers'
+import getAppointments from 'app/appointments/queries/getAppointments'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
+import dayjs from 'dayjs'
 
 const ITEMS_PER_PAGE = 100
 
-export const PatientsList = () => {
+export const AppointmentsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ patients, hasMore }] = usePaginatedQuery(getPatients, {
-    orderBy: { id: 'asc' },
+  const [{ appointments, hasMore }] = usePaginatedQuery(getAppointments, {
+    orderBy: { createdAt: 'desc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
-  })
-
-  const [startSession] = useMutation(createAppointment, {
-    onSuccess: (sessionData) => {
-      router.push(Routes.ShowAppointmentPage({ appointmentId: sessionData.id }))
-    },
   })
 
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
@@ -43,74 +37,77 @@ export const PatientsList = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Name
+                      Patient
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Email
+                      Created At
                     </th>
                     <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Type
+                    </th>
+                    {/* <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Status
+                    </th> */}
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Duration
                     </th>
                     <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Start Session</span>
+                      <span className="sr-only">View Session</span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {patients.map((patient, patientIdx) => (
+                  {appointments.map((session, sessionIdx) => (
                     <tr
-                      key={patient.id}
-                      className={patientIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      key={session.id}
+                      className={sessionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {patient.id}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        {session.id}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {patient.firstName} {patient.lastName}
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        {session.patient.firstName} {session.patient.lastName}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {patient.email}
+                        {dayjs(session.createdAt).format('MM/DD/YYYY h:mm a')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span
-                          className={`${
-                            patient.isActive
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                          } text-white inline-flex px-3 py-1 rounded-full text-xs leading-5 font-semibold align-middle`}
-                        >
-                          {patient.isActive ? 'Active' : 'Inactive'}
+
+                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <span className={`tag-lg ${getBadgeColor(session.status.name)}`}>
+                          {session.status.name}
+                          {session.status.id === 2 && (
+                            <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
+                              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-70"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                            </span>
+                          )}
                         </span>
+                      </td> */}
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {session.duration && session.duration}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
+                        <Link href={Routes.ShowAppointmentPage({ appointmentId: session.id })}>
                           <a href="#" className="text-indigo-600 hover:text-indigo-900">
                             View
                           </a>
                         </Link>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          className="btn-secondary"
-                          onClick={async () => {
-                            try {
-                              startSession({ patientId: patient.id, typeId: 1 })
-                            } catch (error) {
-                              alert('Error starting session')
-                            }
-                          }}
-                        >
-                          Start Session
-                        </button>
                       </td>
                     </tr>
                   ))}
@@ -140,21 +137,23 @@ export const PatientsList = () => {
   )
 }
 
-const PatientsPage: BlitzPage = () => {
+const appointmentsPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>Patients</title>
+        <title>appointments</title>
       </Head>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <PatientsList />
-      </Suspense>
+      <div>
+        <h1 className="mb-3">Sessions</h1>
+
+        <AppointmentsList />
+      </div>
     </>
   )
 }
 
-PatientsPage.authenticate = true
-PatientsPage.getLayout = (page) => <Layout>{page}</Layout>
+appointmentsPage.authenticate = true
+appointmentsPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default PatientsPage
+export default appointmentsPage

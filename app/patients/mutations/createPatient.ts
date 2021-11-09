@@ -23,7 +23,7 @@ export default resolver.pipe(
     const patient = await db.patient.create({
       data: {
         ...input,
-        address: {
+        addresses: {
           create: {
             ...input.address,
             organizationId: ctx.session.orgId,
