@@ -3,7 +3,7 @@ import Layout from 'app/core/layouts/Layout'
 import createAppointment from 'app/appointments/mutations/createAppointment'
 import { AppointmentForm, FORM_ERROR } from 'app/appointments/components/AppointmentForm'
 
-const NewappointmentPage: BlitzPage = () => {
+const NewAppointmentPage: BlitzPage = () => {
   const router = useRouter()
   const [createAppointmentMutation] = useMutation(createAppointment)
 
@@ -33,7 +33,7 @@ const NewappointmentPage: BlitzPage = () => {
   )
 }
 
-NewappointmentPage.authenticate = true
-NewappointmentPage.getLayout = (page) => <Layout title={'Start New Session'}>{page}</Layout>
+NewAppointmentPage.authenticate = true
+NewAppointmentPage.getLayout = (page) => <Layout title={'Start New Session'}>{page}</Layout>
 
-export default NewappointmentPage
+export default NewAppointmentPage

@@ -98,7 +98,7 @@ export const Appointment = () => {
   )
 }
 
-const ShowappointmentPage: BlitzPage = () => {
+const ShowAppointmentPage: BlitzPage = () => {
   return (
     <div>
       <Appointment />
@@ -106,7 +106,7 @@ const ShowappointmentPage: BlitzPage = () => {
   )
 }
 
-ShowappointmentPage.authenticate = true
-ShowappointmentPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowAppointmentPage.authenticate = true
+ShowAppointmentPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default ShowappointmentPage
+export default ShowAppointmentPage

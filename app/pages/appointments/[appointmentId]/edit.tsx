@@ -4,7 +4,7 @@ import updateAppointment from 'app/appointments/mutations/updateAppointment'
 import getAppointment from 'app/appointments/queries/getAppointment'
 import { BlitzPage, Head, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
 
-export const Editappointment = () => {
+export const EditAppointment = () => {
   const router = useRouter()
   const appointmentId = useParam('appointmentId', 'number')
   const [appointment, { setQueryData }] = useQuery(
@@ -56,15 +56,15 @@ export const Editappointment = () => {
   )
 }
 
-const EditappointmentPage: BlitzPage = () => {
+const EditAppointmentPage: BlitzPage = () => {
   return (
     <div>
-      <Editappointment />
+      <EditAppointment />
     </div>
   )
 }
 
-EditappointmentPage.authenticate = true
-EditappointmentPage.getLayout = (page) => <Layout>{page}</Layout>
+EditAppointmentPage.authenticate = true
+EditAppointmentPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default EditappointmentPage
+export default EditAppointmentPage

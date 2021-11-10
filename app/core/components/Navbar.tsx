@@ -7,6 +7,7 @@ import {
   MenuAlt2Icon,
   PlayIcon,
   UserIcon,
+  UsersIcon,
   XIcon,
 } from '@heroicons/react/outline'
 import { PlusSmIcon, SearchIcon } from '@heroicons/react/solid'
@@ -25,9 +26,9 @@ const user = {
 
 const navigation = [
   { name: 'Dashboard', route: Routes.Home(), icon: <HomeIcon />, current: false },
-  { name: 'Patients', route: Routes.PatientsPage(), icon: <UserIcon />, current: false },
-  { name: 'Sessions', route: Routes.AppointmentsPage(), icon: <PlayIcon />, current: false },
+  { name: 'Patients', route: Routes.PatientsPage(), icon: <UsersIcon />, current: false },
   { name: 'Billing', route: Routes.Home(), icon: <CurrencyDollarIcon />, current: false },
+  { name: 'Appointments', route: Routes.AppointmentsPage(), icon: <PlayIcon />, current: false },
 ]
 
 const userNavigation = [
