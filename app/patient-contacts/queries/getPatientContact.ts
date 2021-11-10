@@ -11,7 +11,6 @@ export default resolver.pipe(
   resolver.zod(GetPatientContact),
   resolver.authorize(),
   async ({ id }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const patientContact = await db.patientContact.findFirst({ where: { id } })
 
     if (!patientContact) throw new NotFoundError()

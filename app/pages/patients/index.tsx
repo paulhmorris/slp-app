@@ -1,24 +1,19 @@
 import Layout from 'app/core/layouts/Layout'
-import createAppointment from 'app/appointments/mutations/createAppointment'
 import getPatients from 'app/patients/queries/getPatients'
-import { BlitzPage, Head, Link, Routes, useMutation, usePaginatedQuery, useRouter } from 'blitz'
-import { Suspense } from 'react'
+import { BlitzPage, Head, usePaginatedQuery, useRouter } from 'blitz'
+import { Suspense, useState } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
 export const PatientsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
+  const [sorter, setSorter] = useState({ id: 'asc' })
+
   const [{ patients, hasMore }] = usePaginatedQuery(getPatients, {
-    orderBy: { id: 'asc' },
+    orderBy: { ...sorter },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
-  })
-
-  const [startSession] = useMutation(createAppointment, {
-    onSuccess: (sessionData) => {
-      router.push(Routes.ShowAppointmentPage({ appointmentId: sessionData.id }))
-    },
   })
 
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
@@ -57,12 +52,6 @@ export const PatientsList = () => {
                     >
                       Status
                     </th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Start Session</span>
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,10 +64,11 @@ export const PatientsList = () => {
                         {patient.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {patient.firstName} {patient.lastName}
+                        {patient.patientContacts[0]?.contact?.firstName}{' '}
+                        {patient.patientContacts[0]?.contact?.lastName}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {patient.email}
+                        {patient.patientContacts[0]?.contact?.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span
@@ -90,27 +80,6 @@ export const PatientsList = () => {
                         >
                           {patient.isActive ? 'Active' : 'Inactive'}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
-                          <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                            View
-                          </a>
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          className="btn-secondary"
-                          onClick={async () => {
-                            try {
-                              startSession({ patientId: patient.id, typeId: 1 })
-                            } catch (error) {
-                              alert('Error starting session')
-                            }
-                          }}
-                        >
-                          Start Session
-                        </button>
                       </td>
                     </tr>
                   ))}

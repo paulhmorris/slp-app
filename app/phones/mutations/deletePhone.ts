@@ -6,9 +6,17 @@ const DeletePhone = z.object({
   id: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(DeletePhone), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const phone = await db.phone.deleteMany({ where: { id } })
+export default resolver.pipe(
+  resolver.zod(DeletePhone),
+  resolver.authorize(),
+  async ({ id }, ctx) => {
+    const phone = await db.phone.deleteMany({
+      where: {
+        id,
+        organizationId: ctx.session.orgId,
+      },
+    })
 
-  return phone
-})
+    return phone
+  }
+)

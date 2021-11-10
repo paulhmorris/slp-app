@@ -1,5 +1,4 @@
 import Layout from 'app/core/layouts/Layout'
-import { getBadgeColor } from 'app/core/lib/helpers'
 import getAppointments from 'app/appointments/queries/getAppointments'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import dayjs from 'dayjs'
@@ -10,7 +9,7 @@ export const AppointmentsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
   const [{ appointments, hasMore }] = usePaginatedQuery(getAppointments, {
-    orderBy: { createdAt: 'desc' },
+    orderBy: { scheduledAt: 'desc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
   })
@@ -43,7 +42,7 @@ export const AppointmentsList = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Created At
+                      Scheduled For
                     </th>
                     <th
                       scope="col"
@@ -51,12 +50,6 @@ export const AppointmentsList = () => {
                     >
                       Type
                     </th>
-                    {/* <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Status
-                    </th> */}
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -69,41 +62,30 @@ export const AppointmentsList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments.map((session, sessionIdx) => (
+                  {appointments.map((appointment, appointmentIdx) => (
                     <tr
-                      key={session.id}
-                      className={sessionIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      key={appointment.id}
+                      className={appointmentIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                        {session.id}
+                        {appointment.id}
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                        {session.patient.firstName} {session.patient.lastName}
+                        {appointment.patient.patientContacts[0]?.contact?.firstName}{' '}
+                        {appointment.patient.patientContacts[0]?.contact?.lastName}
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {dayjs(session.createdAt).format('MM/DD/YYYY h:mm a')}
+                        {dayjs(appointment.scheduledAt).format('MM/DD/YYYY h:mm a')}
                       </td>
 
-                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`tag-lg ${getBadgeColor(session.status.name)}`}>
-                          {session.status.name}
-                          {session.status.id === 2 && (
-                            <span className="flex absolute h-2.5 w-2.5 top-0 right-0 -mt-1 -mr-1">
-                              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-70"></span>
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                            </span>
-                          )}
-                        </span>
-                      </td> */}
-
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {session.duration && session.duration}
+                        {appointment.duration && appointment.duration}
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Link href={Routes.ShowAppointmentPage({ appointmentId: session.id })}>
+                        <Link href={Routes.ShowAppointmentPage({ appointmentId: appointment.id })}>
                           <a href="#" className="text-indigo-600 hover:text-indigo-900">
                             View
                           </a>
@@ -141,11 +123,11 @@ const AppointmentsPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>appointments</title>
+        <title>Appointments</title>
       </Head>
 
       <div>
-        <h1 className="mb-3">Sessions</h1>
+        <h1 className="mb-3">Appointments</h1>
 
         <AppointmentsList />
       </div>

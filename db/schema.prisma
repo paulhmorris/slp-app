@@ -46,10 +46,56 @@ model Token {
   @@unique([hashedToken, type])
 }
 
+model Organization {
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  name            String
+  memberships     Membership[]
+  patients        Patient[]
+  patientContacts PatientContact[]
+  patientServices PatientService[]
+  contacts        Contact[]
+  phones          Phone[]
+  addresses       Address[]
+  appointments    Appointment[]
+  goals           Goal[]
+  notes           Note[]
+  goalStatuses    GoalStatus[]
+  goalCategories  GoalCategory[]
+  scores          Score[]
+  scoreTypes      ScoreType[]
+  licenses        License[]
+}
+
+model Membership {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  organizationId Int
+  userId         Int?
+  licenseId      Int?
+  role           MembershipRole
+
+  user         User?        @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  license      License?
+
+  invitedName  String?
+  invitedEmail String?
+
+  @@unique([organizationId, invitedEmail])
+}
+
 enum MembershipRole {
   OWNER
-  ADMIN
-  USER
+  CLINICIAN_ADMIN
+  CLINICIAN_BASIC
+  SUPERVISOR
+  BILLER
+  SCHEDULER
+
+  PATIENT
 }
 
 enum GlobalRole {
@@ -57,129 +103,92 @@ enum GlobalRole {
   CUSTOMER
 }
 
-model Organization {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String
-  memberships    Membership[]
-  patients       Patient[]
-  contacts       PatientContact[]
-  addresses      Address[]
-  appointments   Appointment[]
-  goals          Goal[]
-  notes          Note[]
-  goalStatuses   GoalStatus[]
-  goalCategories GoalCategory[]
-  scores         Score[]
-  scoreTypes     ScoreType[]
-  Phone          Phone[]
-}
-
-model Membership {
-  id             Int            @id @default(autoincrement())
-  role           MembershipRole
-  organizationId Int
-  invitedName    String?
-  invitedEmail   String?
-  userId         Int?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  user           User?          @relation(fields: [userId], references: [id])
-  organization   Organization   @relation(fields: [organizationId], references: [id])
-}
-
 model User {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  email            String   @unique
-  hashedPassword   String?
-  patientContactId Int?
-  patientId        Int?
+  id             Int        @id @default(autoincrement())
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  username       String     @unique
+  hashedPassword String?
+  contactId      Int?
+  role           GlobalRole @default(CUSTOMER)
 
-  role           GlobalRole      @default(CUSTOMER)
-  patientContact PatientContact? @relation(fields: [patientContactId], references: [id])
-  patient        Patient?        @relation(fields: [patientId], references: [id])
-  phone          Phone[]
-  tokens         Token[]
-  sessions       Session[]
-  notes          Note[]
-  scores         Score[]
-  memberships    Membership[]
+  memberships Membership[]
+  contact     Contact?     @relation(fields: [contactId], references: [id])
+  tokens      Token[]
+  sessions    Session[]
+  notes       Note[]
+  scores      Score[]
 }
 
 model Patient {
   id             Int      @id @default(autoincrement())
+  organizationId Int
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  firstName      String
-  lastName       String
-  preferredName  String?
-  dateOfBirth    DateTime
-  isMinor        Boolean  @default(false)
-  email          String?
   isActive       Boolean  @default(true)
-  organizationId Int
-  phoneId        Int?
 
-  addresses    Address[]
-  contacts     PatientContact[]
-  appointments Appointment[]
-  goals        Goal[]
-  phones       Phone[]
-  organization Organization     @relation(fields: [organizationId], references: [id])
-  User         User[]
+  patientContacts PatientContact[]
+  appointments    Appointment[]
+  goals           Goal[]
+  organization    Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model PatientContact {
-  id                     Int       @id @default(autoincrement())
+  id                     Int                @id @default(autoincrement())
   organizationId         Int
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  firstName              String
-  lastName               String
-  preferredName          String?
-  email                  String?
-  allowEmails            Boolean   @default(true)
-  dateOfBirth            DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
   patientId              Int
-  addressId              Int?
-  responsibileForBilling Boolean   @default(false)
-  isEmergencyContact     Boolean   @default(false)
-  receiveReminders       Boolean   @default(true)
+  contactId              Int
+  isMinor                Boolean            @default(false)
+  responsibileForBilling Boolean            @default(false)
+  isEmergencyContact     Boolean            @default(false)
+  receivesReminders      Boolean            @default(true)
+  contactType            PatientContactType @default(PATIENT)
 
-  contactType  PatientContactType @default(PARENT)
-  organization Organization       @relation(fields: [organizationId], references: [id])
-  addresses    Address[]
-  phones       Phone[]
-  patient      Patient?           @relation(fields: [patientId], references: [id])
-  user         User?
-}
-
-model Phone {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  number           String
-  patientId        Int?
-  patientContactId Int?
-  userId           Int?
-  allowCalls       Boolean         @default(true)
-  allowTexts       Boolean         @default(true)
-  organizationId   Int
-  phoneType        PhoneType       @default(MOBILE)
-  contact          PatientContact? @relation(fields: [patientContactId], references: [id])
-  user             User?           @relation(fields: [userId], references: [id])
-  patient          Patient?        @relation(fields: [patientId], references: [id])
-  organization     Organization    @relation(fields: [organizationId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  patient      Patient      @relation(fields: [patientId], references: [id])
+  contact      Contact?     @relation(fields: [contactId], references: [id])
+  @@unique([patientId, contactId])
 }
 
 enum PatientContactType {
+  PATIENT
   PARENT
   GUARDIAN
   FAMILY_MEMBER
   OTHER
+}
+
+model Contact {
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  firstName      String
+  lastName       String
+  preferredName  String?
+  email          String?
+  dateOfBirth    DateTime?
+  organizationId Int
+  user           User?
+  patientContact PatientContact?
+  addresses      Address[]
+  phones         Phone[]
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+}
+
+model Phone {
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  number         String
+  contactId      Int?
+  allowCalls     Boolean      @default(true)
+  allowTexts     Boolean      @default(true)
+  organizationId Int
+  phoneType      PhoneType    @default(MOBILE)
+  contact        Contact?     @relation(fields: [contactId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 enum PhoneType {
@@ -190,20 +199,18 @@ enum PhoneType {
 }
 
 model Address {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  street           String?
-  city             String?
-  region           String?         @default("TX")
-  postcode         String?
-  country          String?         @default("USA")
-  patientId        Int?
-  patientContactId Int?
-  organizationId   Int
-  patient          Patient?        @relation(fields: [patientId], references: [id])
-  patientContact   PatientContact? @relation(fields: [patientContactId], references: [id])
-  organization     Organization    @relation(fields: [organizationId], references: [id])
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  street         String?
+  city           String?
+  region         String?      @default("TX")
+  postcode       String?
+  country        String?      @default("USA")
+  organizationId Int
+  contactId      Int?
+  contact        Contact?     @relation(fields: [contactId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Appointment {
@@ -301,4 +308,34 @@ model ScoreType {
   Score          Score[]
   Goal           Goal[]
   organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+model License {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  membershipId   Int
+  type           String
+  number         String
+  expiresAt      DateTime
+  state          String
+  organizationId Int
+
+  membership   Membership   @relation(fields: [membershipId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model PatientService {
+  id              Int      @id @default(autoincrement())
+  organizationId  Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  description     String
+  rate            Int
+  defaultDuration Int
+  isActive        Boolean  @default(true)
+  billInUnits     Boolean  @default(false)
+  isDefault       Boolean  @default(false)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
 }

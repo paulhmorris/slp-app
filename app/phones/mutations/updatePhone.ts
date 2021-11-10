@@ -11,7 +11,6 @@ export default resolver.pipe(
   resolver.zod(UpdatePhone),
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const phone = await db.phone.update({
       where: {
         id,

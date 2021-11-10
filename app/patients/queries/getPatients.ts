@@ -19,7 +19,24 @@ export default resolver.pipe(
       query: (paginateArgs) =>
         db.patient.findMany({
           ...paginateArgs,
-          where: { organizationId: ctx.session.orgId },
+          where: {
+            ...where,
+            organizationId: ctx.session.orgId,
+          },
+          include: {
+            patientContacts: {
+              where: {
+                contactType: 'PATIENT',
+              },
+              include: {
+                contact: {
+                  include: {
+                    phones: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy,
         }),
     })

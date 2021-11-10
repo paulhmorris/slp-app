@@ -13,24 +13,72 @@ const seed = async () => {
     data: {
       role: 'OWNER',
       organizationId: org.id,
+      license: {
+        create: {
+          type: 'SLP',
+          number: '176029514',
+          expiresAt: new Date('2024-01-01'),
+          state: 'TX',
+          organizationId: org.id,
+        },
+      },
     },
   })
 
   const password = await SecurePassword.hash('password123')
   const user = await db.user.create({
     data: {
-      email: 'admin@blitz.com',
+      username: 'admin@blitz.com',
       hashedPassword: password,
       role: 'CUSTOMER',
       memberships: {
         connect: { id: membership.id },
       },
+      contact: {
+        create: {
+          firstName: 'Harriet',
+          lastName: 'Morris',
+          organizationId: org.id,
+          email: faker.internet.email(),
+        },
+      },
     },
   })
   console.dir(user)
 
+  // Create Services
+  await db.patientService.createMany({
+    data: [
+      {
+        description: 'A default therapy service',
+        rate: faker.datatype.number({ min: 100, max: 250 }),
+        defaultDuration: 50,
+        isDefault: true,
+        organizationId: org.id,
+      },
+      {
+        description: 'A therapy service',
+        rate: faker.datatype.number({ min: 100, max: 250 }),
+        defaultDuration: 50,
+        organizationId: org.id,
+      },
+      {
+        description: 'A therapy service',
+        rate: faker.datatype.number({ min: 100, max: 250 }),
+        defaultDuration: 50,
+        organizationId: org.id,
+      },
+      {
+        description: 'A therapy service',
+        rate: faker.datatype.number({ min: 100, max: 250 }),
+        defaultDuration: 50,
+        organizationId: org.id,
+      },
+    ],
+  })
+
   // Create goal statuses
-  const goalTypes = await db.goalStatus.createMany({
+  await db.goalStatus.createMany({
     data: [
       { name: 'In Progress', organizationId: org.id },
       { name: 'Discontinued', organizationId: org.id },
@@ -59,15 +107,65 @@ const seed = async () => {
     ],
   })
 
-  // Create one patient with 10 sessions
+  // Create primary patient
   const patient = await db.patient.create({
     data: {
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-      email: faker.internet.email(),
-      dateOfBirth: faker.date.past(10, new Date()),
       organizationId: org.id,
     },
+  })
+
+  // Create Contacts
+  await db.contact.createMany({
+    data: [
+      {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        organizationId: org.id,
+        dateOfBirth: faker.date.between('2012-01-01', new Date()),
+      },
+      {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        organizationId: org.id,
+        dateOfBirth: faker.date.between('1950-01-01', '2000-01-01'),
+      },
+      {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        organizationId: org.id,
+        dateOfBirth: faker.date.between('1950-01-01', '2000-01-01'),
+      },
+    ],
+  })
+
+  // Create PatientContact records
+  await db.patientContact.createMany({
+    data: [
+      {
+        patientId: patient.id,
+        contactId: 2,
+        contactType: 'PATIENT',
+        isMinor: true,
+        organizationId: org.id,
+      },
+      {
+        patientId: patient.id,
+        contactId: 3,
+        contactType: 'FAMILY_MEMBER',
+        isEmergencyContact: true,
+        responsibileForBilling: true,
+        organizationId: org.id,
+      },
+      {
+        patientId: patient.id,
+        contactId: 4,
+        contactType: 'GUARDIAN',
+        organizationId: org.id,
+      },
+    ],
   })
 
   // Create 4 long term goals
@@ -97,37 +195,44 @@ const seed = async () => {
     }
   }
 
-  // Create an appointment
-  const appointment = await db.appointment.create({
-    data: {
-      patientId: patient.id,
-      organizationId: org.id,
-    },
-  })
-
-  for (let i = 0; i < 10; i++) {
-    // Create patients
-    await db.patient.create({
-      data: {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        email: faker.internet.email(),
-        dateOfBirth: faker.date.past(10, new Date()),
-        isActive: Math.random() > 0.1,
-        organizationId: org.id,
-      },
-    })
-    // Create appointments
-    await db.appointment.create({
-      data: {
+  // Create Appointments
+  await db.appointment.createMany({
+    data: [
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
         patientId: patient.id,
         organizationId: org.id,
       },
-    })
-  }
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
+        patientId: patient.id,
+        organizationId: org.id,
+      },
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
+        patientId: patient.id,
+        organizationId: org.id,
+      },
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
+        patientId: patient.id,
+        organizationId: org.id,
+      },
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
+        patientId: patient.id,
+        organizationId: org.id,
+      },
+      {
+        scheduledAt: faker.date.between(new Date(), '2022-03-01'),
+        patientId: patient.id,
+        organizationId: org.id,
+      },
+    ],
+  })
 
-  for (let i = 0; i < 100; i++) {
-    // Create notes
+  for (let i = 0; i < 50; i++) {
+    // Create Notes
     await db.note.create({
       data: {
         userId: 1,

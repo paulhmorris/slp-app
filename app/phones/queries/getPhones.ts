@@ -6,8 +6,7 @@ interface GetPhonesInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetPhonesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetPhonesInput, ctx) => {
     const {
       items: phones,
       hasMore,
@@ -17,7 +16,15 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.phone.count({ where }),
-      query: (paginateArgs) => db.phone.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.phone.findMany({
+          ...paginateArgs,
+          where: {
+            ...where,
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+        }),
     })
 
     return {

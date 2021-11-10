@@ -27,8 +27,3 @@ const GoalWithAllRelations = Prisma.validator<Prisma.GoalArgs>()({
   },
 })
 export type GoalWithAllRelations = Prisma.GoalGetPayload<typeof GoalWithAllRelations>
-
-export type WhereUniqueInputWithOrg = {
-  id?: number
-  organizationId?: number
-}

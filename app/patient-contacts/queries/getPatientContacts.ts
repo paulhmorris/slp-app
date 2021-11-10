@@ -6,8 +6,7 @@ interface GetPatientContactsInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetPatientContactsInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  async ({ where, orderBy, skip = 0, take = 100 }: GetPatientContactsInput, ctx) => {
     const {
       items: patientContacts,
       hasMore,
@@ -17,7 +16,15 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.patientContact.count({ where }),
-      query: (paginateArgs) => db.patientContact.findMany({ ...paginateArgs, where, orderBy }),
+      query: (paginateArgs) =>
+        db.patientContact.findMany({
+          ...paginateArgs,
+          where: {
+            ...where,
+            organizationId: ctx.session.orgId,
+          },
+          orderBy,
+        }),
     })
 
     return {

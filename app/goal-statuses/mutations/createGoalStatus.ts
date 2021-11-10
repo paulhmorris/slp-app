@@ -9,7 +9,7 @@ const CreateGoalStatus = z.object({
 export default resolver.pipe(
   resolver.zod(CreateGoalStatus),
   resolver.authorize(),
-  async (input, ctx) => {
+  async (input) => {
     const goalStatus = await db.goalStatus.create({
       data: {
         ...input,

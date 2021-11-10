@@ -20,6 +20,7 @@ export default resolver.pipe(
         db.goal.findMany({
           ...paginateArgs,
           where: {
+            ...where,
             organizationId: ctx.session.orgId,
           },
           orderBy,

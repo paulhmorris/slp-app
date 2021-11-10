@@ -1,4 +1,4 @@
-import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
+import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized, Ctx } from 'blitz'
 
 const config: BlitzConfig = {
   middleware: [
@@ -6,6 +6,9 @@ const config: BlitzConfig = {
       cookiePrefix: 'slp-app',
       isAuthorized: simpleRolesIsAuthorized,
     }),
+    (req, res, next) => {
+      return next()
+    },
   ],
   images: {
     domains: ['tailwindui.com', 'images.unsplash.com'],

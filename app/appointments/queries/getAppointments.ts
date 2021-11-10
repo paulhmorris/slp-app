@@ -25,7 +25,18 @@ export default resolver.pipe(
           },
           orderBy,
           include: {
-            patient: true,
+            patient: {
+              include: {
+                patientContacts: {
+                  where: {
+                    contactType: 'PATIENT',
+                  },
+                  include: {
+                    contact: true,
+                  },
+                },
+              },
+            },
           },
         }),
     })

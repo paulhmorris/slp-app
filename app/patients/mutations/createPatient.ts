@@ -16,23 +16,19 @@ export const CreatePatient = z.object({
   }),
 })
 
-export default resolver.pipe(
-  resolver.zod(CreatePatient),
-  resolver.authorize(),
-  async (input, ctx) => {
-    const patient = await db.patient.create({
-      data: {
-        ...input,
-        addresses: {
-          create: {
-            ...input.address,
-            organizationId: ctx.session.orgId,
-          },
+export default resolver.pipe(resolver.zod(CreatePatient), resolver.authorize(), async (input) => {
+  const patient = await db.patient.create({
+    data: {
+      ...input,
+      addresses: {
+        create: {
+          ...input.address,
+          organizationId: ctx.session.orgId,
         },
-        organizationId: ctx.session.orgId,
       },
-    })
+      organizationId: ctx.session.orgId,
+    },
+  })
 
-    return patient
-  }
-)
+  return patient
+})

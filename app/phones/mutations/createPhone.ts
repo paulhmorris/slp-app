@@ -10,7 +10,6 @@ export default resolver.pipe(
   resolver.zod(CreatePhone),
   resolver.authorize(),
   async (input, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const phone = await db.phone.create({
       data: {
         ...input,

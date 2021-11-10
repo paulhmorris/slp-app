@@ -2,11 +2,11 @@ import { AuthenticationError, resolver, SecurePassword } from 'blitz'
 import db from 'db'
 import { Login } from '../validations'
 
-export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
-  const email = rawEmail.toLowerCase().trim()
+export const authenticateUser = async (rawUsername: string, rawPassword: string) => {
+  const username = rawUsername.toLowerCase().trim()
   const password = rawPassword.trim()
   const user = await db.user.findFirst({
-    where: { email },
+    where: { username },
     include: { memberships: true },
   })
   if (!user) throw new AuthenticationError()
@@ -32,7 +32,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
 
   await ctx.session.$create({
     userId: user.id,
-    roles: [user.role, user.memberships[0]?.role || 'CUSTOMER'],
+    roles: [user.role, user.memberships[0]?.role],
     orgId: user.memberships[0]?.organizationId,
   })
 
