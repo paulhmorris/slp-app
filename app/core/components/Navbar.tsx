@@ -200,24 +200,24 @@ export default function Navbar({ children }) {
               <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex-1 px-4 flex justify-between">
-              <div className="flex-1 flex">
+              <div className="flex-1 flex py-2.5">
                 <form className="w-full flex md:ml-0" action="#" method="GET">
                   <label htmlFor="search-field" className="sr-only">
-                    Search
+                    Search for anything
                   </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                  <div className="relative w-full max-w-xs px-2 ml-auto text-gray-400 focus-within:text-gray-600">
+                    <div className="absolute inset-y-0 left-10 flex items-center pointer-events-none">
                       <SearchIcon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <input
                       id="search-field"
-                      className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                      placeholder="Search"
+                      className="block w-full h-full pl-10 ml-6 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-gray-300 sm:text-sm"
+                      placeholder="Search for anything..."
                       type="search"
                       name="search"
                     />
-                    <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                      <kbd className="inline-flex items-center border border-gray-200 rounded px-5 text-sm font-sans font-medium text-gray-400">
+                    <div className="absolute inset-y-0 -right-3 flex pt-0.5">
+                      <kbd className="inline-flex items-center border border-transparent rounded px-1.5 text-sm font-sans font-medium text-gray-400">
                         ⌘K
                       </kbd>
                     </div>

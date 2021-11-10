@@ -44,12 +44,6 @@ export const Patient = () => {
 const ShowPatientPage: BlitzPage = () => {
   return (
     <div>
-      <p>
-        <Link href={Routes.PatientsPage()}>
-          <a>Patients</a>
-        </Link>
-      </p>
-
       <Suspense fallback={<div>Loading...</div>}>
         <Patient />
       </Suspense>

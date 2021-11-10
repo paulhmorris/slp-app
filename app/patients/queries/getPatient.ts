@@ -16,6 +16,20 @@ export default resolver.pipe(
         id,
         organizationId: ctx.session.orgId,
       },
+      include: {
+        patientContacts: {
+          where: {
+            contactType: 'PATIENT',
+          },
+          include: {
+            contact: {
+              include: {
+                phones: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!patient) throw new NotFoundError()

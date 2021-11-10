@@ -1,6 +1,7 @@
 import Layout from 'app/core/layouts/Layout'
+import { formatPhoneNumber } from 'app/core/lib/helpers'
 import getPatients from 'app/patients/queries/getPatients'
-import { BlitzPage, Head, usePaginatedQuery, useRouter } from 'blitz'
+import { BlitzPage, Head, usePaginatedQuery, useRouter, Link, Routes } from 'blitz'
 import { Suspense, useState } from 'react'
 
 const ITEMS_PER_PAGE = 100
@@ -28,12 +29,12 @@ export const PatientsList = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Id
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -50,6 +51,12 @@ export const PatientsList = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
+                      Phone
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Status
                     </th>
                   </tr>
@@ -60,15 +67,22 @@ export const PatientsList = () => {
                       key={patient.id}
                       className={patientIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {patient.id}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {patient.patientContacts[0]?.contact?.firstName}{' '}
-                        {patient.patientContacts[0]?.contact?.lastName}
+                      </td> */}
+                      <td className="px-6 py-4 whitespace-nowrap text-base font-medium">
+                        <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
+                          <a className="text-indigo-700 hover:underline">
+                            {patient.patientContacts[0]?.contact?.firstName}{' '}
+                            {patient.patientContacts[0]?.contact?.lastName}
+                          </a>
+                        </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {patient.patientContacts[0]?.contact?.email}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatPhoneNumber(patient.patientContacts[0]?.contact?.phones[0]?.number)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span

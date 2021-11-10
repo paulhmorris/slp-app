@@ -1,37 +1,31 @@
-import { paginate, resolver } from 'blitz'
-import db, { Prisma } from 'db'
+import { resolver, NotFoundError } from 'blitz'
+import db from 'db'
+import { z } from 'zod'
 
-interface GetPatientContactsInput
-  extends Pick<Prisma.PatientContactFindManyArgs, 'where' | 'orderBy' | 'skip' | 'take'> {}
+const GetPatient = z.object({
+  patientId: z.number(),
+})
 
 export default resolver.pipe(
+  resolver.zod(GetPatient),
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetPatientContactsInput, ctx) => {
-    const {
-      items: patientContacts,
-      hasMore,
-      nextPage,
-      count,
-    } = await paginate({
-      skip,
-      take,
-      count: () => db.patientContact.count({ where }),
-      query: (paginateArgs) =>
-        db.patientContact.findMany({
-          ...paginateArgs,
-          where: {
-            ...where,
-            organizationId: ctx.session.orgId,
+  async ({ patientId }, ctx) => {
+    const patientContacts = await db.patientContact.findMany({
+      where: {
+        patientId,
+        organizationId: ctx.session.orgId,
+      },
+      include: {
+        contact: {
+          include: {
+            phones: true,
           },
-          orderBy,
-        }),
+        },
+      },
     })
 
-    return {
-      patientContacts,
-      nextPage,
-      hasMore,
-      count,
-    }
+    if (!patientContacts) throw new NotFoundError()
+
+    return patientContacts
   }
 )

@@ -6,16 +6,19 @@ export function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export function capitalize(string: String) {
-  const strArr = string.split(' ')
+export function formatPhoneNumber(normalizedNumber: string | undefined) {
+  const cleanedNumber = ('' + normalizedNumber).replace(/\D/g, '')
+  const match = cleanedNumber.match(/^(\d{3})(\d{3})(\d{4})$/)
+  if (match) {
+    return '(' + match[1] + ') ' + match[2] + '-' + match[3]
+  }
 
-  strArr.forEach((word) => {
-    word = word.charAt(0).toUpperCase() + word.slice(1)
-    console.log(word)
-  })
+  throw new Error('Unable to format phone number')
+}
 
-  console.log(strArr)
-  return strArr.join(' ')
+export function humanizeEnum(string: string) {
+  const spacedString = string.replace('_', ' ').toLowerCase()
+  return spacedString
 }
 
 export const getBadgeColor = (string: string, includeBackground: Boolean = true): string => {
