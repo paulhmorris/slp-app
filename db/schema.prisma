@@ -47,25 +47,25 @@ model Token {
 }
 
 model Organization {
-  id              Int              @id @default(autoincrement())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  name            String
-  memberships     Membership[]
-  patients        Patient[]
-  patientContacts PatientContact[]
-  patientServices PatientService[]
-  contacts        Contact[]
-  phones          Phone[]
-  addresses       Address[]
-  appointments    Appointment[]
-  goals           Goal[]
-  notes           Note[]
-  goalStatuses    GoalStatus[]
-  goalCategories  GoalCategory[]
-  scores          Score[]
-  scoreTypes      ScoreType[]
-  licenses        License[]
+  id               Int               @id @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  name             String
+  memberships      Membership[]
+  patients         Patient[]
+  patientRelations PatientRelation[]
+  services         Service[]
+  contacts         Contact[]
+  phones           Phone[]
+  addresses        Address[]
+  appointments     Appointment[]
+  goals            Goal[]
+  notes            Note[]
+  goalStatuses     GoalStatus[]
+  goalCategories   GoalCategory[]
+  scores           Score[]
+  scoreTypes       ScoreType[]
+  licenses         License[]
 }
 
 model Membership {
@@ -127,24 +127,24 @@ model Patient {
   updatedAt      DateTime @updatedAt
   isActive       Boolean  @default(true)
 
-  patientContacts PatientContact[]
-  appointments    Appointment[]
-  goals           Goal[]
-  organization    Organization     @relation(fields: [organizationId], references: [id])
+  patientRelations PatientRelation[]
+  appointments     Appointment[]
+  goals            Goal[]
+  organization     Organization      @relation(fields: [organizationId], references: [id])
 }
 
-model PatientContact {
-  id                     Int                @id @default(autoincrement())
+model PatientRelation {
+  id                     Int                 @id @default(autoincrement())
   organizationId         Int
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
   patientId              Int
   contactId              Int
-  isMinor                Boolean            @default(false)
-  responsibileForBilling Boolean            @default(false)
-  isEmergencyContact     Boolean            @default(false)
-  receivesReminders      Boolean            @default(true)
-  contactType            PatientContactType @default(PATIENT)
+  isMinor                Boolean             @default(false)
+  responsibileForBilling Boolean             @default(false)
+  isEmergencyContact     Boolean             @default(false)
+  receivesReminders      Boolean             @default(true)
+  relationType           PatientRelationType @default(PATIENT)
 
   organization Organization @relation(fields: [organizationId], references: [id])
   patient      Patient      @relation(fields: [patientId], references: [id])
@@ -152,7 +152,7 @@ model PatientContact {
   @@unique([patientId, contactId])
 }
 
-enum PatientContactType {
+enum PatientRelationType {
   PATIENT
   PARENT
   GUARDIAN
@@ -161,20 +161,20 @@ enum PatientContactType {
 }
 
 model Contact {
-  id             Int             @id @default(autoincrement())
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  firstName      String
-  lastName       String
-  preferredName  String?
-  email          String?
-  dateOfBirth    DateTime?
-  organizationId Int
-  user           User?
-  patientContact PatientContact?
-  addresses      Address[]
-  phones         Phone[]
-  organization   Organization    @relation(fields: [organizationId], references: [id])
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  firstName       String
+  lastName        String
+  preferredName   String?
+  email           String?
+  dateOfBirth     DateTime?
+  organizationId  Int
+  user            User?
+  patientRelation PatientRelation?
+  addresses       Address[]
+  phones          Phone[]
+  organization    Organization     @relation(fields: [organizationId], references: [id])
 }
 
 model Phone {
@@ -325,7 +325,7 @@ model License {
   organization Organization @relation(fields: [organizationId], references: [id])
 }
 
-model PatientService {
+model Service {
   id              Int      @id @default(autoincrement())
   organizationId  Int
   createdAt       DateTime @default(now())

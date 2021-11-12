@@ -2,15 +2,15 @@ import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
-const UpdatePatientService = z.object({
+const UpdateService = z.object({
   id: z.number(),
 })
 
 export default resolver.pipe(
-  resolver.zod(UpdatePatientService),
+  resolver.zod(UpdateService),
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
-    const patientService = await db.patientService.update({
+    const service = await db.service.update({
       where: {
         id,
         organizationId: ctx.session.orgId,
@@ -18,6 +18,6 @@ export default resolver.pipe(
       data,
     })
 
-    return patientService
+    return service
   }
 )

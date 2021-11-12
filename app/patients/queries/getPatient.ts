@@ -1,4 +1,4 @@
-import { resolver, NotFoundError } from 'blitz'
+import { NotFoundError, resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
@@ -17,9 +17,9 @@ export default resolver.pipe(
         organizationId: ctx.session.orgId,
       },
       include: {
-        patientContacts: {
+        patientRelations: {
           where: {
-            contactType: 'PATIENT',
+            relationType: 'PATIENT',
           },
           include: {
             contact: {
@@ -29,6 +29,7 @@ export default resolver.pipe(
             },
           },
         },
+        goals: true,
       },
     })
 

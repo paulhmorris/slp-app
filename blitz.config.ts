@@ -1,4 +1,4 @@
-import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized, Ctx } from 'blitz'
+import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from 'blitz'
 
 const config: BlitzConfig = {
   middleware: [
@@ -6,13 +6,19 @@ const config: BlitzConfig = {
       cookiePrefix: 'slp-app',
       isAuthorized: simpleRolesIsAuthorized,
     }),
-    (req, res, next) => {
-      return next()
-    },
   ],
   images: {
     domains: ['tailwindui.com', 'images.unsplash.com'],
   },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/patients/:slug',
+  //       destination: '/patients/:slug/overview',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   /* Uncomment this to customize the webpack config
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Note: we provide webpack above so you should not `require` it
@@ -22,4 +28,5 @@ const config: BlitzConfig = {
   },
   */
 }
+
 module.exports = config

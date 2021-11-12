@@ -54,7 +54,11 @@ export const currencyFormatter = new Intl.NumberFormat('en-us', {
   currency: 'USD',
 })
 
-export const getChronologicalAge = (dateOfBirth: Date): string => {
+export const getChronologicalAge = (dateOfBirth: Date | null): string => {
+  if (!dateOfBirth) {
+    throw new Error('No Date object specified')
+  }
+
   const years = dayjs().diff(dateOfBirth, 'years', false)
   const days = dayjs().diff(dateOfBirth, 'days', false)
   let months = dayjs().diff(dateOfBirth, 'months', false) - years * 12

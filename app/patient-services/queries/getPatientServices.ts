@@ -1,23 +1,23 @@
 import { paginate, resolver } from 'blitz'
 import db, { Prisma } from 'db'
 
-interface GetPatientServicesInput
-  extends Pick<Prisma.PatientServiceFindManyArgs, 'where' | 'orderBy' | 'skip' | 'take'> {}
+interface GetServicesInput
+  extends Pick<Prisma.ServiceFindManyArgs, 'where' | 'orderBy' | 'skip' | 'take'> {}
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetPatientServicesInput, ctx) => {
+  async ({ where, orderBy, skip = 0, take = 100 }: GetServicesInput, ctx) => {
     const {
-      items: patientServices,
+      items: services,
       hasMore,
       nextPage,
       count,
     } = await paginate({
       skip,
       take,
-      count: () => db.patientService.count({ where }),
+      count: () => db.service.count({ where }),
       query: (paginateArgs) =>
-        db.patientService.findMany({
+        db.service.findMany({
           ...paginateArgs,
           where: {
             ...where,
@@ -28,7 +28,7 @@ export default resolver.pipe(
     })
 
     return {
-      patientServices,
+      services,
       nextPage,
       hasMore,
       count,

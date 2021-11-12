@@ -1,27 +1,27 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
-import createPatientService from 'app/patient-services/mutations/createPatientService'
-import { PatientServiceForm, FORM_ERROR } from 'app/patient-services/components/PatientServiceForm'
+import { FORM_ERROR, ServiceForm } from 'app/patient-services/components/ServiceForm'
+import createService from 'app/patient-services/mutations/createService'
+import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
-const NewPatientServicePage: BlitzPage = () => {
+const NewServicePage: BlitzPage = () => {
   const router = useRouter()
-  const [createPatientServiceMutation] = useMutation(createPatientService)
+  const [createServiceMutation] = useMutation(createService)
 
   return (
     <div>
-      <h1>Create New PatientService</h1>
+      <h1>Create New Service</h1>
 
-      <PatientServiceForm
-        submitText="Create PatientService"
+      <ServiceForm
+        submitText="Create Service"
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
-        // schema={CreatePatientService}
+        // schema={CreateService}
         // initialValues={{}}
         onSubmit={async (values) => {
           try {
-            const patientService = await createPatientServiceMutation(values)
-            router.push(Routes.ShowPatientServicePage({ patientServiceId: patientService.id }))
+            const service = await createServiceMutation(values)
+            router.push(Routes.ShowServicePage({ serviceId: service.id }))
           } catch (error: any) {
             console.error(error)
             return {
@@ -32,17 +32,15 @@ const NewPatientServicePage: BlitzPage = () => {
       />
 
       <p>
-        <Link href={Routes.PatientServicesPage()}>
-          <a>PatientServices</a>
+        <Link href={Routes.ServicesPage()}>
+          <a>Services</a>
         </Link>
       </p>
     </div>
   )
 }
 
-NewPatientServicePage.authenticate = true
-NewPatientServicePage.getLayout = (page) => (
-  <Layout title={'Create New PatientService'}>{page}</Layout>
-)
+NewServicePage.authenticate = true
+NewServicePage.getLayout = (page) => <Layout title={'Create New Service'}>{page}</Layout>
 
-export default NewPatientServicePage
+export default NewServicePage

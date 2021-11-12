@@ -27,9 +27,9 @@ export default resolver.pipe(
           include: {
             patient: {
               include: {
-                patientContacts: {
+                patientRelations: {
                   where: {
-                    contactType: 'PATIENT',
+                    relationType: 'PATIENT',
                   },
                   include: {
                     contact: true,

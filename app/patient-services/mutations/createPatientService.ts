@@ -2,7 +2,7 @@ import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
-const CreatePatientService = z.object({
+const CreateService = z.object({
   id: z.number(),
   description: z.string(),
   defaultDuration: z.number(),
@@ -10,16 +10,16 @@ const CreatePatientService = z.object({
 })
 
 export default resolver.pipe(
-  resolver.zod(CreatePatientService),
+  resolver.zod(CreateService),
   resolver.authorize(),
   async (input, ctx) => {
-    const patientService = await db.patientService.create({
+    const service = await db.service.create({
       data: {
         ...input,
         organizationId: ctx.session.orgId,
       },
     })
 
-    return patientService
+    return service
   }
 )

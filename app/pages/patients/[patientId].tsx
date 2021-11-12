@@ -1,51 +1,74 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
+import { PatientHeading } from 'app/patients/components/overview/PatientHeading'
+import { PatientInfo } from 'app/patients/components/sidebar/PatientInfo'
+import { PatientRelationList } from 'app/patients/components/sidebar/PatientRelationList'
+import { UpcomingAppointments } from 'app/patients/components/sidebar/UpcomingAppointments'
 import getPatient from 'app/patients/queries/getPatient'
-import deletePatient from 'app/patients/mutations/deletePatient'
+import getUpcomingAppointments from 'app/patients/queries/getUpcomingAppointments'
+import { BlitzPage, Head, Link, Routes, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
-export const Patient = () => {
-  const router = useRouter()
+export const Patient = ({ children }) => {
   const patientId = useParam('patientId', 'number')
-  const [deletePatientMutation] = useMutation(deletePatient)
+  const router = useRouter()
   const [patient] = useQuery(getPatient, { id: patientId })
+  const [upcomingAppointments] = useQuery(getUpcomingAppointments, { patientId: patient.id })
+
+  const contact = patient.patientRelations[0]?.contact
+
+  if (!contact) {
+    throw new Error('No Contact entry found for this Patient')
+  }
 
   return (
     <>
       <Head>
-        <title>Patient {patient.id}</title>
+        <title>
+          Details for {contact.firstName.substring(0, 1)}
+          {contact.lastName.substring(0, 1)}
+        </title>
       </Head>
 
-      <div>
-        <h1>Patient {patient.id}</h1>
-        <pre>{JSON.stringify(patient, null, 2)}</pre>
+      <PatientHeading
+        patientId={patient.id}
+        contact={contact}
+        upcomingAppointments={upcomingAppointments}
+      />
 
-        <Link href={Routes.EditPatientPage({ patientId: patient.id })}>
-          <a className="btn-primary mr-2">Edit</a>
-        </Link>
+      <div className="grid gap-5 grid-cols-4">
+        <div className="col-span-3 mt-4">
+          <Link href={Routes.PatientOverviewPage({ patientId: patient.id })}>
+            <button>Overview</button>
+          </Link>
+          {children}
+        </div>
 
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm('This will be deleted')) {
-              await deletePatientMutation({ id: patient.id })
-              router.push(Routes.PatientsPage())
-            }
-          }}
-          className="btn-white"
-        >
-          Delete
-        </button>
+        <Sidebar>
+          <PatientInfo contact={contact} />
+          <PatientRelationList patientId={patient.id} />
+          <UpcomingAppointments patientId={patient.id} />
+        </Sidebar>
       </div>
     </>
   )
 }
 
-const ShowPatientPage: BlitzPage = () => {
+const Overview = () => {
+  const router = useRouter()
+  return router.pathname.includes('/deets') && <div>Overview</div>
+}
+
+const Sidebar = ({ children }) => {
+  return (
+    <aside className="flex flex-col col-span-1 w-full min-h-screen space-y-4">{children}</aside>
+  )
+}
+
+const ShowPatientPage: BlitzPage = ({ children }) => {
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
-        <Patient />
+        <Patient>{children}</Patient>
       </Suspense>
     </div>
   )

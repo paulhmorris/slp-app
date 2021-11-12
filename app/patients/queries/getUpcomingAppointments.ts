@@ -1,4 +1,4 @@
-import { resolver, NotFoundError } from 'blitz'
+import { NotFoundError, resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
@@ -18,12 +18,6 @@ export default resolver.pipe(
           gt: new Date(),
         },
       },
-      select: {
-        id: true,
-        scheduledAt: true,
-        duration: true,
-      },
-      take: 5,
       orderBy: {
         scheduledAt: 'asc',
       },

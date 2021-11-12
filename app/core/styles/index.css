@@ -44,6 +44,10 @@
     @apply text-gray-600;
   }
 
+  a {
+    @apply text-sm text-blue-600 hover:underline;
+  }
+
   input::placeholder {
     @apply text-gray-300;
   }

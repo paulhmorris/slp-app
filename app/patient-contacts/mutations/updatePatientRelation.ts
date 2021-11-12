@@ -2,21 +2,22 @@ import { resolver } from 'blitz'
 import db from 'db'
 import { z } from 'zod'
 
-const DeletePatientContact = z.object({
+const UpdatePatientRelation = z.object({
   id: z.number(),
 })
 
 export default resolver.pipe(
-  resolver.zod(DeletePatientContact),
+  resolver.zod(UpdatePatientRelation),
   resolver.authorize(),
-  async ({ id }, ctx) => {
-    const patientContact = await db.patientContact.deleteMany({
+  async ({ id, ...data }, ctx) => {
+    const patientRelation = await db.patientRelation.update({
       where: {
         id,
         organizationId: ctx.session.orgId,
       },
+      data,
     })
 
-    return patientContact
+    return patientRelation
   }
 )

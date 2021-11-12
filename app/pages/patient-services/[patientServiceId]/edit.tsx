@@ -1,48 +1,48 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
-import getPatientService from 'app/patient-services/queries/getPatientService'
-import updatePatientService from 'app/patient-services/mutations/updatePatientService'
-import { PatientServiceForm, FORM_ERROR } from 'app/patient-services/components/PatientServiceForm'
+import { FORM_ERROR, ServiceForm } from 'app/patient-services/components/ServiceForm'
+import updateService from 'app/patient-services/mutations/updateService'
+import getService from 'app/patient-services/queries/getService'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
-export const EditPatientService = () => {
+export const EditService = () => {
   const router = useRouter()
-  const patientServiceId = useParam('patientServiceId', 'number')
-  const [patientService, { setQueryData }] = useQuery(
-    getPatientService,
-    { id: patientServiceId },
+  const serviceId = useParam('serviceId', 'number')
+  const [service, { setQueryData }] = useQuery(
+    getService,
+    { id: serviceId },
     {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
   )
-  const [updatePatientServiceMutation] = useMutation(updatePatientService)
+  const [updateServiceMutation] = useMutation(updateService)
 
   return (
     <>
       <Head>
-        <title>Edit PatientService {patientService.id}</title>
+        <title>Edit Service {service.id}</title>
       </Head>
 
       <div>
-        <h1>Edit PatientService {patientService.id}</h1>
-        <pre>{JSON.stringify(patientService, null, 2)}</pre>
+        <h1>Edit Service {service.id}</h1>
+        <pre>{JSON.stringify(service, null, 2)}</pre>
 
-        <PatientServiceForm
-          submitText="Update PatientService"
+        <ServiceForm
+          submitText="Update Service"
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
-          // schema={UpdatePatientService}
-          initialValues={patientService}
+          // schema={UpdateService}
+          initialValues={service}
           onSubmit={async (values) => {
             try {
-              const updated = await updatePatientServiceMutation({
-                id: patientService.id,
+              const updated = await updateServiceMutation({
+                id: service.id,
                 ...values,
               })
               await setQueryData(updated)
-              router.push(Routes.ShowPatientServicePage({ patientServiceId: updated.id }))
+              router.push(Routes.ShowServicePage({ serviceId: updated.id }))
             } catch (error: any) {
               console.error(error)
               return {
@@ -56,23 +56,23 @@ export const EditPatientService = () => {
   )
 }
 
-const EditPatientServicePage: BlitzPage = () => {
+const EditServicePage: BlitzPage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
-        <EditPatientService />
+        <EditService />
       </Suspense>
 
       <p>
-        <Link href={Routes.PatientServicesPage()}>
-          <a>PatientServices</a>
+        <Link href={Routes.ServicesPage()}>
+          <a>Services</a>
         </Link>
       </p>
     </div>
   )
 }
 
-EditPatientServicePage.authenticate = true
-EditPatientServicePage.getLayout = (page) => <Layout>{page}</Layout>
+EditServicePage.authenticate = true
+EditServicePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default EditPatientServicePage
+export default EditServicePage

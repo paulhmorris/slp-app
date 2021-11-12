@@ -1,14 +1,14 @@
 import Layout from 'app/core/layouts/Layout'
-import getServices from 'app/patient-services/queries/getServices'
+import getPatientRelations from 'app/patient-contacts/queries/getPatientRelations'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
-export const ServicesList = () => {
+export const PatientRelationsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ services, hasMore }] = usePaginatedQuery(getServices, {
+  const [{ patientRelations, hasMore }] = usePaginatedQuery(getPatientRelations, {
     orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
@@ -20,10 +20,10 @@ export const ServicesList = () => {
   return (
     <div>
       <ul>
-        {services.map((service) => (
-          <li key={service.id}>
-            <Link href={Routes.ShowServicePage({ serviceId: service.id })}>
-              <a>{service.name}</a>
+        {patientRelations.map((patientRelation) => (
+          <li key={patientRelation.id}>
+            <Link href={Routes.ShowPatientRelationPage({ patientRelationId: patientRelation.id })}>
+              <a>{patientRelation.name}</a>
             </Link>
           </li>
         ))}
@@ -39,29 +39,29 @@ export const ServicesList = () => {
   )
 }
 
-const ServicesPage: BlitzPage = () => {
+const PatientRelationsPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>Services</title>
+        <title>PatientRelations</title>
       </Head>
 
       <div>
         <p>
-          <Link href={Routes.NewServicePage()}>
-            <a>Create Service</a>
+          <Link href={Routes.NewPatientRelationPage()}>
+            <a>Create PatientRelation</a>
           </Link>
         </p>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <ServicesList />
+          <PatientRelationsList />
         </Suspense>
       </div>
     </>
   )
 }
 
-ServicesPage.authenticate = true
-ServicesPage.getLayout = (page) => <Layout>{page}</Layout>
+PatientRelationsPage.authenticate = true
+PatientRelationsPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default ServicesPage
+export default PatientRelationsPage

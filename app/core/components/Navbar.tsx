@@ -117,28 +117,28 @@ export default function Navbar({ children }) {
                 <div className="mt-5 flex-1 h-0 overflow-y-auto">
                   <nav className="px-2 space-y-1">
                     {navigation.map((item) => (
-                      <HeadlessLink key={item.name} href={item.route}>
-                        <a
+                      <HeadlessLink
+                        key={item.name}
+                        href={item.route}
+                        className={classNames(
+                          item.current
+                            ? 'bg-gray-900 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                        )}
+                      >
+                        <div
                           className={classNames(
                             item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                              ? 'text-gray-500'
+                              : 'text-gray-400 group-hover:text-gray-500',
+                            'mr-4 flex-shrink-0 h-6 w-6'
                           )}
+                          aria-hidden="true"
                         >
-                          <div
-                            className={classNames(
-                              item.current
-                                ? 'text-gray-500'
-                                : 'text-gray-400 group-hover:text-gray-500',
-                              'mr-4 flex-shrink-0 h-6 w-6'
-                            )}
-                            aria-hidden="true"
-                          >
-                            {item.icon}
-                          </div>
-                          {item.name}
-                        </a>
+                          {item.icon}
+                        </div>
+                        {item.name}
                       </HeadlessLink>
                     ))}
                   </nav>
@@ -161,28 +161,26 @@ export default function Navbar({ children }) {
             <div className="mt-5 flex-grow flex flex-col">
               <nav className="flex-1 px-2 pb-4 space-y-1">
                 {navigation.map((item) => (
-                  <HeadlessLink key={item.name} href={item.route}>
-                    <a
+                  <HeadlessLink
+                    key={item.name}
+                    href={item.route}
+                    className={classNames(
+                      item.current
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                    )}
+                  >
+                    <div
                       className={classNames(
-                        item.current
-                          ? 'bg-gray-900 text-white'
-                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                        'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                        item.current ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-300',
+                        'mr-4 flex-shrink-0 h-6 w-6'
                       )}
+                      aria-hidden="true"
                     >
-                      <div
-                        className={classNames(
-                          item.current
-                            ? 'text-gray-300'
-                            : 'text-gray-400 group-hover:text-gray-300',
-                          'mr-4 flex-shrink-0 h-6 w-6'
-                        )}
-                        aria-hidden="true"
-                      >
-                        {item.icon}
-                      </div>
-                      {item.name}
-                    </a>
+                      {item.icon}
+                    </div>
+                    {item.name}
                   </HeadlessLink>
                 ))}
               </nav>
@@ -211,7 +209,7 @@ export default function Navbar({ children }) {
                     </div>
                     <input
                       id="search-field"
-                      className="block w-full h-full pl-10 ml-6 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-gray-300 sm:text-sm"
+                      className="block w-full h-full pl-10 ml-6 py-2 border border-gray-300 rounded-md leading-5 text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-gray-300 sm:text-sm"
                       placeholder="Search for anything..."
                       type="search"
                       name="search"
@@ -275,15 +273,14 @@ const ProfileDropdown = () => {
           {userNavigation.map((item) => (
             <Menu.Item key={item.name}>
               {({ active }) => (
-                <HeadlessLink href={item.href}>
-                  <a
-                    className={classNames(
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700'
-                    )}
-                  >
-                    {item.name}
-                  </a>
+                <HeadlessLink
+                  href={item.href}
+                  className={classNames(
+                    active ? 'bg-gray-100' : '',
+                    'block px-4 py-2 text-sm text-gray-700'
+                  )}
+                >
+                  {item.name}
                 </HeadlessLink>
               )}
             </Menu.Item>
@@ -317,18 +314,17 @@ const CreateButton = () => {
           {createOptions.map((item) => (
             <Menu.Item key={item.name}>
               {({ active }) => (
-                <HeadlessLink href={item.route}>
-                  <a
-                    className={classNames(
-                      active ? 'bg-gray-100' : '',
-                      'flex items-center px-4 py-2 text-sm text-gray-700'
-                    )}
-                  >
-                    <div className="inline-block h-4 w-4 mr-4 fill-current text-indigo-600">
-                      {item.icon}
-                    </div>
-                    {item.name}
-                  </a>
+                <HeadlessLink
+                  href={item.route}
+                  className={classNames(
+                    active ? 'bg-gray-100' : '',
+                    'flex items-center px-4 py-2 text-sm text-gray-700'
+                  )}
+                >
+                  <div className="inline-block h-4 w-4 mr-4 fill-current text-indigo-600">
+                    {item.icon}
+                  </div>
+                  {item.name}
                 </HeadlessLink>
               )}
             </Menu.Item>

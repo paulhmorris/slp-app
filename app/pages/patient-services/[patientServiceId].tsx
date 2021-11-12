@@ -1,26 +1,26 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from 'blitz'
 import Layout from 'app/core/layouts/Layout'
-import getPatientService from 'app/patient-services/queries/getPatientService'
-import deletePatientService from 'app/patient-services/mutations/deletePatientService'
+import deleteService from 'app/patient-services/mutations/deleteService'
+import getService from 'app/patient-services/queries/getService'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
-export const PatientService = () => {
+export const Service = () => {
   const router = useRouter()
-  const patientServiceId = useParam('patientServiceId', 'number')
-  const [deletePatientServiceMutation] = useMutation(deletePatientService)
-  const [patientService] = useQuery(getPatientService, { id: patientServiceId })
+  const serviceId = useParam('serviceId', 'number')
+  const [deleteServiceMutation] = useMutation(deleteService)
+  const [service] = useQuery(getService, { id: serviceId })
 
   return (
     <>
       <Head>
-        <title>PatientService {patientService.id}</title>
+        <title>Service {service.id}</title>
       </Head>
 
       <div>
-        <h1>PatientService {patientService.id}</h1>
-        <pre>{JSON.stringify(patientService, null, 2)}</pre>
+        <h1>Service {service.id}</h1>
+        <pre>{JSON.stringify(service, null, 2)}</pre>
 
-        <Link href={Routes.EditPatientServicePage({ patientServiceId: patientService.id })}>
+        <Link href={Routes.EditServicePage({ serviceId: service.id })}>
           <a>Edit</a>
         </Link>
 
@@ -28,8 +28,8 @@ export const PatientService = () => {
           type="button"
           onClick={async () => {
             if (window.confirm('This will be deleted')) {
-              await deletePatientServiceMutation({ id: patientService.id })
-              router.push(Routes.PatientServicesPage())
+              await deleteServiceMutation({ id: service.id })
+              router.push(Routes.ServicesPage())
             }
           }}
           style={{ marginLeft: '0.5rem' }}
@@ -41,23 +41,23 @@ export const PatientService = () => {
   )
 }
 
-const ShowPatientServicePage: BlitzPage = () => {
+const ShowServicePage: BlitzPage = () => {
   return (
     <div>
       <p>
-        <Link href={Routes.PatientServicesPage()}>
-          <a>PatientServices</a>
+        <Link href={Routes.ServicesPage()}>
+          <a>Services</a>
         </Link>
       </p>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <PatientService />
+        <Service />
       </Suspense>
     </div>
   )
 }
 
-ShowPatientServicePage.authenticate = true
-ShowPatientServicePage.getLayout = (page) => <Layout>{page}</Layout>
+ShowServicePage.authenticate = true
+ShowServicePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default ShowPatientServicePage
+export default ShowServicePage

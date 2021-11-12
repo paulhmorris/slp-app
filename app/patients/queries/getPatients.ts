@@ -24,9 +24,9 @@ export default resolver.pipe(
             organizationId: ctx.session.orgId,
           },
           include: {
-            patientContacts: {
+            patientRelations: {
               where: {
-                contactType: 'PATIENT',
+                relationType: 'PATIENT',
               },
               include: {
                 contact: {

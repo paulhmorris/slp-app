@@ -1,5 +1,5 @@
-import Layout from 'app/core/layouts/Layout'
 import getAppointments from 'app/appointments/queries/getAppointments'
+import Layout from 'app/core/layouts/Layout'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import dayjs from 'dayjs'
 
@@ -72,8 +72,8 @@ export const AppointmentsList = () => {
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                        {appointment.patient.patientContacts[0]?.contact?.firstName}{' '}
-                        {appointment.patient.patientContacts[0]?.contact?.lastName}
+                        {appointment.patient.patientRelations[0]?.contact?.firstName}{' '}
+                        {appointment.patient.patientRelations[0]?.contact?.lastName}
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

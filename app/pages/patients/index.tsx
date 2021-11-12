@@ -1,7 +1,7 @@
 import Layout from 'app/core/layouts/Layout'
 import { formatPhoneNumber } from 'app/core/lib/helpers'
 import getPatients from 'app/patients/queries/getPatients'
-import { BlitzPage, Head, usePaginatedQuery, useRouter, Link, Routes } from 'blitz'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense, useState } from 'react'
 
 const ITEMS_PER_PAGE = 100
@@ -71,18 +71,18 @@ export const PatientsList = () => {
                         {patient.id}
                       </td> */}
                       <td className="px-6 py-4 whitespace-nowrap text-base font-medium">
-                        <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
+                        <Link href={Routes.PatientOverviewPage({ patientId: patient.id })}>
                           <a className="text-indigo-700 hover:underline">
-                            {patient.patientContacts[0]?.contact?.firstName}{' '}
-                            {patient.patientContacts[0]?.contact?.lastName}
+                            {patient.patientRelations[0]?.contact?.firstName}{' '}
+                            {patient.patientRelations[0]?.contact?.lastName}
                           </a>
                         </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {patient.patientContacts[0]?.contact?.email}
+                        {patient.patientRelations[0]?.contact?.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatPhoneNumber(patient.patientContacts[0]?.contact?.phones[0]?.number)}
+                        {formatPhoneNumber(patient.patientRelations[0]?.contact?.phones[0]?.number)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span

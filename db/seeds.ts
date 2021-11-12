@@ -39,7 +39,7 @@ const seed = async () => {
           firstName: 'Harriet',
           lastName: 'Morris',
           organizationId: org.id,
-          email: faker.internet.email(),
+          email: faker.internet.email().toLowerCase(),
         },
       },
     },
@@ -47,7 +47,7 @@ const seed = async () => {
   console.dir(user)
 
   // Create Services
-  await db.patientService.createMany({
+  await db.service.createMany({
     data: [
       {
         description: 'A default therapy service',
@@ -120,41 +120,68 @@ const seed = async () => {
       {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        email: faker.internet.email(),
+        email: faker.internet.email().toLowerCase(),
         organizationId: org.id,
         dateOfBirth: faker.date.between('2012-01-01', new Date()),
       },
       {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        email: faker.internet.email(),
+        email: faker.internet.email().toLowerCase(),
         organizationId: org.id,
         dateOfBirth: faker.date.between('1950-01-01', '2000-01-01'),
       },
       {
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        email: faker.internet.email(),
+        email: faker.internet.email().toLowerCase(),
         organizationId: org.id,
         dateOfBirth: faker.date.between('1950-01-01', '2000-01-01'),
       },
     ],
   })
 
-  // Create PatientContact records
-  await db.patientContact.createMany({
+  // Create Phones
+  await db.phone.createMany({
+    data: [
+      {
+        organizationId: org.id,
+        allowCalls: true,
+        allowTexts: true,
+        number: faker.phone.phoneNumber(),
+        contactId: faker.datatype.number({ min: 2, max: 4 }),
+      },
+      {
+        organizationId: org.id,
+        allowCalls: true,
+        allowTexts: true,
+        number: faker.phone.phoneNumber(),
+        contactId: faker.datatype.number({ min: 2, max: 4 }),
+      },
+      {
+        organizationId: org.id,
+        allowCalls: true,
+        allowTexts: true,
+        number: faker.phone.phoneNumber(),
+        contactId: faker.datatype.number({ min: 2, max: 4 }),
+      },
+    ],
+  })
+
+  // Create PatientRelation records
+  await db.patientRelation.createMany({
     data: [
       {
         patientId: patient.id,
         contactId: 2,
-        contactType: 'PATIENT',
+        relationType: 'PATIENT',
         isMinor: true,
         organizationId: org.id,
       },
       {
         patientId: patient.id,
         contactId: 3,
-        contactType: 'FAMILY_MEMBER',
+        relationType: 'FAMILY_MEMBER',
         isEmergencyContact: true,
         responsibileForBilling: true,
         organizationId: org.id,
@@ -162,7 +189,7 @@ const seed = async () => {
       {
         patientId: patient.id,
         contactId: 4,
-        contactType: 'GUARDIAN',
+        relationType: 'GUARDIAN',
         organizationId: org.id,
       },
     ],
