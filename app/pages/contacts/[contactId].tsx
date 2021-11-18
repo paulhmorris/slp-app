@@ -1,8 +1,7 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import getContact from 'app/contacts/queries/getContact'
 import deleteContact from 'app/contacts/mutations/deleteContact'
+import getContact from 'app/contacts/queries/getContact'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const Contact = () => {
   const router = useRouter()
@@ -58,6 +57,6 @@ const ShowContactPage: BlitzPage = () => {
 }
 
 ShowContactPage.authenticate = true
-ShowContactPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowContactPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowContactPage

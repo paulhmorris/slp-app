@@ -1,13 +1,12 @@
-import { Divider } from 'app/core/components/Divider'
-import EmptyState from 'app/core/components/EmptyState'
-import { Toast } from 'app/core/components/Toast'
-import Layout from 'app/core/layouts/Layout'
-import getGoals from 'app/goals/queries/getGoals'
-import { SessionNotes } from 'app/notes/components/SessionNotes'
 import { PatientActiveGoals } from 'app/appointments/components/PatientActiveGoals'
 import { SessionHeader } from 'app/appointments/components/SessionHeader'
 import updateAppointment from 'app/appointments/mutations/updateAppointment'
 import getAppointment from 'app/appointments/queries/getAppointment'
+import { Divider } from 'app/core/components/Divider'
+import EmptyState from 'app/core/components/EmptyState'
+import { Toast } from 'app/core/components/Toast'
+import getGoals from 'app/goals/queries/getGoals'
+import { SessionNotes } from 'app/notes/components/SessionNotes'
 import { BlitzPage, Head, invalidateQuery, useMutation, useParam, useQuery } from 'blitz'
 import { Goal } from 'db'
 import { Suspense, useState } from 'react'
@@ -107,6 +106,6 @@ const ShowAppointmentPage: BlitzPage = () => {
 }
 
 ShowAppointmentPage.authenticate = true
-ShowAppointmentPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowAppointmentPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowAppointmentPage

@@ -1,7 +1,6 @@
-import { useRouter, useMutation, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
+import { FORM_ERROR, PatientForm } from 'app/patients/components/forms/PatientSettings'
 import createPatient from 'app/patients/mutations/createPatient'
-import { PatientForm, FORM_ERROR } from 'app/patients/components/PatientForm'
+import { BlitzPage, Routes, useMutation, useRouter } from 'blitz'
 import { createPatientSchema } from '../../patients/validations'
 
 const NewPatientPage: BlitzPage = () => {
@@ -22,13 +21,6 @@ const NewPatientPage: BlitzPage = () => {
           lastName: '',
           email: '',
           dateOfBirth: new Date(),
-          address: {
-            street: '',
-            city: '',
-            region: '',
-            postcode: '',
-            country: 'USA',
-          },
         }}
         schema={createPatientSchema}
         onSubmit={async (values) => {
@@ -48,6 +40,6 @@ const NewPatientPage: BlitzPage = () => {
 }
 
 NewPatientPage.authenticate = true
-NewPatientPage.getLayout = (page) => <Layout title={'Create New Patient'}>{page}</Layout>
+NewPatientPage.getLayout = (page) => <AdminLayout title={'Create New Patient'}>{page}</AdminLayout>
 
 export default NewPatientPage

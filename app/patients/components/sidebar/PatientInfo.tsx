@@ -18,8 +18,8 @@ export const PatientInfo = ({ contact }: IPatientInfo) => {
           </label>
         </div>
         <div className="w-3/4 text-sm text-gray-500">
-          {contact?.phones.map((phone, phoneIdx) => (
-            <>
+          {contact.phones.map((phone, phoneIdx) => (
+            <div key={phoneIdx}>
               <a
                 className="block text-indigo-700 hover:underline"
                 href={`tel:${phone.number}`}
@@ -29,11 +29,11 @@ export const PatientInfo = ({ contact }: IPatientInfo) => {
                 {formatPhoneNumber(phone.number)}
               </a>
               <p className="capitalize text-gray-700">{humanizeEnum(phone.phoneType)}</p>
-            </>
+            </div>
           ))}
         </div>
       </div>
-      {contact?.email && (
+      {contact.email && (
         <div className="flex justify-start">
           <div className="flex justify-start w-1/4">
             <label id="phoneLabel" className="text-gray-500 text-sm">
@@ -47,7 +47,7 @@ export const PatientInfo = ({ contact }: IPatientInfo) => {
               key={contact?.id}
               aria-describedby="phoneLabel"
             >
-              {contact?.email}
+              {contact.email}
             </a>
           </div>
         </div>

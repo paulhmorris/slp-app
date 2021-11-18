@@ -1,7 +1,6 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes, useQuery } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import createAppointment from 'app/appointments/mutations/createAppointment'
 import { AppointmentForm, FORM_ERROR } from 'app/appointments/components/AppointmentForm'
+import createAppointment from 'app/appointments/mutations/createAppointment'
+import { BlitzPage, Routes, useMutation, useRouter } from 'blitz'
 
 const NewAppointmentPage: BlitzPage = () => {
   const router = useRouter()
@@ -34,6 +33,8 @@ const NewAppointmentPage: BlitzPage = () => {
 }
 
 NewAppointmentPage.authenticate = true
-NewAppointmentPage.getLayout = (page) => <Layout title={'Start New Session'}>{page}</Layout>
+NewAppointmentPage.getLayout = (page) => (
+  <AdminLayout title={'Start New Session'}>{page}</AdminLayout>
+)
 
 export default NewAppointmentPage

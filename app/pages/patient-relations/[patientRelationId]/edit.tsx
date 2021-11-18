@@ -1,4 +1,4 @@
-import Layout from 'app/core/layouts/Layout'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import {
   FORM_ERROR,
   PatientRelationForm,
@@ -76,6 +76,6 @@ const EditPatientRelationPage: BlitzPage = () => {
 }
 
 EditPatientRelationPage.authenticate = true
-EditPatientRelationPage.getLayout = (page) => <Layout>{page}</Layout>
+EditPatientRelationPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditPatientRelationPage

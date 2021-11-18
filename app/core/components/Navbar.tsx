@@ -118,6 +118,7 @@ export default function Navbar({ children }) {
                   <nav className="px-2 space-y-1">
                     {navigation.map((item) => (
                       <HeadlessLink
+                        passHref
                         key={item.name}
                         href={item.route}
                         className={classNames(

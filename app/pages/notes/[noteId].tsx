@@ -1,12 +1,11 @@
-import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getNote from "app/notes/queries/getNote"
-import deleteNote from "app/notes/mutations/deleteNote"
+import deleteNote from 'app/notes/mutations/deleteNote'
+import getNote from 'app/notes/queries/getNote'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const Note = () => {
   const router = useRouter()
-  const noteId = useParam("noteId", "number")
+  const noteId = useParam('noteId', 'number')
   const [deleteNoteMutation] = useMutation(deleteNote)
   const [note] = useQuery(getNote, { id: noteId })
 
@@ -27,12 +26,12 @@ export const Note = () => {
         <button
           type="button"
           onClick={async () => {
-            if (window.confirm("This will be deleted")) {
+            if (window.confirm('This will be deleted')) {
               await deleteNoteMutation({ id: note.id })
               router.push(Routes.NotesPage())
             }
           }}
-          style={{ marginLeft: "0.5rem" }}
+          style={{ marginLeft: '0.5rem' }}
         >
           Delete
         </button>
@@ -58,6 +57,6 @@ const ShowNotePage: BlitzPage = () => {
 }
 
 ShowNotePage.authenticate = true
-ShowNotePage.getLayout = (page) => <Layout>{page}</Layout>
+ShowNotePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowNotePage

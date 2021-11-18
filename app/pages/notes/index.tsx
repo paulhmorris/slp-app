@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import getNotes from 'app/notes/queries/getNotes'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
@@ -62,6 +61,6 @@ const NotesPage: BlitzPage = () => {
 }
 
 NotesPage.authenticate = true
-NotesPage.getLayout = (page) => <Layout>{page}</Layout>
+NotesPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default NotesPage

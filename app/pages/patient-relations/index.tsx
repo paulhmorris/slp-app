@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import getPatientRelations from 'app/patient-contacts/queries/getPatientRelations'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
@@ -62,6 +61,6 @@ const PatientRelationsPage: BlitzPage = () => {
 }
 
 PatientRelationsPage.authenticate = true
-PatientRelationsPage.getLayout = (page) => <Layout>{page}</Layout>
+PatientRelationsPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default PatientRelationsPage

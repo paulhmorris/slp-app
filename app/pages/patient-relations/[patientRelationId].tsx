@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import deletePatientRelation from 'app/patient-contacts/mutations/deletePatientRelation'
 import getPatientRelation from 'app/patient-contacts/queries/getPatientRelation'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
@@ -58,6 +57,6 @@ const ShowPatientRelationPage: BlitzPage = () => {
 }
 
 ShowPatientRelationPage.authenticate = true
-ShowPatientRelationPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowPatientRelationPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowPatientRelationPage

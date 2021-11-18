@@ -1,7 +1,6 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
+import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
 import createScore from 'app/scores/mutations/createScore'
-import { ScoreForm, FORM_ERROR } from 'app/scores/components/ScoreForm'
+import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
 const NewScorePage: BlitzPage = () => {
   const router = useRouter()
@@ -41,6 +40,6 @@ const NewScorePage: BlitzPage = () => {
 }
 
 NewScorePage.authenticate = true
-NewScorePage.getLayout = (page) => <Layout title={'Create New Score'}>{page}</Layout>
+NewScorePage.getLayout = (page) => <AdminLayout title={'Create New Score'}>{page}</AdminLayout>
 
 export default NewScorePage

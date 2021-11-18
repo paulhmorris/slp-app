@@ -31,6 +31,7 @@ export const SidebarCard = ({ title, action, actionRoute, children }: SidebarCar
             )}
           </div>
           <Transition
+            show={open}
             enter="transition duration-100 ease-out"
             enterFrom="opacity-0"
             enterTo="opacity-100"
@@ -38,7 +39,7 @@ export const SidebarCard = ({ title, action, actionRoute, children }: SidebarCar
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Disclosure.Panel>{children}</Disclosure.Panel>
+            <Disclosure.Panel static>{children}</Disclosure.Panel>
           </Transition>
         </div>
       )}

@@ -1,4 +1,4 @@
-import Layout from 'app/core/layouts/Layout'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { formatPhoneNumber } from 'app/core/lib/helpers'
 import getPatients from 'app/patients/queries/getPatients'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
@@ -71,7 +71,7 @@ export const PatientsList = () => {
                         {patient.id}
                       </td> */}
                       <td className="px-6 py-4 whitespace-nowrap text-base font-medium">
-                        <Link href={Routes.PatientOverviewPage({ patientId: patient.id })}>
+                        <Link href={Routes.ShowPatientPage({ patientId: patient.id })}>
                           <a className="text-indigo-700 hover:underline">
                             {patient.patientRelations[0]?.contact?.firstName}{' '}
                             {patient.patientRelations[0]?.contact?.lastName}
@@ -138,6 +138,6 @@ const PatientsPage: BlitzPage = () => {
 }
 
 PatientsPage.authenticate = true
-PatientsPage.getLayout = (page) => <Layout>{page}</Layout>
+PatientsPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default PatientsPage

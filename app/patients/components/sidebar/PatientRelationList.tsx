@@ -15,7 +15,7 @@ export const PatientRelationList = ({ patientId }: UpcomingAppointmentProps) => 
       {patientRelations.map(
         ({ id, relationType, contactId, contact }) =>
           relationType !== 'PATIENT' && (
-            <div className="mb-4">
+            <div key={id} className="mb-4">
               <div className="flex text-sm text-gray-500 mb-2" key={id}>
                 <Link href={Routes.ShowContactPage({ contactId })}>
                   <a className="text-indigo-700 hover:underline mr-2">
@@ -35,17 +35,16 @@ export const PatientRelationList = ({ patientId }: UpcomingAppointmentProps) => 
                   </div>
                   <div className="w-3/4 text-sm text-gray-500">
                     {contact?.phones.map((phone, phoneIdx) => (
-                      <>
+                      <div key={phoneIdx}>
                         <a
                           className="block text-indigo-700 hover:underline"
                           href={`tel:${phone.number}`}
-                          key={phoneIdx}
                           aria-describedby="phoneLabel"
                         >
                           {formatPhoneNumber(phone.number)}
                         </a>
                         <p className="capitalize text-gray-800">{humanizeEnum(phone.phoneType)}</p>
-                      </>
+                      </div>
                     ))}
                   </div>
                 </div>

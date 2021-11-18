@@ -1,7 +1,6 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import createContact from 'app/contacts/mutations/createContact'
 import { ContactForm, FORM_ERROR } from 'app/contacts/components/ContactForm'
+import createContact from 'app/contacts/mutations/createContact'
+import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
 const NewContactPage: BlitzPage = () => {
   const router = useRouter()
@@ -41,6 +40,6 @@ const NewContactPage: BlitzPage = () => {
 }
 
 NewContactPage.authenticate = true
-NewContactPage.getLayout = (page) => <Layout title={'Create New Contact'}>{page}</Layout>
+NewContactPage.getLayout = (page) => <AdminLayout title={'Create New Contact'}>{page}</AdminLayout>
 
 export default NewContactPage

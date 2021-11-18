@@ -44,6 +44,10 @@
     @apply text-gray-600;
   }
 
+  label {
+    @apply select-none;
+  }
+
   a {
     @apply text-sm text-blue-600 hover:underline;
   }
@@ -65,7 +69,7 @@
   }
 
   .btn-danger {
-    @apply relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply relative inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .tag {

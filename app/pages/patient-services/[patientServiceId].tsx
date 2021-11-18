@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import deleteService from 'app/patient-services/mutations/deleteService'
 import getService from 'app/patient-services/queries/getService'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
@@ -58,6 +57,6 @@ const ShowServicePage: BlitzPage = () => {
 }
 
 ShowServicePage.authenticate = true
-ShowServicePage.getLayout = (page) => <Layout>{page}</Layout>
+ShowServicePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowServicePage

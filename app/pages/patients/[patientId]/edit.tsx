@@ -1,9 +1,9 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import getPatient from 'app/patients/queries/getPatient'
+import AdminLayout from 'app/core/layouts/AdminLayout'
+import { FORM_ERROR, PatientForm } from 'app/patients/components/forms/PatientSettings'
 import updatePatient from 'app/patients/mutations/updatePatient'
-import { PatientForm, FORM_ERROR } from 'app/patients/components/PatientForm'
+import getPatient from 'app/patients/queries/getPatient'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const EditPatient = () => {
   const router = useRouter()
@@ -26,7 +26,7 @@ export const EditPatient = () => {
 
       <div>
         <h1>Edit Patient {patient.id}</h1>
-        <pre>{JSON.stringify(patient, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(patient, null, 2)}</pre> */}
 
         <PatientForm
           submitText="Update Patient"
@@ -73,6 +73,6 @@ const EditPatientPage: BlitzPage = () => {
 }
 
 EditPatientPage.authenticate = true
-EditPatientPage.getLayout = (page) => <Layout>{page}</Layout>
+EditPatientPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditPatientPage

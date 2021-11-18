@@ -1,6 +1,5 @@
 import { css } from '@emotion/react'
 import LoginForm from 'app/auth/components/LoginForm'
-import Navbar from 'app/core/components/Navbar'
 import 'app/core/styles/index.css'
 import {
   AppProps,
@@ -31,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
       onReset={useQueryErrorResetBoundary().reset}
     >
       <Suspense fallback={<BeatLoader color="#818CF8" css={loader} size={30} />}>
-        <Navbar>{getLayout(<Component {...pageProps} />)}</Navbar>
+        {getLayout(<Component {...pageProps} />)}
         <Toaster gutter={8} position="top-right" />
       </Suspense>
     </ErrorBoundary>

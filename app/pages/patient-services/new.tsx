@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import { FORM_ERROR, ServiceForm } from 'app/patient-services/components/ServiceForm'
 import createService from 'app/patient-services/mutations/createService'
 import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
@@ -41,6 +40,6 @@ const NewServicePage: BlitzPage = () => {
 }
 
 NewServicePage.authenticate = true
-NewServicePage.getLayout = (page) => <Layout title={'Create New Service'}>{page}</Layout>
+NewServicePage.getLayout = (page) => <AdminLayout title={'Create New Service'}>{page}</AdminLayout>
 
 export default NewServicePage

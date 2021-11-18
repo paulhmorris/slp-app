@@ -1,5 +1,4 @@
 import getAppointments from 'app/appointments/queries/getAppointments'
-import Layout from 'app/core/layouts/Layout'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import dayjs from 'dayjs'
 
@@ -136,6 +135,6 @@ const AppointmentsPage: BlitzPage = () => {
 }
 
 AppointmentsPage.authenticate = true
-AppointmentsPage.getLayout = (page) => <Layout>{page}</Layout>
+AppointmentsPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default AppointmentsPage

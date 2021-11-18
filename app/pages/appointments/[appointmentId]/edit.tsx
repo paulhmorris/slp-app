@@ -1,7 +1,7 @@
-import Layout from 'app/core/layouts/Layout'
-import { FORM_ERROR, AppointmentForm } from 'app/appointments/components/AppointmentForm'
+import { AppointmentForm, FORM_ERROR } from 'app/appointments/components/AppointmentForm'
 import updateAppointment from 'app/appointments/mutations/updateAppointment'
 import getAppointment from 'app/appointments/queries/getAppointment'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Head, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
 
 export const EditAppointment = () => {
@@ -65,6 +65,6 @@ const EditAppointmentPage: BlitzPage = () => {
 }
 
 EditAppointmentPage.authenticate = true
-EditAppointmentPage.getLayout = (page) => <Layout>{page}</Layout>
+EditAppointmentPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditAppointmentPage

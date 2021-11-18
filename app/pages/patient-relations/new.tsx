@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import {
   FORM_ERROR,
   PatientRelationForm,
@@ -45,7 +44,7 @@ const NewPatientRelationPage: BlitzPage = () => {
 
 NewPatientRelationPage.authenticate = true
 NewPatientRelationPage.getLayout = (page) => (
-  <Layout title={'Create New PatientRelation'}>{page}</Layout>
+  <AdminLayout title={'Create New PatientRelation'}>{page}</AdminLayout>
 )
 
 export default NewPatientRelationPage

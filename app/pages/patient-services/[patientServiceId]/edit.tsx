@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import { FORM_ERROR, ServiceForm } from 'app/patient-services/components/ServiceForm'
 import updateService from 'app/patient-services/mutations/updateService'
 import getService from 'app/patient-services/queries/getService'
@@ -73,6 +72,6 @@ const EditServicePage: BlitzPage = () => {
 }
 
 EditServicePage.authenticate = true
-EditServicePage.getLayout = (page) => <Layout>{page}</Layout>
+EditServicePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditServicePage

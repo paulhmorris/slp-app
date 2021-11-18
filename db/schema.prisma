@@ -172,7 +172,7 @@ model Contact {
   organizationId  Int
   user            User?
   patientRelation PatientRelation?
-  addresses       Address[]
+  address         Address?
   phones          Phone[]
   organization    Organization     @relation(fields: [organizationId], references: [id])
 }
@@ -183,8 +183,8 @@ model Phone {
   updatedAt      DateTime     @updatedAt
   number         String
   contactId      Int?
-  allowCalls     Boolean      @default(true)
-  allowTexts     Boolean      @default(true)
+  allowCalls     Boolean      @default(false)
+  allowTexts     Boolean      @default(false)
   organizationId Int
   phoneType      PhoneType    @default(MOBILE)
   contact        Contact?     @relation(fields: [contactId], references: [id])
@@ -203,6 +203,7 @@ model Address {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   street         String?
+  street2        String?
   city           String?
   region         String?      @default("TX")
   postcode       String?

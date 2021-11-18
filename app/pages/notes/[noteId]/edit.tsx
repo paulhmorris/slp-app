@@ -1,13 +1,12 @@
-import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import getNote from "app/notes/queries/getNote"
-import updateNote from "app/notes/mutations/updateNote"
-import { NoteForm, FORM_ERROR } from "app/notes/components/NoteForm"
+import { FORM_ERROR, NoteForm } from 'app/notes/components/NoteForm'
+import updateNote from 'app/notes/mutations/updateNote'
+import getNote from 'app/notes/queries/getNote'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const EditNote = () => {
   const router = useRouter()
-  const noteId = useParam("noteId", "number")
+  const noteId = useParam('noteId', 'number')
   const [note, { setQueryData }] = useQuery(
     getNote,
     { id: noteId },
@@ -73,6 +72,6 @@ const EditNotePage: BlitzPage = () => {
 }
 
 EditNotePage.authenticate = true
-EditNotePage.getLayout = (page) => <Layout>{page}</Layout>
+EditNotePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditNotePage

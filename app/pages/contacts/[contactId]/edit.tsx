@@ -1,9 +1,9 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import getContact from 'app/contacts/queries/getContact'
-import updateContact from 'app/contacts/mutations/updateContact'
 import { ContactForm, FORM_ERROR } from 'app/contacts/components/ContactForm'
+import updateContact from 'app/contacts/mutations/updateContact'
+import getContact from 'app/contacts/queries/getContact'
+import AdminLayout from 'app/core/layouts/AdminLayout'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const EditContact = () => {
   const router = useRouter()
@@ -73,6 +73,6 @@ const EditContactPage: BlitzPage = () => {
 }
 
 EditContactPage.authenticate = true
-EditContactPage.getLayout = (page) => <Layout>{page}</Layout>
+EditContactPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditContactPage

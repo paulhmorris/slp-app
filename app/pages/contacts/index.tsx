@@ -1,7 +1,6 @@
-import { Suspense } from 'react'
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
 import getContacts from 'app/contacts/queries/getContacts'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
@@ -62,6 +61,6 @@ const ContactsPage: BlitzPage = () => {
 }
 
 ContactsPage.authenticate = true
-ContactsPage.getLayout = (page) => <Layout>{page}</Layout>
+ContactsPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ContactsPage

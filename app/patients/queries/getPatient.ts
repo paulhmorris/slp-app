@@ -24,7 +24,11 @@ export default resolver.pipe(
           include: {
             contact: {
               include: {
-                phones: true,
+                phones: {
+                  orderBy: {
+                    id: 'asc',
+                  },
+                },
               },
             },
           },

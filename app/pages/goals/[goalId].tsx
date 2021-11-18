@@ -1,8 +1,7 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import getGoal from 'app/goals/queries/getGoal'
 import deleteGoal from 'app/goals/mutations/deleteGoal'
+import getGoal from 'app/goals/queries/getGoal'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const Goal = () => {
   const router = useRouter()
@@ -58,6 +57,6 @@ const ShowGoalPage: BlitzPage = () => {
 }
 
 ShowGoalPage.authenticate = true
-ShowGoalPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowGoalPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default ShowGoalPage

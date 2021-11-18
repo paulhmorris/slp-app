@@ -1,7 +1,6 @@
-import { Suspense } from 'react'
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
 import getGoals from 'app/goals/queries/getGoals'
+import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 const ITEMS_PER_PAGE = 100
 
@@ -62,6 +61,6 @@ const GoalsPage: BlitzPage = () => {
 }
 
 GoalsPage.authenticate = true
-GoalsPage.getLayout = (page) => <Layout>{page}</Layout>
+GoalsPage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default GoalsPage

@@ -1,7 +1,6 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
+import { FORM_ERROR, GoalForm } from 'app/goals/components/GoalForm'
 import createGoal from 'app/goals/mutations/createGoal'
-import { GoalForm, FORM_ERROR } from 'app/goals/components/GoalForm'
+import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
 const NewGoalPage: BlitzPage = () => {
   const router = useRouter()
@@ -41,6 +40,6 @@ const NewGoalPage: BlitzPage = () => {
 }
 
 NewGoalPage.authenticate = true
-NewGoalPage.getLayout = (page) => <Layout title={'Create New Goal'}>{page}</Layout>
+NewGoalPage.getLayout = (page) => <AdminLayout title={'Create New Goal'}>{page}</AdminLayout>
 
 export default NewGoalPage

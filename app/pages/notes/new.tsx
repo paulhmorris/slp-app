@@ -1,4 +1,3 @@
-import Layout from 'app/core/layouts/Layout'
 import { FORM_ERROR, NoteForm } from 'app/notes/components/NoteForm'
 import createNote from 'app/notes/mutations/createNote'
 import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
@@ -39,6 +38,6 @@ const NewNotePage: BlitzPage = () => {
 }
 
 NewNotePage.authenticate = true
-NewNotePage.getLayout = (page) => <Layout title={'Create New Note'}>{page}</Layout>
+NewNotePage.getLayout = (page) => <AdminLayout title={'Create New Note'}>{page}</AdminLayout>
 
 export default NewNotePage

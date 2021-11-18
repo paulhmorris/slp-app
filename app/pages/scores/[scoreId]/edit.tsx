@@ -1,9 +1,8 @@
-import { Suspense } from 'react'
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from 'blitz'
-import Layout from 'app/core/layouts/Layout'
-import getScore from 'app/scores/queries/getScore'
+import { FORM_ERROR, ScoreForm } from 'app/scores/components/ScoreForm'
 import updateScore from 'app/scores/mutations/updateScore'
-import { ScoreForm, FORM_ERROR } from 'app/scores/components/ScoreForm'
+import getScore from 'app/scores/queries/getScore'
+import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
+import { Suspense } from 'react'
 
 export const EditScore = () => {
   const router = useRouter()
@@ -73,6 +72,6 @@ const EditScorePage: BlitzPage = () => {
 }
 
 EditScorePage.authenticate = true
-EditScorePage.getLayout = (page) => <Layout>{page}</Layout>
+EditScorePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>
 
 export default EditScorePage
