@@ -1,5 +1,5 @@
 import { Form, FormProps } from 'app/core/components/Form'
-import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import { z } from 'zod'
 export { FORM_ERROR } from 'app/core/components/Form'
 

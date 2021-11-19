@@ -10,6 +10,7 @@ const UpdatePatientSettings = z.object({
   email: z.string(),
   dateOfBirth: z.date(),
   isMinor: z.boolean(),
+  isActive: z.boolean(),
   phones: z
     .object({
       id: z.number().optional(),
@@ -22,7 +23,7 @@ const UpdatePatientSettings = z.object({
   address: z
     .object({
       street: z.string(),
-      street2: z.string().optional(),
+      street2: z.nullable(z.string()),
       city: z.string(),
       region: z.string(),
       postcode: z.string(),
@@ -34,7 +35,7 @@ const UpdatePatientSettings = z.object({
 export default resolver.pipe(
   resolver.zod(UpdatePatientSettings),
   resolver.authorize(),
-  async ({ id, isMinor, ...data }, ctx) => {
+  async ({ id, isMinor, isActive, ...data }, ctx) => {
     const contact = await db.contact.update({
       where: { id },
       data: {
@@ -42,6 +43,11 @@ export default resolver.pipe(
         patientRelation: {
           update: {
             isMinor,
+            patient: {
+              update: {
+                isActive,
+              },
+            },
           },
         },
         phones: {

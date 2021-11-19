@@ -29,6 +29,7 @@ export default resolver.pipe(
                     id: 'asc',
                   },
                 },
+                address: true,
               },
             },
           },

@@ -1,12 +1,20 @@
 import dayjs from 'dayjs'
 import dayOfYear from 'dayjs/plugin/dayOfYear'
+import { Address } from 'db'
 dayjs.extend(dayOfYear)
 
 export function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+export function formatAddress({ street, street2, city, region, postcode }: Address) {
+  return `${street} ${street2}, ${city}, ${region} ${postcode}`
+}
+
 export function formatPhoneNumber(normalizedNumber: string | undefined) {
+  if (!normalizedNumber) {
+    return
+  }
   const cleanedNumber = ('' + normalizedNumber).replace(/\D/g, '')
   const match = cleanedNumber.match(/^(\d{3})(\d{3})(\d{4})$/)
   if (match) {
@@ -28,6 +36,7 @@ export const getBadgeColor = (string: string, includeBackground: Boolean = true)
     'expressive language': 'blue',
 
     open: 'green',
+    active: 'green',
     'receptive language': 'green',
     'in progress': 'green',
 
@@ -42,6 +51,7 @@ export const getBadgeColor = (string: string, includeBackground: Boolean = true)
 
     canceled: 'red',
     'on hold': 'red',
+    inactive: 'red',
   }
 
   const color = tags[string] || 'gray'

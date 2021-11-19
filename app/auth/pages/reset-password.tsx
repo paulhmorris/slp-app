@@ -1,7 +1,7 @@
 import resetPassword from 'app/auth/mutations/resetPassword'
 import { ResetPassword } from 'app/auth/validations'
-import { Form, FORM_ERROR } from 'app/core/components/Forms/Form'
-import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
+import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
 import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Link, Routes, useMutation, useRouterQuery } from 'blitz'
 

@@ -8,7 +8,7 @@ import { NameFields } from './NameFields'
 import { PhoneFields } from './PhoneFields'
 export { FORM_ERROR } from 'app/core/components/forms/Form'
 
-export function PatientForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
+export function RelationForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   const { initialValues } = props
 
   return (

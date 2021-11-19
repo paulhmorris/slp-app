@@ -1,8 +1,8 @@
-import { AuthenticationError, Link, useMutation, Routes } from 'blitz'
-import { LabeledTextField } from 'app/core/components/Forms/LabeledTextField'
-import { Form, FORM_ERROR } from 'app/core/components/Forms/Form'
 import login from 'app/auth/mutations/login'
 import { Login } from 'app/auth/validations'
+import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
+import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import { AuthenticationError, Link, Routes, useMutation } from 'blitz'
 
 type LoginFormProps = {
   onSuccess?: () => void

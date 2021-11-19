@@ -1,7 +1,7 @@
-import { Form, FormProps } from 'app/core/components/Forms/Form'
+import { Form, FormProps } from 'app/core/components/forms/Form'
 import { Field } from 'react-final-form'
 import { z } from 'zod'
-export { FORM_ERROR } from 'app/core/components/Forms/Form'
+export { FORM_ERROR } from 'app/core/components/forms/Form'
 
 export function NoteForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (

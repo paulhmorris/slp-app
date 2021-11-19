@@ -14,12 +14,16 @@ export default resolver.pipe(
     const patientRelations = await db.patientRelation.findMany({
       where: {
         patientId,
+        relationType: {
+          not: 'PATIENT',
+        },
         organizationId: ctx.session.orgId,
       },
       include: {
         contact: {
           include: {
             phones: true,
+            address: true,
           },
         },
       },

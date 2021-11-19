@@ -1,20 +1,25 @@
-import { getChronologicalAge } from 'app/core/lib/helpers'
+import { getBadgeColor, getChronologicalAge } from 'app/core/lib/helpers'
 import { Link, Routes } from 'blitz'
 import dayjs from 'dayjs'
-import { Appointment, Contact } from 'db'
+import { Appointment, Contact, Patient } from 'db'
 
 interface IPatientHeading {
-  patientId: number
+  patient: Patient
   contact: Contact
   upcomingAppointments: Appointment[]
 }
 
-export const PatientHeading = ({ patientId, contact, upcomingAppointments }: IPatientHeading) => {
+export const PatientHeading = ({ patient, contact, upcomingAppointments }: IPatientHeading) => {
   return (
     <div>
-      <h1 className="text-3xl">
-        {contact.firstName} {contact.lastName}
-      </h1>
+      <div className="flex items-center">
+        <h1 className="text-3xl mr-5">
+          {contact.firstName} {contact.lastName}
+        </h1>
+        <span className={`tag ${getBadgeColor(patient.isActive ? 'active' : 'inactive')}`}>
+          {patient.isActive ? 'Active' : 'Inactive'}
+        </span>
+      </div>
 
       <div className="text-sm">
         <span>{dayjs(contact.dateOfBirth).format('MM/DD/YYYY')}</span>{' '}
@@ -33,7 +38,7 @@ export const PatientHeading = ({ patientId, contact, upcomingAppointments }: IPa
             {' |'}
           </>
         )}
-        <Link href={Routes.EditPatientPage({ patientId })}>
+        <Link href={Routes.EditPatientPage({ patientId: patient.id })}>
           <a className="ml-2">Edit</a>
         </Link>
       </div>

@@ -13,7 +13,6 @@ export default resolver.pipe(
     const patientRelation = await db.patientRelation.update({
       where: {
         id,
-        organizationId: ctx.session.orgId,
       },
       data,
     })

@@ -1,5 +1,5 @@
-import LabeledCheckbox from 'app/core/components/Forms/LabeledCheckbox'
-import LabeledTextField, { LabeledTextFieldProps } from 'app/core/components/Forms/LabeledTextField'
+import LabeledCheckbox from 'app/core/components/forms/LabeledCheckbox'
+import LabeledTextField, { LabeledTextFieldProps } from 'app/core/components/forms/LabeledTextField'
 
 const nameFields: LabeledTextFieldProps[] = [
   {
@@ -14,13 +14,6 @@ const nameFields: LabeledTextFieldProps[] = [
     label: 'last name',
     placeholder: 'Last name',
     span: 'col-span-1',
-    required: true,
-  },
-  {
-    name: 'email',
-    label: 'email address',
-    placeholder: 'jimmy@john.com',
-    span: 'col-span-2',
     required: true,
   },
   {

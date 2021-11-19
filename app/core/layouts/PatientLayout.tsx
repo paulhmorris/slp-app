@@ -26,15 +26,14 @@ const PatientLayout: BlitzLayout<{ title?: string }> = ({ title, children }) => 
       <Head>
         <title>
           {title ||
-            `Details for ${contact.firstName.substring(0, 1)}
-          ${contact.lastName.substring(0, 1)}`}
+            `Details for ${contact.firstName.substring(0, 1)}${contact.lastName.substring(0, 1)}`}
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Suspense fallback={<div>Loading...</div>}>
         <PatientHeading
-          patientId={patient.id}
+          patient={patient}
           contact={contact}
           upcomingAppointments={upcomingAppointments}
         />

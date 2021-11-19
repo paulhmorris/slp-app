@@ -38,14 +38,14 @@ export function Form<S extends z.ZodType<any, any>>({
       validate={validateZodSchema(schema)}
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError }) => (
-        <form onSubmit={handleSubmit} className="form" {...props}>
+        <form onSubmit={handleSubmit} {...props}>
           {children}
 
           {submitText && (
             <button
               type="submit"
               disabled={submitting}
-              className={`btn-primary relative ${submitting && 'text-transparent'}`}
+              className={`btn-primary relative mt-4 ${submitting && 'text-transparent'}`}
             >
               {submitting && (
                 <PulseLoader css={loader} color="white" size={6} speedMultiplier={0.75} />
@@ -59,12 +59,6 @@ export function Form<S extends z.ZodType<any, any>>({
               <pre>{submitError}</pre>
             </div>
           )}
-
-          <style global jsx>{`
-            .form > * + * {
-              margin-top: 1rem;
-            }
-          `}</style>
         </form>
       )}
     />

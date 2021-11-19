@@ -15,16 +15,23 @@ import {
 import { Suspense } from 'react'
 import toast from 'react-hot-toast'
 
+const handleUpdate = async ({ isSuccess }) => {
+  toast.custom(
+    (t) => (
+      <Toast
+        show={t.visible}
+        type={isSuccess ? 'success' : 'error'}
+        title={isSuccess ? 'Success!' : 'Whoops! Something went wrong'}
+        message={isSuccess ? 'Patient settings have been saved' : "We couldn't save your changes"}
+      />
+    ),
+    isSuccess && { duration: 3000 }
+  )
+}
+
 export const PatientSettings = () => {
   const patientId = useParam('patientId', 'number')
-  const [patient, { setQueryData }] = useQuery(
-    getPatient,
-    { id: patientId },
-    {
-      // This ensures the query never refreshes and overwrites the form data while the user is editing.
-      staleTime: Infinity,
-    }
-  )
+  const [patient] = useQuery(getPatient, { id: patientId }, { staleTime: Infinity })
   const [updateSettingsMutation] = useMutation(updatePatientSettings, {
     onSuccess: () => handleUpdate({ isSuccess: true }),
     onError: () => handleUpdate({ isSuccess: false }),
@@ -32,7 +39,7 @@ export const PatientSettings = () => {
 
   const contact = patient.patientRelations[0]?.contact
   if (!contact) {
-    throw new NotFoundError()
+    throw new NotFoundError('No Patient Contact information was found')
   }
 
   const settingsFormValues = {
@@ -41,28 +48,17 @@ export const PatientSettings = () => {
     email: contact.email,
     dateOfBirth: contact.dateOfBirth,
     isMinor: patient.patientRelations[0]?.isMinor,
+    isActive: patient.isActive,
     phones: contact.phones,
-  }
-
-  const handleUpdate = async ({ isSuccess }) => {
-    toast.custom(
-      (t) => (
-        <Toast
-          show={t.visible}
-          type={isSuccess ? 'success' : 'error'}
-          title={isSuccess ? 'Success!' : 'Whoops! Something went wrong'}
-          message={isSuccess ? 'Patient settings have been saved' : "We couldn't save your changes"}
-        />
-      ),
-      isSuccess && { duration: 3000 }
-    )
+    address: {
+      ...contact.address,
+    },
   }
 
   const handleSubmit = async (values) => {
     try {
       const updated = await updateSettingsMutation({
         id: contact.id,
-        phones: {},
         ...values,
       })
       invalidateQuery(getPatient)

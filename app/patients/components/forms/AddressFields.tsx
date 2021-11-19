@@ -1,4 +1,4 @@
-import { LabeledTextField, LabeledTextFieldProps } from 'app/core/components/Forms/LabeledTextField'
+import { LabeledTextField, LabeledTextFieldProps } from 'app/core/components/forms/LabeledTextField'
 
 const addressFields: LabeledTextFieldProps[] = [
   {
