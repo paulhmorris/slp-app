@@ -45,7 +45,7 @@ export const GoalToScore = ({ goal }: GoalToScoreProps) => {
 
   return (
     <>
-      <div className="container flex flex-col items-center space-y-4 justify-center mx-auto py-8 pl-8 pr-12 bg-white rounded-md border border-gray-200">
+      <div className="container flex flex-col items-center space-y-4 justify-center mx-auto py-8 pl-8 pr-12 bg-white rounded-md border border-gray-200 max-w-sm">
         {goal.defaultScoreTypeId === 1 ? (
           <PercentageGoal goal={goal} scoreMutation={createScoreMutation} userId={session.userId} />
         ) : goal.defaultScoreTypeId === 2 ? (

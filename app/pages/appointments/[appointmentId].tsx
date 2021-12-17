@@ -3,10 +3,9 @@ import { SessionHeader } from 'app/appointments/components/SessionHeader'
 import updateAppointment from 'app/appointments/mutations/updateAppointment'
 import getAppointment from 'app/appointments/queries/getAppointment'
 import { Divider } from 'app/core/components/Divider'
-import EmptyState from 'app/core/components/EmptyState'
 import { Toast } from 'app/core/components/Toast'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import getGoals from 'app/goals/queries/getGoals'
-import { SessionNotes } from 'app/notes/components/SessionNotes'
 import { BlitzPage, Head, invalidateQuery, useMutation, useParam, useQuery } from 'blitz'
 import { Goal } from 'db'
 import { Suspense, useState } from 'react'
@@ -40,6 +39,7 @@ export const Appointment = () => {
     where: { patientId: appointment.patientId, goalStatusId: 1 },
     orderBy: { createdAt: 'desc' },
   })
+  const contact = appointment?.patient?.patientRelations[0]?.contact!
 
   const [currentGoal, setCurrentGoal]: [Goal | undefined, any] = useState(undefined)
 
@@ -70,6 +70,7 @@ export const Appointment = () => {
       <div className="mx-auto">
         <SessionHeader
           patient={appointment.patient}
+          contact={contact}
           appointment={appointment}
           updateSession={updateSessionStatus}
           loading={isLoading}
@@ -77,22 +78,13 @@ export const Appointment = () => {
         <Divider padding="6" />
 
         <div className="flex-1 relative z-0 space-x-8">
-          {/* TODO: figure out appointment statuses */}
-          {appointment.endedAt ? (
-            <Suspense fallback={<div>Loading...</div>}>
-              <PatientActiveGoals
-                goals={goals}
-                currentGoal={currentGoal}
-                setGoal={setCurrentGoal}
-              />
-            </Suspense>
-          ) : (
-            <EmptyState message="This session has already been submitted to insurance and only an admin can make changes." />
-          )}
+          <Suspense fallback={<div>Loading...</div>}>
+            <PatientActiveGoals goals={goals} currentGoal={currentGoal} setGoal={setCurrentGoal} />
+          </Suspense>
         </div>
       </div>
       {/* @ts-ignore */}
-      {currentGoal && <SessionNotes goalId={currentGoal.id} />}
+      {/* {currentGoal && <SessionNotes goalId={currentGoal.id} />} */}
     </>
   )
 }

@@ -1,19 +1,11 @@
 import { css } from '@emotion/react'
-import { ClockIcon, UploadIcon } from '@heroicons/react/outline'
-import {
-  CakeIcon,
-  CalendarIcon,
-  CheckCircleIcon,
-  ExternalLinkIcon,
-  RefreshIcon,
-} from '@heroicons/react/solid'
+import { CakeIcon, CalendarIcon, ExternalLinkIcon } from '@heroicons/react/solid'
 import { getChronologicalAge, isBirthday } from 'app/core/lib/helpers'
 import { Link, Routes } from 'blitz'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import timezone from 'dayjs/plugin/timezone'
-import { Patient, Appointment } from 'db'
-import { PulseLoader } from 'react-spinners'
+import { Appointment, Contact, Patient } from 'db'
 
 dayjs.extend(timezone)
 dayjs.extend(advancedFormat)
@@ -23,6 +15,7 @@ dayjs.extend(advancedFormat)
 
 interface SessionHeaderProps {
   patient: Patient
+  contact: Contact
   appointment: Appointment
   loading: boolean
   updateSession: (status: number) => Promise<void>
@@ -30,6 +23,7 @@ interface SessionHeaderProps {
 
 export const SessionHeader = ({
   patient,
+  contact,
   appointment,
   updateSession,
   loading,
@@ -45,7 +39,7 @@ export const SessionHeader = ({
     <div className="lg:flex lg:items-center lg:justify-between mt-6">
       <div className="mt-5 flex space-x-3 lg:mt-0 items-center">
         <div className="flex-0 mr-8">
-          <PatientDetail patient={patient} />
+          <PatientDetail patient={patient} contact={contact} />
         </div>
 
         {/* <span>
@@ -127,15 +121,15 @@ export const SessionHeader = ({
   )
 }
 
-const PatientDetail = ({ patient }) => {
+const PatientDetail = ({ contact }) => {
   return (
     <>
       <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
-        {patient.firstName} {patient.lastName}
+        {contact.firstName} {contact.lastName}
       </h2>
       <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
         <div className="mt-2 flex flex-1 justify-start items-center text-sm text-gray-500">
-          {isBirthday(patient.dateOfBirth) ? (
+          {isBirthday(contact.dateOfBirth) ? (
             <CakeIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-purple-500" aria-hidden="true" />
           ) : (
             <CalendarIcon
@@ -143,7 +137,7 @@ const PatientDetail = ({ patient }) => {
               aria-hidden="true"
             />
           )}
-          <span>{getChronologicalAge(patient.dateOfBirth)}</span>
+          <span>{getChronologicalAge(contact.dateOfBirth)}</span>
         </div>
       </div>
     </>

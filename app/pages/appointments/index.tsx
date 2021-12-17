@@ -1,4 +1,5 @@
 import getAppointments from 'app/appointments/queries/getAppointments'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import dayjs from 'dayjs'
 

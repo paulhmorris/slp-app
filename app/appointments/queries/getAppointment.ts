@@ -20,6 +20,14 @@ export default resolver.pipe(
         patient: {
           include: {
             goals: true,
+            patientRelations: {
+              where: {
+                relationType: 'PATIENT',
+              },
+              include: {
+                contact: true,
+              },
+            },
           },
         },
       },

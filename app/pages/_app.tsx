@@ -31,7 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <Suspense fallback={<BeatLoader color="#818CF8" css={loader} size={30} />}>
         {getLayout(<Component {...pageProps} />)}
-        <Toaster gutter={8} position="top-right" />
+        <Toaster gutter={8} position="bottom-left" />
       </Suspense>
     </ErrorBoundary>
   )
