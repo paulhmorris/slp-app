@@ -1,5 +1,6 @@
 import { ContactForm, FORM_ERROR } from 'app/contacts/components/ContactForm'
 import createContact from 'app/contacts/mutations/createContact'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'
 
 const NewContactPage: BlitzPage = () => {

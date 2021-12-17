@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import getNotes from 'app/notes/queries/getNotes'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'

@@ -5,7 +5,7 @@ import { z } from 'zod'
 const CreateLicense = z.object({
   membershipId: z.number(),
   type: z.string(),
-  number: z.number(),
+  number: z.string(),
   expiresAt: z.date(),
   state: z.string(),
 })

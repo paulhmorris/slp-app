@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import deleteGoal from 'app/goals/mutations/deleteGoal'
 import getGoal from 'app/goals/queries/getGoal'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'

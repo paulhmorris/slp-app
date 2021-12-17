@@ -1,18 +1,18 @@
-import { resolver, SecurePassword, hash256 } from "blitz"
-import db from "db"
-import { ResetPassword } from "../validations"
-import login from "./login"
+import { hash256, resolver, SecurePassword } from 'blitz'
+import db from 'db'
+import { ResetPassword } from '../validations'
+import login from './login'
 
 export class ResetPasswordError extends Error {
-  name = "ResetPasswordError"
-  message = "Reset password link is invalid or it has expired."
+  name = 'ResetPasswordError'
+  message = 'Reset password link is invalid or it has expired.'
 }
 
 export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, token }, ctx) => {
   // 1. Try to find this token in the database
   const hashedToken = hash256(token)
   const possibleToken = await db.token.findFirst({
-    where: { hashedToken, type: "RESET_PASSWORD" },
+    where: { hashedToken, type: 'RESET_PASSWORD' },
     include: { user: true },
   })
 
@@ -41,7 +41,7 @@ export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, tok
   await db.session.deleteMany({ where: { userId: user.id } })
 
   // 7. Now log the user in with the new credentials
-  await login({ email: user.email, password }, ctx)
+  await login({ email: user.username, password }, ctx)
 
   return true
 })

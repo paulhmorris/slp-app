@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import deleteNote from 'app/notes/mutations/deleteNote'
 import getNote from 'app/notes/queries/getNote'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'

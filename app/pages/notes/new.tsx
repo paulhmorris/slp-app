@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { FORM_ERROR, NoteForm } from 'app/notes/components/NoteForm'
 import createNote from 'app/notes/mutations/createNote'
 import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'

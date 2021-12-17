@@ -8,7 +8,7 @@ const CreateGoal = z.object({
   goalCategoryId: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input) => {
+export default resolver.pipe(resolver.zod(CreateGoal), resolver.authorize(), async (input, ctx) => {
   const goal = await db.goal.create({
     data: {
       ...input,

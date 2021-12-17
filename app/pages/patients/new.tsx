@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { FORM_ERROR, PatientForm } from 'app/patients/components/forms/PatientSettings'
 import createPatient from 'app/patients/mutations/createPatient'
 import { BlitzPage, Routes, useMutation, useRouter } from 'blitz'
@@ -20,6 +21,8 @@ const NewPatientPage: BlitzPage = () => {
           firstName: '',
           lastName: '',
           email: '',
+          // @ts-ignore how can I add properties to this type?
+          isActive: true,
           dateOfBirth: new Date(),
         }}
         schema={createPatientSchema}

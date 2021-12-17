@@ -11,7 +11,8 @@ import {
   XIcon,
 } from '@heroicons/react/outline'
 import { PlusSmIcon, SearchIcon } from '@heroicons/react/solid'
-import { Routes, useRouter } from 'blitz'
+import logout from 'app/auth/mutations/logout'
+import { Routes, useMutation, useRouter } from 'blitz'
 import { Fragment, useState } from 'react'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 import { classNames } from '../lib/helpers'
@@ -34,7 +35,6 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
 ]
 
 const createOptions = [
@@ -249,6 +249,7 @@ export default function Navbar({ children }) {
 }
 
 const ProfileDropdown = () => {
+  const [logoutMutation] = useMutation(logout)
   return (
     <Menu as="div" className="ml-3 relative">
       <div>
@@ -286,6 +287,19 @@ const ProfileDropdown = () => {
               )}
             </Menu.Item>
           ))}
+          <Menu.Item>
+            {({ active }) => (
+              <button
+                onClick={async () => await logoutMutation()}
+                className={classNames(
+                  active ? 'bg-gray-100' : '',
+                  'block w-full text-left px-4 py-2 text-sm text-gray-700'
+                )}
+              >
+                Sign Out
+              </button>
+            )}
+          </Menu.Item>
         </Menu.Items>
       </Transition>
     </Menu>

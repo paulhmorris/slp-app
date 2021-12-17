@@ -9,7 +9,7 @@ const CreateNote = z.object({
   noteTypeId: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(CreateNote), resolver.authorize(), async (input) => {
+export default resolver.pipe(resolver.zod(CreateNote), resolver.authorize(), async (input, ctx) => {
   const note = await db.note.create({
     data: {
       ...input,

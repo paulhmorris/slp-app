@@ -1,4 +1,5 @@
 import getContacts from 'app/contacts/queries/getContacts'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
 
@@ -22,7 +23,9 @@ export const ContactsList = () => {
         {contacts.map((contact) => (
           <li key={contact.id}>
             <Link href={Routes.ShowContactPage({ contactId: contact.id })}>
-              <a>{contact.name}</a>
+              <a>
+                {contact.firstName} {contact.lastName}
+              </a>
             </Link>
           </li>
         ))}

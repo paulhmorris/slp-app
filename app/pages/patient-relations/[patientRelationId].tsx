@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import deletePatientRelation from 'app/patient-contacts/mutations/deletePatientRelation'
 import getPatientRelation from 'app/patient-contacts/queries/getPatientRelation'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'

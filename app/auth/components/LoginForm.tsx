@@ -13,7 +13,7 @@ export const LoginForm = (props: LoginFormProps) => {
 
   return (
     <div className="p-12 max-w-sm">
-      <h1>Login</h1>
+      <h1 className="mb-4">Login</h1>
 
       <Form
         submitText="Login"
@@ -35,14 +35,16 @@ export const LoginForm = (props: LoginFormProps) => {
           }
         }}
       >
-        <LabeledTextField
-          name="email"
-          label="Email"
-          placeholder="Email"
-          type="email"
-          autoComplete="current-password"
-          required
-        />
+        <div className="mb-4">
+          <LabeledTextField
+            name="email"
+            label="Email"
+            placeholder="Email"
+            type="email"
+            autoComplete="current-password"
+            required
+          />
+        </div>
         <LabeledTextField
           name="password"
           label="Password"

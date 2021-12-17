@@ -1,5 +1,6 @@
 import { AppointmentForm, FORM_ERROR } from 'app/appointments/components/AppointmentForm'
 import createAppointment from 'app/appointments/mutations/createAppointment'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Routes, useMutation, useRouter } from 'blitz'
 
 const NewAppointmentPage: BlitzPage = () => {

@@ -2,6 +2,7 @@ import forgotPassword from 'app/auth/mutations/forgotPassword'
 import { ForgotPassword } from 'app/auth/validations'
 import { Form, FORM_ERROR } from 'app/core/components/forms/Form'
 import { LabeledTextField } from 'app/core/components/forms/LabeledTextField'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, useMutation } from 'blitz'
 
 const ForgotPasswordPage: BlitzPage = () => {

@@ -1,4 +1,5 @@
 import { LoginForm } from 'app/auth/components/LoginForm'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, useRouter } from 'blitz'
 
 const LoginPage: BlitzPage = () => {

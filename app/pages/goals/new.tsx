@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { FORM_ERROR, GoalForm } from 'app/goals/components/GoalForm'
 import createGoal from 'app/goals/mutations/createGoal'
 import { BlitzPage, Link, Routes, useMutation, useRouter } from 'blitz'

@@ -1,3 +1,4 @@
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import getPatientRelations from 'app/patient-contacts/queries/getPatientRelations'
 import { BlitzPage, Head, Link, Routes, usePaginatedQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
@@ -7,7 +8,7 @@ const ITEMS_PER_PAGE = 100
 export const PatientRelationsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ patientRelations, hasMore }] = usePaginatedQuery(getPatientRelations, {
+  const [patientRelations, hasMore] = usePaginatedQuery(getPatientRelations, {
     orderBy: { id: 'asc' },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
@@ -22,7 +23,9 @@ export const PatientRelationsList = () => {
         {patientRelations.map((patientRelation) => (
           <li key={patientRelation.id}>
             <Link href={Routes.ShowPatientRelationPage({ patientRelationId: patientRelation.id })}>
-              <a>{patientRelation.name}</a>
+              <a>
+                {patientRelation.contact?.firstName} {patientRelation.contact?.lastName}
+              </a>
             </Link>
           </li>
         ))}

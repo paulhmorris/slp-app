@@ -1,5 +1,6 @@
 import deleteContact from 'app/contacts/mutations/deleteContact'
 import getContact from 'app/contacts/queries/getContact'
+import AdminLayout from 'app/core/layouts/AdminLayout'
 import { BlitzPage, Head, Link, Routes, useMutation, useParam, useQuery, useRouter } from 'blitz'
 import { Suspense } from 'react'
 
